@@ -1,0 +1,156 @@
+.series-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 16px !important;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4) !important;
+  }
+}
+
+.card-inner {
+  display: flex;
+  gap: 0;
+}
+
+.poster-container {
+  position: relative;
+  flex-shrink: 0;
+  width: 90px;
+}
+
+.poster {
+  width: 90px;
+  height: 130px;
+  object-fit: cover;
+  display: block;
+}
+
+.poster-placeholder {
+  width: 90px;
+  height: 130px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.status-badge {
+  position: absolute;
+  top: 8px;
+  left: 6px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #00E5A0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.series-info {
+  flex: 1;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.series-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.series-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.series-network {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.progress-value {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.progress-bar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #00E5A0;
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+
+.card-actions {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 6px 10px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.status-btn {
+  font-size: 10px !important;
+  height: 28px !important;
+  padding: 0 8px !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+
+  mat-icon {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+    margin-right: 4px;
+  }
+}
+
+.delete-btn {
+  margin-left: auto;
+  color: rgba(255, 107, 107, 0.7) !important;
+
+  &:hover {
+    color: #FF6B6B !important;
+  }
+}

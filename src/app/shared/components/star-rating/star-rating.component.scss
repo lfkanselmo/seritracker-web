@@ -1,0 +1,32 @@
+.star-rating {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.star {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: color 0.1s;
+  line-height: 1;
+  user-select: none;
+
+  &.active {
+    color: #FFD166;
+  }
+
+  &.readonly {
+    cursor: default;
+  }
+
+  &:not(.readonly):hover {
+    transform: scale(1.2);
+  }
+}
+
+.rating-value {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-left: 4px;
+}
