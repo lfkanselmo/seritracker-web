@@ -1,0 +1,61 @@
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0F1117;
+  padding: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #1a1d2e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.submit-btn {
+  margin-top: 16px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.error-message {
+  color: #f44336;
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.register-link {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  width: 100%;
+
+  a {
+    color: #7c4dff;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 0;
+}
