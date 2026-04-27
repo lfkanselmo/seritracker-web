@@ -1,0 +1,133 @@
+<app-navbar />
+
+<div class="page-container">
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <div class="state-container">
+      <mat-spinner diameter="48" />
+    </div>
+  }
+
+  <!-- Error -->
+  @if (hasError && !isLoading) {
+    <div class="state-container error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button (click)="onBack()">Volver</button>
+    </div>
+  }
+
+  @if (series && !isLoading) {
+
+    <!-- Back -->
+    <button mat-button class="back-btn" (click)="onBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver a mi lista
+    </button>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="poster-container">
+        @if (series.posterUrl) {
+          <img [src]="series.posterUrl" [alt]="series.title" class="poster">
+        } @else {
+          <div class="poster-placeholder">📺</div>
+        }
+      </div>
+
+      <div class="hero-info">
+        <h1 class="series-title">{{ series.title }}</h1>
+        <p class="series-meta">{{ series.network }}</p>
+
+        <!-- Status badge -->
+        <div class="status-badge">
+          {{ series.status | seriesStatus }}
+        </div>
+
+        <!-- Rating -->
+        <div class="rating-section">
+          <p class="section-label">Tu calificación</p>
+          <app-star-rating
+            [value]="series.rating"
+            (ratingChange)="onRatingChange($event)">
+          </app-star-rating>
+        </div>
+      </div>
+    </div>
+
+    <!-- Episode progress -->
+    @if (series.status !== 'WANT_TO_WATCH') {
+      <div class="detail-card">
+        <h2 class="card-title">Progreso de episodios</h2>
+
+        <div class="progress-stats">
+          <span class="progress-number">{{ series.watchedEpisodes }}</span>
+          <span class="progress-divider">/</span>
+          <span class="progress-total">{{ series.totalEpisodes }} episodios</span>
+          <span class="progress-pct">{{ progressPercent }}%</span>
+        </div>
+
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="progressPercent"></div>
+        </div>
+
+        <div class="episode-controls">
+          <button mat-icon-button
+                  [disabled]="series.watchedEpisodes === 0"
+                  (click)="onEpisodesChange(-1)">
+            <mat-icon>remove</mat-icon>
+          </button>
+
+          <input
+            type="number"
+            class="episodes-input"
+            [value]="series.watchedEpisodes"
+            [min]="0"
+            [max]="series.totalEpisodes"
+            (change)="onEpisodesInput($event)">
+
+          <button mat-icon-button
+                  [disabled]="series.watchedEpisodes === series.totalEpisodes"
+                  (click)="onEpisodesChange(1)">
+            <mat-icon>add</mat-icon>
+          </button>
+
+          <button mat-stroked-button class="mark-all-btn"
+                  (click)="onMarkAllWatched()">
+            <mat-icon>done_all</mat-icon>
+            Marcar todo
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Change status -->
+    <div class="detail-card">
+      <h2 class="card-title">Cambiar estado</h2>
+      <div class="status-buttons">
+        @for (status of statuses; track status) {
+          <button
+            mat-stroked-button
+            class="status-btn"
+            [class.active]="series.status === status"
+            (click)="onStatusChange(status)">
+            <mat-icon>{{ statusConfig[status].icon }}</mat-icon>
+            {{ status | seriesStatus }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Danger zone -->
+    <div class="detail-card danger">
+      <h2 class="card-title danger-title">Zona de peligro</h2>
+      <button mat-stroked-button color="warn" (click)="onDeleteRequest()">
+        <mat-icon>delete</mat-icon>
+        Eliminar de mi lista
+      </button>
+    </div>
+
+  }
+
+</div>
