@@ -1,0 +1,112 @@
+<app-navbar />
+
+<div class="page-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Mi Lista</h1>
+      <p class="page-subtitle">{{ stats.total }} series en tu colección</p>
+    </div>
+    <div class="header-actions">
+      <button mat-icon-button (click)="showSearch = !showSearch" matTooltip="Buscar">
+        <mat-icon>search</mat-icon>
+      </button>
+      <button mat-raised-button color="primary" (click)="onAddSeries()">
+        <mat-icon>add</mat-icon>
+        Agregar
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-value">{{ stats.total }}</span>
+      <span class="stat-label">Total</span>
+    </div>
+    <div class="stat-card watching">
+      <span class="stat-value">{{ stats.watching }}</span>
+      <span class="stat-label">Viendo</span>
+    </div>
+    <div class="stat-card want-to">
+      <span class="stat-value">{{ stats.wantTo }}</span>
+      <span class="stat-label">Por ver</span>
+    </div>
+    <div class="stat-card completed">
+      <span class="stat-value">{{ stats.completed }}</span>
+      <span class="stat-label">Completadas</span>
+    </div>
+    <div class="stat-card abandoned">
+      <span class="stat-value">{{ stats.abandoned }}</span>
+      <span class="stat-label">Abandonadas</span>
+    </div>
+  </div>
+
+  <!-- Search bar -->
+  @if (showSearch) {
+    <div class="search-bar">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar en mi lista</mat-label>
+        <input matInput [value]="searchQuery" (input)="onSearchInput($event)">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  }
+
+  <!-- Tabs -->
+  <div class="tabs">
+    @for (tab of tabs; track tab.label) {
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === tab.status"
+        (click)="onTabChange(tab.status)">
+        {{ tab.label }}
+      </button>
+    }
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <div class="state-container">
+      <mat-spinner diameter="48" />
+      <p>Cargando tus series…</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (hasError && !isLoading) {
+    <div class="state-container error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button (click)="loadSeries()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Empty -->
+  @if (!isLoading && !hasError && filteredSeries.length === 0) {
+    <div class="state-container empty">
+      <span class="empty-icon">📺</span>
+      <p>No hay series en esta categoría</p>
+      <button mat-raised-button color="primary" (click)="onAddSeries()">
+        Agregar primera serie
+      </button>
+    </div>
+  }
+
+  <!-- Grid -->
+  @if (!isLoading && filteredSeries.length > 0) {
+    <div class="series-grid">
+      @for (series of filteredSeries; track series.id) {
+        <app-series-card
+          [series]="series"
+          (statusChange)="onStatusChange(series, $event)"
+          (ratingChange)="onRatingChange(series, $event)"
+          (deleteRequest)="onDeleteRequest(series)"
+          (cardClick)="onCardClick(series)">
+        </app-series-card>
+      }
+    </div>
+  }
+
+</div>

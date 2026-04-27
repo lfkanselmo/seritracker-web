@@ -22,7 +22,6 @@ export const routes: Routes = [
       }
     ]
   },
-  /*
   {
     path: 'series',
     canActivate: [authGuard],
@@ -33,15 +32,19 @@ export const routes: Routes = [
           .then(m => m.SeriesListComponent)
       },
       {
+        path: 'search',
+        loadComponent: () => import('./features/series/series-search/series-search.component')
+          .then(m => m.SeriesSearchComponent)
+      },
+      {
         path: ':id',
         loadComponent: () => import('./features/series/series-detail/series-detail.component')
           .then(m => m.SeriesDetailComponent)
       }
     ]
   },
-  */
   {
     path: '**',
-    redirectTo: 'auth/login'
+    redirectTo: 'series'
   }
 ];
