@@ -1,0 +1,83 @@
+<app-navbar />
+
+<div class="page-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <button mat-icon-button (click)="onBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 class="page-title">Agregar Serie</h1>
+      <p class="page-subtitle">Busca series en The Movie Database</p>
+    </div>
+  </div>
+
+  <!-- Search input -->
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Buscar serie…</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Ej: Breaking Bad, Arcane…" autofocus>
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <!-- Searching -->
+  @if (isSearching) {
+    <div class="state-container">
+      <mat-spinner diameter="40" />
+      <p>Buscando…</p>
+    </div>
+  }
+
+  <!-- No results -->
+  @if (hasSearched && !isSearching && results.length === 0) {
+    <div class="state-container">
+      <mat-icon>search_off</mat-icon>
+      <p>No se encontraron resultados</p>
+    </div>
+  }
+
+  <!-- Results -->
+  @if (!isSearching && results.length > 0) {
+    <div class="results-list">
+      @for (series of results; track series.tmdbId) {
+        <div class="result-card">
+
+          <!-- Poster -->
+          <div class="result-poster">
+            @if (series.posterUrl) {
+              <img [src]="series.posterUrl" [alt]="series.title" loading="lazy">
+            } @else {
+              <div class="poster-placeholder">📺</div>
+            }
+          </div>
+
+          <!-- Info -->
+          <div class="result-info">
+            <h3 class="result-title">{{ series.title }}</h3>
+            @if (series.network) {
+              <span class="result-network">{{ series.network }}</span>
+            }
+          </div>
+
+          <!-- Add buttons -->
+          <div class="result-actions">
+            @if (isAdding === series.tmdbId) {
+              <mat-spinner diameter="24" />
+            } @else {
+              @for (status of statuses; track status) {
+                <button
+                  mat-stroked-button
+                  class="add-btn"
+                  (click)="onAddSeries(series, status)">
+                  {{ statusLabels[status] }}
+                </button>
+              }
+            }
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+</div>
