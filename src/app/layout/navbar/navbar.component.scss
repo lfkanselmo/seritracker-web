@@ -4,6 +4,7 @@
   position: sticky;
   top: 0;
   z-index: 100;
+  padding: 0 16px;
 }
 
 .brand {
@@ -16,12 +17,17 @@
 
 .brand-icon {
   font-size: 22px;
+  line-height: 1;
 }
 
 .brand-name {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.5px;
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
 }
 
 .spacer {
@@ -35,6 +41,4 @@
   padding: 8px 16px;
   color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  pointer-events: none;
 }

@@ -21,27 +21,27 @@
 
   <!-- Stats -->
   <div class="stats-grid">
-    <div class="stat-card">
-      <span class="stat-value">{{ stats.total }}</span>
-      <span class="stat-label">Total</span>
-    </div>
-    <div class="stat-card watching">
-      <span class="stat-value">{{ stats.watching }}</span>
-      <span class="stat-label">Viendo</span>
-    </div>
-    <div class="stat-card want-to">
-      <span class="stat-value">{{ stats.wantTo }}</span>
-      <span class="stat-label">Por ver</span>
-    </div>
-    <div class="stat-card completed">
-      <span class="stat-value">{{ stats.completed }}</span>
-      <span class="stat-label">Completadas</span>
-    </div>
-    <div class="stat-card abandoned">
-      <span class="stat-value">{{ stats.abandoned }}</span>
-      <span class="stat-label">Abandonadas</span>
-    </div>
+  <div class="stat-card">
+    <span class="stat-value">{{ stats.total }}</span>
+    <span class="stat-label">Total</span>
   </div>
+  <div class="stat-card watching">
+    <span class="stat-value">{{ stats.watching }}</span>
+    <span class="stat-label">Viendo</span>
+  </div>
+  <div class="stat-card want-to">
+    <span class="stat-value">{{ stats.wantTo }}</span>
+    <span class="stat-label">Por ver</span>
+  </div>
+  <div class="stat-card completed">
+    <span class="stat-value">{{ stats.completed }}</span>
+    <span class="stat-label">Hechas</span>
+  </div>
+  <div class="stat-card abandoned">
+    <span class="stat-value">{{ stats.abandoned }}</span>
+    <span class="stat-label">Dejadas</span>
+  </div>
+</div>
 
   <!-- Search bar -->
   @if (showSearch) {
