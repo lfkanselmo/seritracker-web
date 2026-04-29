@@ -91,7 +91,7 @@ export class SeriesDetailComponent implements OnInit {
           this.cdr.detectChanges();
           this.snackBar.open('Estado actualizado', '✓', { duration: 2000 });
         },
-        error: () => this.snackBar.open('Error al actualizar estado', '✕', { duration: 3000 })
+        error: () => { }
       });
   }
 
@@ -106,7 +106,7 @@ export class SeriesDetailComponent implements OnInit {
           this.cdr.detectChanges();
           this.snackBar.open('Calificación guardada', '✓', { duration: 2000 });
         },
-        error: () => this.snackBar.open('Error al calificar', '✕', { duration: 3000 })
+        error: () => { }
       });
   }
 
@@ -168,7 +168,7 @@ export class SeriesDetailComponent implements OnInit {
           this.series = response.data;
           this.cdr.detectChanges();
         },
-        error: () => this.snackBar.open('Error al actualizar episodios', '✕', { duration: 3000 })
+        error: () => { }
       });
   }
 
@@ -182,7 +182,7 @@ export class SeriesDetailComponent implements OnInit {
           this.snackBar.open('Serie eliminada', '✓', { duration: 2000 });
           this.router.navigate(['/series']);
         },
-        error: () => this.snackBar.open('Error al eliminar', '✕', { duration: 3000 })
+        error: () => { }
       });
   }
 }

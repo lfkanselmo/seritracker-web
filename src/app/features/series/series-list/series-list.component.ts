@@ -124,19 +124,8 @@ export class SeriesListComponent implements OnInit {
           this.recalculateStats();
           this.snackBar.open('Estado actualizado', '✓', { duration: 2000 });
         },
-        error: () => this.snackBar.open('Error al actualizar estado', '✕', { duration: 3000 })
+        error: () => { } // el interceptor ya muestra el error
       });
-  }
-
-  private recalculateStats(): void {
-    this.stats = {
-      total: this.seriesList.length,
-      watching: this.seriesList.filter(s => s.status === 'WATCHING').length,
-      wantTo: this.seriesList.filter(s => s.status === 'WANT_TO_WATCH').length,
-      completed: this.seriesList.filter(s => s.status === 'COMPLETED').length,
-      abandoned: this.seriesList.filter(s => s.status === 'ABANDONED').length,
-    };
-    this.cdr.detectChanges();
   }
 
   onRatingChange(series: UserSeries, rating: number): void {
@@ -147,9 +136,10 @@ export class SeriesListComponent implements OnInit {
           this.seriesList = this.seriesList.map(s =>
             s.id === series.id ? response.data : s
           );
+          this.recalculateStats();
           this.snackBar.open('Calificación guardada', '✓', { duration: 2000 });
         },
-        error: () => this.snackBar.open('Error al calificar', '✕', { duration: 3000 })
+        error: () => { }
       });
   }
 
@@ -192,7 +182,18 @@ export class SeriesListComponent implements OnInit {
           this.recalculateStats();
           this.snackBar.open('Serie eliminada', '✓', { duration: 2000 });
         },
-        error: () => this.snackBar.open('Error al eliminar', '✕', { duration: 3000 })
+        error: () => { }
       });
+  }
+
+  private recalculateStats(): void {
+    this.stats = {
+      total: this.seriesList.length,
+      watching: this.seriesList.filter(s => s.status === 'WATCHING').length,
+      wantTo: this.seriesList.filter(s => s.status === 'WANT_TO_WATCH').length,
+      completed: this.seriesList.filter(s => s.status === 'COMPLETED').length,
+      abandoned: this.seriesList.filter(s => s.status === 'ABANDONED').length,
+    };
+    this.cdr.detectChanges();
   }
 }
