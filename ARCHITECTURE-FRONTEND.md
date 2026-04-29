@@ -23,7 +23,8 @@ src/app/
 │   ├── guards/
 │   │   └── auth.guard.ts
 │   ├── interceptors/
-│   │   └── auth.interceptor.ts
+│   │   ├── auth.interceptor.ts    ← Agrega JWT a cada request
+│   │   └── error.interceptor.ts   ← Maneja errores HTTP globalmente
 │   ├── models/
 │   │   ├── user.model.ts
 │   │   ├── series.model.ts
@@ -147,7 +148,61 @@ export class SeriesService {
 - Un servicio por dominio — AuthService, SeriesService, TmdbService
 - Siempre devolver Observable — nunca Promise en servicios HTTP
 - Nunca subscribirse dentro de un servicio
-- Manejo de errores en el componente, no en el servicio
+- Manejo de errores en el componente o interceptor, no en el servicio
+
+---
+
+## Manejo de Errores HTTP
+
+### Responsabilidades
+
+| Quién | Qué maneja |
+|-------|-----------|
+| `errorInterceptor` | 0 (sin conexión), 401 (sesión expirada), 403 (sin permisos), 404 (no encontrado), 500 (error servidor) |
+| Componente | 409 (duplicado), errores con contexto específico de negocio |
+| Estado de error en UI | `loadSeries` muestra bloque de error con botón reintentar |
+
+### Regla principal
+
+```
+Si el error es técnico o genérico → errorInterceptor
+Si el error necesita contexto de negocio → componente
+```
+
+### El bloque error en subscripciones
+
+```typescript
+// ✅ Si el interceptor ya lo cubre — dejar vacío
+error: () => {}
+
+// ✅ Si necesita lógica específica de negocio (ej: 409 duplicado)
+error: (err) => {
+  if (err.status === 409) {
+    this.errorMessage = 'Esta serie ya está en tu lista';
+  }
+}
+
+// ✅ Si necesita mostrar estado de error en la UI
+error: (err) => {
+  this.hasError     = true;
+  this.errorMessage = err.error?.message ?? 'Error al cargar';
+  this.isLoading    = false;
+}
+
+// ❌ NUNCA repetir lo que ya hace el interceptor
+error: () => this.snackBar.open('Error del servidor', '✕')
+```
+
+### Comportamiento del errorInterceptor por código
+
+| Código | Acción |
+|--------|--------|
+| `0` | Snackbar: "Sin conexión con el servidor" |
+| `401` | Logout + redirect a /auth/login + snackbar |
+| `403` | Snackbar: "No tienes permisos" |
+| `404` | Snackbar: "Recurso no encontrado" |
+| `409` | Sin acción — lo maneja el componente |
+| `500` | Snackbar: "Error interno del servidor" |
 
 ---
 
@@ -158,6 +213,7 @@ export class SeriesService {
 series-list.component.ts
 auth.guard.ts
 auth.interceptor.ts
+error.interceptor.ts
 series.model.ts
 series-status.pipe.ts
 ```
@@ -221,7 +277,7 @@ canDelete(): boolean
 | Smart/Dumb Components | features/ vs shared/ | Separa lógica de presentación |
 | Observable pattern | Servicios HTTP | Manejo reactivo de datos |
 | Lazy Loading | Rutas de features | Carga solo lo necesario |
-| Interceptor | HTTP requests | JWT centralizado |
+| Interceptor | HTTP requests | JWT y errores centralizados |
 | Guard | Rutas protegidas | Autenticación declarativa |
 | Pipe | Templates | Transformación de datos reutilizable |
 
@@ -314,5 +370,6 @@ loadSeries(): void {
 ✅ ¿Los @for tienen trackBy?
 ✅ ¿No hay any sin justificación?
 ✅ ¿Los métodos de evento empiezan con on?
+✅ ¿El bloque error no repite lo que ya hace el interceptor?
 ✅ ¿El commit sigue el formato feat/fix/refactor?
 ```
