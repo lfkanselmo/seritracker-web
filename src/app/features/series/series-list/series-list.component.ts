@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { SeriesCardComponent } from '../../../shared/components/series-card/series-card.component';
+import { fadeIn, listStagger, tabFade } from '../../../shared/animations/app.animations';
 
 @Component({
   selector: 'app-series-list',
@@ -31,6 +32,7 @@ import { SeriesCardComponent } from '../../../shared/components/series-card/seri
     NavbarComponent,
     SeriesCardComponent,
   ],
+  animations: [fadeIn, listStagger, tabFade],
   templateUrl: './series-list.component.html',
   styleUrl: './series-list.component.scss'
 })

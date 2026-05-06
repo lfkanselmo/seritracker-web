@@ -1,6 +1,6 @@
 <app-navbar />
 
-<div class="page-container">
+<div class="page-container" @pageFadeIn>
 
   <!-- Header -->
   <div class="page-header">
@@ -38,9 +38,9 @@
 
   <!-- Results -->
   @if (!isSearching && results.length > 0) {
-    <div class="results-list">
-      @for (series of results; track series.tmdbId) {
-        <div class="result-card">
+  <div class="results-list" [@listStagger]="results.length">
+    @for (series of results; track series.tmdbId) {
+      <div class="result-card" @fadeIn>
 
           <!-- Poster -->
           <div class="result-poster">

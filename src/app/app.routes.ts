@@ -3,20 +3,17 @@ import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'series',
-    pathMatch: 'full'
-  },
-  {
     path: 'auth',
     children: [
       {
         path: 'login',
+        data: { animation: 'auth' },
         loadComponent: () => import('./features/auth/login/login.component')
           .then(m => m.LoginComponent)
       },
       {
         path: 'register',
+        data: { animation: 'auth' },
         loadComponent: () => import('./features/auth/register/register.component')
           .then(m => m.RegisterComponent)
       }
@@ -28,16 +25,19 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        data: { animation: 'series-list' },
         loadComponent: () => import('./features/series/series-list/series-list.component')
           .then(m => m.SeriesListComponent)
       },
       {
         path: 'search',
+        data: { animation: 'series-search' },
         loadComponent: () => import('./features/series/series-search/series-search.component')
           .then(m => m.SeriesSearchComponent)
       },
       {
         path: ':id',
+        data: { animation: 'series-detail' },
         loadComponent: () => import('./features/series/series-detail/series-detail.component')
           .then(m => m.SeriesDetailComponent)
       }

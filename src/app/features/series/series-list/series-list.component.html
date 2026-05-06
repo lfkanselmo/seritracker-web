@@ -1,6 +1,6 @@
 <app-navbar />
 
-<div class="page-container">
+<div class="page-container" @fadeIn>
 
   <!-- Header -->
   <div class="page-header">
@@ -20,7 +20,7 @@
   </div>
 
   <!-- Stats -->
-  <div class="stats-grid">
+  <div class="stats-grid" @fadeIn>
   <div class="stat-card">
     <span class="stat-value">{{ stats.total }}</span>
     <span class="stat-label">Total</span>
@@ -96,8 +96,9 @@
 
   <!-- Grid -->
   @if (!isLoading && filteredSeries.length > 0) {
-    <div class="series-grid">
-      @for (series of filteredSeries; track series.id) {
+  <div class="series-grid" [@listStagger]="filteredSeries.length">
+    @for (series of filteredSeries; track series.id) {
+      <div @fadeIn>
         <app-series-card
           [series]="series"
           (statusChange)="onStatusChange(series, $event)"
@@ -105,8 +106,9 @@
           (deleteRequest)="onDeleteRequest(series)"
           (cardClick)="onCardClick(series)">
         </app-series-card>
-      }
-    </div>
-  }
+      </div>
+    }
+  </div>
+}
 
 </div>

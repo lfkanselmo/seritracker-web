@@ -16,6 +16,7 @@ import { TmdbService } from '../../../core/services/tmdb.service';
 import { SeriesService } from '../../../core/services/series.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
+import { pageFadeIn, listStagger, fadeIn } from '../../../shared/animations/app.animations';
 
 @Component({
   selector: 'app-series-search',
@@ -31,25 +32,26 @@ import { NavbarComponent } from '../../../layout/navbar/navbar.component';
     MatChipsModule,
     NavbarComponent,
   ],
+  animations: [pageFadeIn, listStagger, fadeIn],
   templateUrl: './series-search.component.html',
-  styleUrl:    './series-search.component.scss'
+  styleUrl: './series-search.component.scss'
 })
 export class SeriesSearchComponent {
 
-  private destroyRef    = inject(DestroyRef);
-  private tmdbService   = inject(TmdbService);
+  private destroyRef = inject(DestroyRef);
+  private tmdbService = inject(TmdbService);
   private seriesService = inject(SeriesService);
-  private authService   = inject(AuthService);
-  private router        = inject(Router);
-  private snackBar      = inject(MatSnackBar);
-  private cdr           = inject(ChangeDetectorRef);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+  private cdr = inject(ChangeDetectorRef);
 
   searchControl = new FormControl('');
 
-  results:     TmdbSeries[] = [];
-  isSearching  = false;
-  isAdding:    number | null = null;
-  hasSearched  = false;
+  results: TmdbSeries[] = [];
+  isSearching = false;
+  isAdding: number | null = null;
+  hasSearched = false;
 
   readonly statuses: SeriesStatus[] = [
     'WATCHING', 'WANT_TO_WATCH', 'COMPLETED', 'ABANDONED'
@@ -58,10 +60,10 @@ export class SeriesSearchComponent {
   readonly statusConfig = STATUS_CONFIG;
 
   readonly statusLabels: Record<SeriesStatus, string> = {
-    WATCHING:      'Viendo',
+    WATCHING: 'Viendo',
     WANT_TO_WATCH: 'Por ver',
-    COMPLETED:     'Completada',
-    ABANDONED:     'Abandonada'
+    COMPLETED: 'Completada',
+    ABANDONED: 'Abandonada'
   };
 
   get userId(): number {
@@ -81,7 +83,7 @@ export class SeriesSearchComponent {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (response) => {
-        this.results     = response.data;
+        this.results = response.data;
         this.isSearching = false;
       },
       error: () => {
@@ -92,27 +94,27 @@ export class SeriesSearchComponent {
   }
 
   onAddSeries(series: TmdbSeries, status: SeriesStatus): void {
-  this.isAdding = series.tmdbId;
-  this.cdr.detectChanges();
+    this.isAdding = series.tmdbId;
+    this.cdr.detectChanges();
 
-  this.seriesService.create(this.userId, {
-    tmdbId: series.tmdbId,
-    status
-  }).pipe(takeUntilDestroyed(this.destroyRef))
-    .subscribe({
-      next: () => {
-        this.snackBar.open(`"${series.title}" agregada a tu lista`, '✓', { duration: 3000 });
-        this.isAdding = null;
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        const message = err.error?.message ?? 'Error al agregar serie';
-        this.snackBar.open(message, '✕', { duration: 3000 });
-        this.isAdding = null;
-        this.cdr.detectChanges();
-      }
-    });
-}
+    this.seriesService.create(this.userId, {
+      tmdbId: series.tmdbId,
+      status
+    }).pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.snackBar.open(`"${series.title}" agregada a tu lista`, '✓', { duration: 3000 });
+          this.isAdding = null;
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          const message = err.error?.message ?? 'Error al agregar serie';
+          this.snackBar.open(message, '✕', { duration: 3000 });
+          this.isAdding = null;
+          this.cdr.detectChanges();
+        }
+      });
+  }
 
   onBack(): void {
     this.router.navigate(['/series']);

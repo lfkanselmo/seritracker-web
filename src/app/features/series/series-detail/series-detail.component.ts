@@ -13,6 +13,7 @@ import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
 import { SeriesStatusPipe } from '../../../shared/pipes/series-status.pipe';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { pageFadeIn, fadeIn } from '../../../shared/animations/app.animations';
 
 @Component({
   selector: 'app-series-detail',
@@ -26,6 +27,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
     StarRatingComponent,
     SeriesStatusPipe,
   ],
+  animations: [pageFadeIn, fadeIn],
   templateUrl: './series-detail.component.html',
   styleUrl: './series-detail.component.scss'
 })

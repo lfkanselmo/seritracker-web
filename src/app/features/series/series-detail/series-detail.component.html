@@ -1,6 +1,6 @@
 <app-navbar />
 
-<div class="page-container">
+<div class="page-container" @pageFadeIn>
 
   <!-- Loading -->
   @if (isLoading) {
@@ -27,7 +27,7 @@
     </button>
 
     <!-- Hero -->
-    <div class="hero">
+    <div class="hero" @fadeIn>
       <div class="poster-container">
         @if (series.posterUrl) {
           <img [src]="series.posterUrl" [alt]="series.title" class="poster">
