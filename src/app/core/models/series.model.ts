@@ -42,8 +42,20 @@ export interface UpdateEpisodesRequest {
 }
 
 export const STATUS_CONFIG: Record<SeriesStatus, { label: string; color: string; icon: string }> = {
-  WATCHING:      { label: 'Viendo',      color: 'accent',  icon: 'play_arrow' },
-  WANT_TO_WATCH: { label: 'Por ver',     color: 'primary', icon: 'bookmark'   },
-  COMPLETED:     { label: 'Completada',  color: 'warn',    icon: 'check'      },
-  ABANDONED:     { label: 'Abandonada',  color: 'warn',    icon: 'close'      },
+  WATCHING: { label: 'Viendo', color: 'accent', icon: 'play_arrow' },
+  WANT_TO_WATCH: { label: 'Por ver', color: 'primary', icon: 'bookmark' },
+  COMPLETED: { label: 'Completada', color: 'warn', icon: 'check' },
+  ABANDONED: { label: 'Abandonada', color: 'warn', icon: 'close' },
 };
+
+export interface Notification {
+  id: number;
+  tmdbId: number;
+  seriesTitle: string;
+  episodeCode: string;
+  airDate: string;
+  sentAt: string;
+  read: boolean;
+  isToday: boolean;
+  isTomorrow: boolean;
+}
