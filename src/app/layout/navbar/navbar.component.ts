@@ -56,7 +56,7 @@ export class NavbarComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.notifications = response.data;
+          this.notifications = response.data.content;
         },
         error: () => { }
       });

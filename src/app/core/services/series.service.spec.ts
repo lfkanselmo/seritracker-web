@@ -25,7 +25,12 @@ describe('SeriesService', () => {
     };
 
     const mockApiResponse = { success: true, data: mockUserSeries, message: 'OK', timestamp: '' };
-    const mockListResponse = { success: true, data: [mockUserSeries], message: 'OK', timestamp: '' };
+    const mockPageResponse = {
+        success: true,
+        data: { content: [mockUserSeries], page: 0, size: 20, totalElements: 1, totalPages: 1 },
+        message: 'OK',
+        timestamp: ''
+    };
 
     beforeEach(() => {
         httpClientMock = {
@@ -50,28 +55,31 @@ describe('SeriesService', () => {
     });
 
     describe('getAll', () => {
-        it('should call GET /series', () => {
-            httpClientMock.get.mockReturnValue(of(mockListResponse));
+        it('should call GET /series with pagination params', () => {
+            httpClientMock.get.mockReturnValue(of(mockPageResponse));
 
             service.getAll().subscribe(response => {
-                expect(response.data).toHaveLength(1);
-                expect(response.data[0].title).toBe('Breaking Bad');
+                expect(response.data.content).toHaveLength(1);
+                expect(response.data.content[0].title).toBe('Breaking Bad');
+                expect(response.data.totalElements).toBe(1);
             });
 
             expect(httpClientMock.get).toHaveBeenCalledWith(
                 expect.stringContaining('/series'),
-                expect.objectContaining({ params: expect.anything() })
+                expect.objectContaining({ params: expect.objectContaining({ page: '0', size: '20' }) })
             );
         });
 
-        it('should call GET /series with status filter', () => {
-            httpClientMock.get.mockReturnValue(of(mockListResponse));
+        it('should call GET /series with status filter and custom page', () => {
+            httpClientMock.get.mockReturnValue(of(mockPageResponse));
 
-            service.getAll('WATCHING').subscribe();
+            service.getAll('WATCHING', 2, 10).subscribe();
 
             expect(httpClientMock.get).toHaveBeenCalledWith(
                 expect.stringContaining('/series'),
-                expect.objectContaining({ params: expect.anything() })
+                expect.objectContaining({
+                    params: expect.objectContaining({ status: 'WATCHING', page: '2', size: '10' })
+                })
             );
         });
     });

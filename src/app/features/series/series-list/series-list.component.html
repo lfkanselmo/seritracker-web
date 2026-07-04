@@ -6,7 +6,7 @@
   <div class="page-header">
     <div class="header-left">
       <h1 class="page-title">Mi Lista</h1>
-      <p class="page-subtitle">{{ stats.total }} series en tu colección</p>
+      <p class="page-subtitle">{{ totalElements }} series en esta categoría</p>
     </div>
     <div class="header-actions">
       <button mat-icon-button (click)="showSearch = !showSearch" matTooltip="Buscar">
@@ -18,30 +18,6 @@
       </button>
     </div>
   </div>
-
-  <!-- Stats -->
-  <div class="stats-grid" @fadeIn>
-  <div class="stat-card">
-    <span class="stat-value">{{ stats.total }}</span>
-    <span class="stat-label">Total</span>
-  </div>
-  <div class="stat-card watching">
-    <span class="stat-value">{{ stats.watching }}</span>
-    <span class="stat-label">Viendo</span>
-  </div>
-  <div class="stat-card want-to">
-    <span class="stat-value">{{ stats.wantTo }}</span>
-    <span class="stat-label">Por ver</span>
-  </div>
-  <div class="stat-card completed">
-    <span class="stat-value">{{ stats.completed }}</span>
-    <span class="stat-label">Hechas</span>
-  </div>
-  <div class="stat-card abandoned">
-    <span class="stat-value">{{ stats.abandoned }}</span>
-    <span class="stat-label">Dejadas</span>
-  </div>
-</div>
 
   <!-- Search bar -->
   @if (showSearch) {
@@ -109,6 +85,15 @@
       </div>
     }
   </div>
+
+  <mat-paginator
+    [length]="totalElements"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onPageChange($event)"
+    aria-label="Seleccionar página">
+  </mat-paginator>
 }
 
 </div>

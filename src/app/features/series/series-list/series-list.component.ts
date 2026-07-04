@@ -2,6 +2,7 @@ import { Component, OnInit, DestroyRef, inject, ChangeDetectorRef } from '@angul
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserSeries, SeriesStatus, STATUS_CONFIG } from '../../../core/models/series.model';
 import { SeriesService } from '../../../core/services/series.service';
@@ -28,6 +29,7 @@ import { fadeIn, listStagger, tabFade } from '../../../shared/animations/app.ani
     MatFormFieldModule,
     MatInputModule,
     MatTooltipModule,
+    MatPaginatorModule,
     NavbarComponent,
     SeriesCardComponent,
   ],
@@ -46,6 +48,12 @@ export class SeriesListComponent implements OnInit {
 
   // Estado de datos
   seriesList: UserSeries[] = [];
+  totalElements = 0;
+
+  // Estado de paginación
+  pageIndex = 0;
+  pageSize = 20;
+  readonly pageSizeOptions = [10, 20, 50];
 
   // Estado de UI
   isLoading = false;
@@ -54,14 +62,6 @@ export class SeriesListComponent implements OnInit {
   activeTab: SeriesStatus | null = null;
   searchQuery = '';
   showSearch = false;
-
-  stats = {
-    total: 0,
-    watching: 0,
-    wantTo: 0,
-    completed: 0,
-    abandoned: 0,
-  };
 
   readonly tabs = [
     { label: 'Todas', status: null },
@@ -88,24 +88,33 @@ export class SeriesListComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    this.seriesService.getAll(this.activeTab ?? undefined)
+    this.seriesService.getAll(this.activeTab ?? undefined, this.pageIndex, this.pageSize)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.seriesList = response.data;
+          this.seriesList = response.data.content;
+          this.totalElements = response.data.totalElements;
           this.isLoading = false;
-          this.recalculateStats();
+          this.cdr.detectChanges();
         },
         error: (err) => {
           this.hasError = true;
           this.errorMessage = err.error?.message ?? 'Error al cargar las series';
           this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }
 
   onTabChange(status: SeriesStatus | null): void {
     this.activeTab = status;
+    this.pageIndex = 0;
+    this.loadSeries();
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
     this.loadSeries();
   }
 
@@ -117,8 +126,8 @@ export class SeriesListComponent implements OnInit {
           this.seriesList = this.seriesList.map(s =>
             s.id === series.id ? response.data : s
           );
-          this.recalculateStats();
           this.snackBar.open('Estado actualizado', '✓', { duration: 2000 });
+          this.cdr.detectChanges();
         },
         error: () => { } // el interceptor ya muestra el error
       });
@@ -132,8 +141,8 @@ export class SeriesListComponent implements OnInit {
           this.seriesList = this.seriesList.map(s =>
             s.id === series.id ? response.data : s
           );
-          this.recalculateStats();
           this.snackBar.open('Calificación guardada', '✓', { duration: 2000 });
+          this.cdr.detectChanges();
         },
         error: () => { }
       });
@@ -174,22 +183,10 @@ export class SeriesListComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.seriesList = this.seriesList.filter(s => s.id !== series.id);
-          this.recalculateStats();
           this.snackBar.open('Serie eliminada', '✓', { duration: 2000 });
+          this.loadSeries();
         },
         error: () => { }
       });
-  }
-
-  private recalculateStats(): void {
-    this.stats = {
-      total: this.seriesList.length,
-      watching: this.seriesList.filter(s => s.status === 'WATCHING').length,
-      wantTo: this.seriesList.filter(s => s.status === 'WANT_TO_WATCH').length,
-      completed: this.seriesList.filter(s => s.status === 'COMPLETED').length,
-      abandoned: this.seriesList.filter(s => s.status === 'ABANDONED').length,
-    };
-    this.cdr.detectChanges();
   }
 }

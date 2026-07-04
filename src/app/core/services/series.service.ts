@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { ApiResponse } from '../models/api-response.model';
+import { ApiResponse, PageResponse } from '../models/api-response.model';
 import { UserSeries, SeriesStatus, CreateSeriesRequest, UpdateStatusRequest, UpdateRatingRequest, UpdateEpisodesRequest } from '../models/series.model';
 
 @Injectable({ providedIn: 'root' })
@@ -12,10 +12,10 @@ export class SeriesService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(status?: SeriesStatus): Observable<ApiResponse<UserSeries[]>> {
-    const params: Record<string, string> = {};
+  getAll(status?: SeriesStatus, page = 0, size = 20): Observable<ApiResponse<PageResponse<UserSeries>>> {
+    const params: Record<string, string> = { page: String(page), size: String(size) };
     if (status) params['status'] = status;
-    return this.http.get<ApiResponse<UserSeries[]>>(this.apiUrl, { params });
+    return this.http.get<ApiResponse<PageResponse<UserSeries>>>(this.apiUrl, { params });
   }
 
   getById(id: number): Observable<ApiResponse<UserSeries>> {
