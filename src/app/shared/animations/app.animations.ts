@@ -5,9 +5,7 @@ import {
     animate,
     query,
     stagger,
-    animateChild,
     group,
-    state,
 } from '@angular/animations';
 
 // ── Fade in simple ─────────────────────────────────────────────────
