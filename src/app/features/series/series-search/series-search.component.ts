@@ -14,7 +14,6 @@ import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/oper
 import { TmdbSeries, SeriesStatus, STATUS_CONFIG } from '../../../core/models/series.model';
 import { TmdbService } from '../../../core/services/tmdb.service';
 import { SeriesService } from '../../../core/services/series.service';
-import { AuthService } from '../../../core/services/auth.service';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { pageFadeIn, listStagger, fadeIn } from '../../../shared/animations/app.animations';
 
@@ -41,7 +40,6 @@ export class SeriesSearchComponent {
   private destroyRef = inject(DestroyRef);
   private tmdbService = inject(TmdbService);
   private seriesService = inject(SeriesService);
-  private authService = inject(AuthService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
@@ -65,10 +63,6 @@ export class SeriesSearchComponent {
     COMPLETED: 'Completada',
     ABANDONED: 'Abandonada'
   };
-
-  get userId(): number {
-    return this.authService.getUserId()!;
-  }
 
   constructor() {
     this.searchControl.valueChanges.pipe(
@@ -97,7 +91,7 @@ export class SeriesSearchComponent {
     this.isAdding = series.tmdbId;
     this.cdr.detectChanges();
 
-    this.seriesService.create(this.userId, {
+    this.seriesService.create({
       tmdbId: series.tmdbId,
       status
     }).pipe(takeUntilDestroyed(this.destroyRef))

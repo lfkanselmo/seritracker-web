@@ -5,7 +5,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserSeries, SeriesStatus, STATUS_CONFIG } from '../../../core/models/series.model';
 import { SeriesService } from '../../../core/services/series.service';
-import { AuthService } from '../../../core/services/auth.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,7 +39,6 @@ export class SeriesListComponent implements OnInit {
 
   private destroyRef = inject(DestroyRef);
   private seriesService = inject(SeriesService);
-  private authService = inject(AuthService);
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
@@ -75,10 +73,6 @@ export class SeriesListComponent implements OnInit {
 
   readonly statusConfig = STATUS_CONFIG;
 
-  get userId(): number {
-    return this.authService.getUserId()!;
-  }
-
   get filteredSeries(): UserSeries[] {
     if (!this.searchQuery.trim()) return this.seriesList;
     return this.seriesList.filter(s =>
@@ -94,7 +88,7 @@ export class SeriesListComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    this.seriesService.getAll(this.userId, this.activeTab ?? undefined)
+    this.seriesService.getAll(this.activeTab ?? undefined)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {

@@ -41,22 +41,18 @@ export class NavbarComponent implements OnInit {
     return this.authService.getUserName();
   }
 
-  get userId(): number | null {
-    return this.authService.getUserId();
-  }
-
   get unreadCount(): number {
     return this.notifications.filter(n => !n.read).length;
   }
 
   ngOnInit(): void {
-    if (this.userId) {
+    if (this.authService.isLoggedIn()) {
       this.loadNotifications();
     }
   }
 
   loadNotifications(): void {
-    this.notificationService.getUnread(this.userId!)
+    this.notificationService.getUnread()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {

@@ -50,10 +50,10 @@ describe('SeriesService', () => {
     });
 
     describe('getAll', () => {
-        it('should call GET /series with userId', () => {
+        it('should call GET /series', () => {
             httpClientMock.get.mockReturnValue(of(mockListResponse));
 
-            service.getAll(1).subscribe(response => {
+            service.getAll().subscribe(response => {
                 expect(response.data).toHaveLength(1);
                 expect(response.data[0].title).toBe('Breaking Bad');
             });
@@ -64,10 +64,10 @@ describe('SeriesService', () => {
             );
         });
 
-        it('should call GET /series with userId and status filter', () => {
+        it('should call GET /series with status filter', () => {
             httpClientMock.get.mockReturnValue(of(mockListResponse));
 
-            service.getAll(1, 'WATCHING').subscribe();
+            service.getAll('WATCHING').subscribe();
 
             expect(httpClientMock.get).toHaveBeenCalledWith(
                 expect.stringContaining('/series'),
@@ -92,15 +92,15 @@ describe('SeriesService', () => {
     });
 
     describe('create', () => {
-        it('should call POST /series with userId and request body', () => {
+        it('should call POST /series with request body', () => {
             httpClientMock.post.mockReturnValue(of(mockApiResponse));
 
-            service.create(1, { tmdbId: 1396, status: 'WATCHING' }).subscribe(response => {
+            service.create({ tmdbId: 1396, status: 'WATCHING' }).subscribe(response => {
                 expect(response.data.tmdbId).toBe(1396);
             });
 
             expect(httpClientMock.post).toHaveBeenCalledWith(
-                expect.stringContaining('/series?userId=1'),
+                expect.stringContaining('/series'),
                 expect.objectContaining({ tmdbId: 1396 })
             );
         });

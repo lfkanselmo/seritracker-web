@@ -26,17 +26,11 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem('token');
-    localStorage.removeItem('userId');
     localStorage.removeItem('userName');
   }
 
   getToken(): string | null {
     return localStorage.getItem('token');
-  }
-
-  getUserId(): number | null {
-    const id = localStorage.getItem('userId');
-    return id ? Number(id) : null;
   }
 
   getUserName(): string | null {
@@ -49,7 +43,6 @@ export class AuthService {
 
   private saveSession(auth: AuthResponse): void {
     localStorage.setItem('token', auth.token);
-    localStorage.setItem('userId', String(auth.userId));
     localStorage.setItem('userName', auth.name);
   }
 }

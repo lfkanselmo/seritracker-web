@@ -12,10 +12,8 @@ export class NotificationService {
 
     constructor(private http: HttpClient) { }
 
-    getUnread(userId: number): Observable<ApiResponse<Notification[]>> {
-        return this.http.get<ApiResponse<Notification[]>>(this.apiUrl, {
-            params: { userId: String(userId) }
-        });
+    getUnread(): Observable<ApiResponse<Notification[]>> {
+        return this.http.get<ApiResponse<Notification[]>>(this.apiUrl);
     }
 
     markAsRead(id: number): Observable<ApiResponse<void>> {

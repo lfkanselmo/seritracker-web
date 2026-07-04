@@ -12,8 +12,8 @@ export class SeriesService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(userId: number, status?: SeriesStatus): Observable<ApiResponse<UserSeries[]>> {
-    const params: Record<string, string> = { userId: String(userId) };
+  getAll(status?: SeriesStatus): Observable<ApiResponse<UserSeries[]>> {
+    const params: Record<string, string> = {};
     if (status) params['status'] = status;
     return this.http.get<ApiResponse<UserSeries[]>>(this.apiUrl, { params });
   }
@@ -22,8 +22,8 @@ export class SeriesService {
     return this.http.get<ApiResponse<UserSeries>>(`${this.apiUrl}/${id}`);
   }
 
-  create(userId: number, request: CreateSeriesRequest): Observable<ApiResponse<UserSeries>> {
-    return this.http.post<ApiResponse<UserSeries>>(`${this.apiUrl}?userId=${userId}`, request);
+  create(request: CreateSeriesRequest): Observable<ApiResponse<UserSeries>> {
+    return this.http.post<ApiResponse<UserSeries>>(this.apiUrl, request);
   }
 
   updateStatus(id: number, request: UpdateStatusRequest): Observable<ApiResponse<UserSeries>> {

@@ -33,11 +33,6 @@ describe('AuthService', () => {
         expect(service.isLoggedIn()).toBe(false);
     });
 
-    it('should return null userId when not logged in', () => {
-        localStorage.clear();
-        expect(service.getUserId()).toBeNull();
-    });
-
     it('should return null userName when not logged in', () => {
         localStorage.clear();
         expect(service.getUserName()).toBeNull();
@@ -45,13 +40,11 @@ describe('AuthService', () => {
 
     it('should clear session on logout', () => {
         localStorage.setItem('token', 'test_token');
-        localStorage.setItem('userId', '1');
         localStorage.setItem('userName', 'Test');
 
         service.logout();
 
         expect(service.getToken()).toBeNull();
-        expect(service.getUserId()).toBeNull();
         expect(service.getUserName()).toBeNull();
     });
 });
