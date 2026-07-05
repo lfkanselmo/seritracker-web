@@ -56,6 +56,12 @@
     }
   </mat-menu>
 
+  <!-- Tema claro/oscuro -->
+  <button mat-icon-button (click)="themeService.toggle()"
+          [matTooltip]="themeService.theme() === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
+    <mat-icon>{{ themeService.theme() === 'dark' ? 'dark_mode' : 'light_mode' }}</mat-icon>
+  </button>
+
   <!-- Usuario -->
   <button mat-icon-button [matMenuTriggerFor]="userMenu">
     <mat-icon>account_circle</mat-icon>

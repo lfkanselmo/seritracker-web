@@ -5,6 +5,7 @@ import { of, throwError } from 'rxjs';
 import { NavbarComponent } from './navbar.component';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { Notification } from '../../core/models/series.model';
 
 describe('NavbarComponent', () => {
@@ -17,6 +18,10 @@ describe('NavbarComponent', () => {
     let notificationServiceMock: {
         getUnread: ReturnType<typeof vi.fn>;
         markAsRead: ReturnType<typeof vi.fn>;
+    };
+    let themeServiceMock: {
+        theme: ReturnType<typeof vi.fn>;
+        toggle: ReturnType<typeof vi.fn>;
     };
     let navigateSpy: ReturnType<typeof vi.spyOn>;
 
@@ -47,6 +52,10 @@ describe('NavbarComponent', () => {
             })),
             markAsRead: vi.fn().mockReturnValue(of({ success: true, data: null, message: 'OK', timestamp: '' })),
         };
+        themeServiceMock = {
+            theme: vi.fn().mockReturnValue('dark'),
+            toggle: vi.fn(),
+        };
 
         TestBed.configureTestingModule({
             imports: [NavbarComponent],
@@ -54,6 +63,7 @@ describe('NavbarComponent', () => {
                 provideRouter([]),
                 { provide: AuthService, useValue: authServiceMock },
                 { provide: NotificationService, useValue: notificationServiceMock },
+                { provide: ThemeService, useValue: themeServiceMock },
             ]
         });
 
@@ -135,6 +145,17 @@ describe('NavbarComponent', () => {
 
             expect(authServiceMock.logout).toHaveBeenCalled();
             expect(navigateSpy).toHaveBeenCalledWith(['/auth/login']);
+        });
+    });
+
+    describe('themeService', () => {
+        it('should expose the current theme', () => {
+            expect(component.themeService.theme()).toBe('dark');
+        });
+
+        it('should delegate toggling to ThemeService', () => {
+            component.themeService.toggle();
+            expect(themeServiceMock.toggle).toHaveBeenCalled();
         });
     });
 });

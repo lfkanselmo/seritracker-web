@@ -8,6 +8,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 import { SeriesListComponent } from './series-list.component';
 import { SeriesService } from '../../../core/services/series.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { UserSeries } from '../../../core/models/series.model';
 
 describe('SeriesListComponent', () => {
@@ -60,6 +61,7 @@ describe('SeriesListComponent', () => {
                 provideRouter([]),
                 provideNoopAnimations(),
                 { provide: SeriesService, useValue: seriesServiceMock },
+                { provide: ThemeService, useValue: { theme: () => 'dark', toggle: vi.fn() } },
                 { provide: MatDialog, useValue: dialogMock },
                 { provide: MatSnackBar, useValue: snackBarMock },
             ]

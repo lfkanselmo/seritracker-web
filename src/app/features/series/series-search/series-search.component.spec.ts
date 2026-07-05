@@ -7,6 +7,7 @@ import { of, throwError } from 'rxjs';
 import { SeriesSearchComponent } from './series-search.component';
 import { TmdbService } from '../../../core/services/tmdb.service';
 import { SeriesService } from '../../../core/services/series.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { TmdbSeries } from '../../../core/models/series.model';
 
 describe('SeriesSearchComponent', () => {
@@ -39,6 +40,7 @@ describe('SeriesSearchComponent', () => {
                 provideNoopAnimations(),
                 { provide: TmdbService, useValue: tmdbServiceMock },
                 { provide: SeriesService, useValue: seriesServiceMock },
+                { provide: ThemeService, useValue: { theme: () => 'dark', toggle: vi.fn() } },
                 { provide: MatSnackBar, useValue: snackBarMock },
             ]
         });

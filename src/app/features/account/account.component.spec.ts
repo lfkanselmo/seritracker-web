@@ -7,6 +7,7 @@ import { of, throwError } from 'rxjs';
 import { AccountComponent } from './account.component';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 describe('AccountComponent', () => {
     let component: AccountComponent;
@@ -48,6 +49,7 @@ describe('AccountComponent', () => {
                 provideNoopAnimations(),
                 { provide: AuthService, useValue: authServiceMock },
                 { provide: NotificationService, useValue: notificationServiceMock },
+                { provide: ThemeService, useValue: { theme: () => 'dark', toggle: vi.fn() } },
                 { provide: MatSnackBar, useValue: snackBarMock },
             ]
         });

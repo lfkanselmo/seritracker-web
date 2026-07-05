@@ -79,10 +79,12 @@ export class SeriesSearchComponent {
       next: (response) => {
         this.results = response.data;
         this.isSearching = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.isSearching = false;
         this.snackBar.open('Error al buscar series', '✕', { duration: 3000 });
+        this.cdr.detectChanges();
       }
     });
   }

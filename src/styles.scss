@@ -2,9 +2,11 @@
 @use './styles/theme-colors' as theme;
 
 // ─────────────────────────────────────────────────────────────────
-// Tema de Angular Material — M3, fijado a modo oscuro.
-// Paletas generadas desde los colores de marca (ng generate
-// @angular/material:theme-color). Ver DESIGN_SYSTEM.md.
+// Tema de Angular Material — M3. Oscuro por defecto; la variante
+// clara se activa con [data-theme="light"] en <html> (ver
+// ThemeService y el toggle en el navbar). Paletas generadas desde
+// los colores de marca (ng generate @angular/material:theme-color).
+// Ver DESIGN_SYSTEM.md.
 // ─────────────────────────────────────────────────────────────────
 :root {
   @include mat.theme((
@@ -23,7 +25,7 @@
     density: 0,
   ));
 
-  // ── Superficies y texto ──────────────────────────────────────
+  // ── Superficies y texto — oscuro (default) ───────────────────
   --color-ink: #0b0d12;
   --color-surface: #12151d;
   --color-surface-raised: #171b26;
@@ -33,19 +35,24 @@
   --color-text-dim: rgba(238, 241, 246, 0.58);
   --color-text-faint: rgba(238, 241, 246, 0.36);
 
-  // ── Acento de marca — degradado Ambilight ────────────────────
+  // ── Acento de marca — degradado Ambilight (oscuro) ────────────
   --color-teal: #2dd4bf;
   --color-amber: #f5a623;
-  --gradient-brand: linear-gradient(90deg, var(--color-teal), var(--color-amber));
-  --gradient-brand-soft: linear-gradient(135deg, rgba(45, 212, 191, 0.35), rgba(245, 166, 35, 0.35));
-  --shadow-glow-brand: 0 20px 60px -24px rgba(45, 212, 191, 0.45), 0 24px 70px -20px rgba(245, 166, 35, 0.3);
-  --shadow-glow-brand-sm: 0 8px 24px -10px rgba(45, 212, 191, 0.5);
 
   // ── Color semántico — independiente del acento de marca ──────
   --status-watching: #00e5a0;
   --status-want: #6c8eff;
   --status-completed: #ffd166;
   --status-abandoned: #ff6b6b;
+
+  // ── Compuestos derivados del acento ───────────────────────────
+  // Se definen una sola vez: al usar color-mix() sobre --color-teal
+  // y --color-amber, se recalculan solos en la variante clara sin
+  // necesidad de repetirlos por tema.
+  --gradient-brand: linear-gradient(90deg, var(--color-teal), var(--color-amber));
+  --gradient-brand-soft: linear-gradient(135deg, color-mix(in srgb, var(--color-teal) 35%, transparent), color-mix(in srgb, var(--color-amber) 35%, transparent));
+  --shadow-glow-brand: 0 20px 60px -24px color-mix(in srgb, var(--color-teal) 45%, transparent), 0 24px 70px -20px color-mix(in srgb, var(--color-amber) 30%, transparent);
+  --shadow-glow-brand-sm: 0 8px 24px -10px color-mix(in srgb, var(--color-teal) 50%, transparent);
 
   // ── Tipografía ────────────────────────────────────────────────
   --font-display: 'Sora', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -76,12 +83,54 @@
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 }
 
+// ─────────────────────────────────────────────────────────────────
+// Variante clara — mismo degradado de marca (teal → amber), con los
+// tonos profundizados para mantener contraste sobre superficies
+// claras. Los cuatro colores de estado también se profundizan por
+// la misma razón. Ver DESIGN_SYSTEM.md.
+// ─────────────────────────────────────────────────────────────────
+:root[data-theme="light"] {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: theme.$primary-palette,
+      tertiary: theme.$tertiary-palette,
+    ),
+    typography: (
+      plain-family: 'Inter',
+      brand-family: 'Sora',
+      bold-weight: 700,
+      medium-weight: 600,
+      regular-weight: 400,
+    ),
+    density: 0,
+  ));
+
+  --color-ink: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-surface-raised: #eef0f4;
+  --color-border: rgba(15, 23, 35, 0.09);
+  --color-border-strong: rgba(15, 23, 35, 0.18);
+  --color-text: #12141a;
+  --color-text-dim: rgba(18, 20, 26, 0.64);
+  --color-text-faint: rgba(18, 20, 26, 0.42);
+
+  --color-teal: #0f9c8c;
+  --color-amber: #b56a05;
+
+  --status-watching: #0a8f63;
+  --status-want: #3457d5;
+  --status-completed: #a9720a;
+  --status-abandoned: #d43d3d;
+}
+
 html, body {
   height: 100%;
   margin: 0;
   font-family: var(--font-body);
   background: var(--color-ink);
   color: var(--color-text);
+  transition: background-color var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard);
 }
 
 * { box-sizing: border-box; }
@@ -149,11 +198,11 @@ h1, h2, h3, h4 {
 // color="warn" para que el rojo semántico siempre se aplique.
 .btn-danger {
   color: var(--status-abandoned) !important;
-  border-color: rgba(255, 107, 107, 0.35) !important;
+  border-color: color-mix(in srgb, var(--status-abandoned) 35%, transparent) !important;
   transition: background var(--dur-base) var(--ease-standard);
 
   &:hover:not(:disabled) {
-    background: rgba(255, 107, 107, 0.08) !important;
+    background: color-mix(in srgb, var(--status-abandoned) 8%, transparent) !important;
   }
 }
 
@@ -164,6 +213,6 @@ h1, h2, h3, h4 {
   transition: background-color var(--dur-base) var(--ease-standard);
 
   &:hover:not(:disabled) {
-    background-color: #ff8080 !important;
+    background-color: color-mix(in srgb, var(--status-abandoned) 80%, white) !important;
   }
 }

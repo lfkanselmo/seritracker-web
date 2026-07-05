@@ -32,6 +32,14 @@ esté aquí, **se añade aquí primero** y luego se usa — no se hardcodea.
 5. **Todo color/tipografía/espaciado sale de un token.** Nunca hardcodear
    un hex o un `px` de espaciado en un componente. Esto es lo que permite
    que un cambio de identidad futuro sea un cambio en un solo archivo.
+6. **Ningún componente hardcodea `rgba()` de un color de marca/estado.**
+   Si necesitás una versión translúcida de `--color-teal`, `--color-amber`
+   o un `--status-*`, usá `color-mix(in srgb, var(--token) X%, transparent)`
+   en vez de escribir el `rgb()` a mano. Un `rgba(45, 212, 191, .1)`
+   hardcodeado es exactamente `--color-teal` al 10% en el tema oscuro —
+   pero queda desincronizado apenas el tema claro cambia ese hue. Esta
+   regla existe porque se encontraron y corrigieron ocho casos así al
+   implementar el tema claro (ver sección siguiente).
 
 ## Dónde vive
 
@@ -43,46 +51,64 @@ esté aquí, **se añade aquí primero** y luego se usa — no se hardcodea.
   `ng generate @angular/material:theme-color`. No se edita a mano; si se
   cambia el color de marca, se regenera este archivo.
 - **`src/index.html`** — carga las tres familias tipográficas desde
-  Google Fonts.
+  Google Fonts, y un `<script>` inline que aplica el tema guardado antes
+  de que cargue Angular (evita el flash del tema incorrecto).
+- **`src/app/core/services/theme.service.ts`** — resuelve el tema inicial,
+  expone el toggle y persiste la preferencia. Ver "Tema claro/oscuro".
 
 ## Color
 
 ### Superficies y texto
 
-| Token | Valor | Uso |
-|---|---|---|
-| `--color-ink` | `#0b0d12` | Fondo de página |
-| `--color-surface` | `#12151d` | Cards, inputs |
-| `--color-surface-raised` | `#171b26` | Elementos sobre una card (placeholders, inputs anidados) |
-| `--color-border` | `rgba(255,255,255,.08)` | Bordes por defecto |
-| `--color-border-strong` | `rgba(255,255,255,.16)` | Bordes en hover/focus/active |
-| `--color-text` | `#eef1f6` | Texto principal |
-| `--color-text-dim` | `rgba(238,241,246,.58)` | Texto secundario |
-| `--color-text-faint` | `rgba(238,241,246,.36)` | Metadatos, labels, placeholders |
+| Token | Oscuro (default) | Claro | Uso |
+|---|---|---|---|
+| `--color-ink` | `#0b0d12` | `#f5f6f8` | Fondo de página |
+| `--color-surface` | `#12151d` | `#ffffff` | Cards, inputs |
+| `--color-surface-raised` | `#171b26` | `#eef0f4` | Elementos sobre una card (placeholders, inputs anidados) |
+| `--color-border` | `rgba(255,255,255,.08)` | `rgba(15,23,35,.09)` | Bordes por defecto |
+| `--color-border-strong` | `rgba(255,255,255,.16)` | `rgba(15,23,35,.18)` | Bordes en hover/focus/active |
+| `--color-text` | `#eef1f6` | `#12141a` | Texto principal |
+| `--color-text-dim` | `rgba(238,241,246,.58)` | `rgba(18,20,26,.64)` | Texto secundario |
+| `--color-text-faint` | `rgba(238,241,246,.36)` | `rgba(18,20,26,.42)` | Metadatos, labels, placeholders |
+
+Ninguno de los dos fondos es blanco/negro puro — ambos llevan un
+sesguito frío, coherente con el principio 4.
 
 ### Acento de marca
 
-| Token | Valor | Uso |
-|---|---|---|
-| `--color-teal` | `#2dd4bf` | Extremo frío del degradado; enlaces, focus |
-| `--color-amber` | `#f5a623` | Extremo cálido del degradado |
-| `--gradient-brand` | `linear-gradient(90deg, teal, amber)` | CTAs, barra de progreso "watching" |
-| `--gradient-brand-soft` | versión 35% opacidad, 135deg | Fondos de estado activo (tabs, chips) |
-| `--shadow-glow-brand` / `-sm` | sombra difusa teal+amber | Hover de cards, poster hero |
+| Token | Oscuro (default) | Claro | Uso |
+|---|---|---|---|
+| `--color-teal` | `#2dd4bf` | `#0f9c8c` | Extremo frío del degradado; enlaces, focus |
+| `--color-amber` | `#f5a623` | `#b56a05` | Extremo cálido del degradado |
+
+En el tema claro, teal y amber se profundizan (más oscuros, menos
+saturados) — el mismo valor del tema oscuro pierde casi todo el
+contraste sobre blanco. El resto de los tokens de marca se derivan
+de estos dos con `color-mix()` y **no se repiten por tema**:
+
+| Token | Definición |
+|---|---|
+| `--gradient-brand` | `linear-gradient(90deg, var(--color-teal), var(--color-amber))` |
+| `--gradient-brand-soft` | mismo degradado, cada extremo a `color-mix(in srgb, var(--color-teal) 35%, transparent)` |
+| `--shadow-glow-brand` / `-sm` | sombra difusa con `color-mix()` sobre teal/amber |
+
+Uso: CTAs, barra de progreso "watching", fondos de estado activo (tabs,
+chips), glow de hover en cards.
 
 ### Color semántico (independiente del acento)
 
-| Token | Valor | Estado |
-|---|---|---|
-| `--status-watching` | `#00e5a0` | Viendo |
-| `--status-want` | `#6c8eff` | Por ver |
-| `--status-completed` | `#ffd166` | Completada |
-| `--status-abandoned` | `#ff6b6b` | Abandonada / acciones destructivas |
+| Token | Oscuro (default) | Claro | Estado |
+|---|---|---|---|
+| `--status-watching` | `#00e5a0` | `#0a8f63` | Viendo |
+| `--status-want` | `#6c8eff` | `#3457d5` | Por ver |
+| `--status-completed` | `#ffd166` | `#a9720a` | Completada |
+| `--status-abandoned` | `#ff6b6b` | `#d43d3d` | Abandonada / acciones destructivas |
 
 Estos cuatro colores son deliberadamente distintos del teal/amber de
 marca (aunque `--status-watching` y `--color-teal` comparten familia
 cromática por coincidencia, no por regla). Si se añade un quinto estado,
-se elige un hue que no colisione con los cinco anteriores.
+se elige un hue que no colisione con los cinco anteriores — y se le
+suma su propio valor claro/oscuro en esta tabla.
 
 ### ⚠️ Nota: `color="warn"` de Angular Material no funciona con `mat.theme()`
 
@@ -96,6 +122,32 @@ se renderizaba en teal en lugar de rojo.
 **Regla:** nunca usar `color="warn"` ni `color="accent"` en este proyecto.
 Usar las utilidades `.btn-danger` (outline) o `.btn-danger-solid` (relleno)
 para cualquier acción destructiva.
+
+## Tema claro/oscuro
+
+El tema se activa con el atributo `[data-theme]` en `<html>` — `"dark"` es
+el default (`:root` sin atributo), `"light"` es la variante explícita
+(`:root[data-theme="light"]`). `mat.theme()` se invoca dos veces en
+`styles.scss`, una por cada `theme-type`, cada una bajo su selector.
+
+**Resolución del tema inicial** (sin flash del tema incorrecto):
+1. Un `<script>` inline en `index.html` (antes de que cargue Angular) lee
+   `localStorage.theme`; si no hay nada guardado, usa
+   `window.matchMedia('(prefers-color-scheme: light)')`. Aplica el
+   resultado como `data-theme` en `<html>` de forma síncrona.
+2. `ThemeService` (`core/services/theme.service.ts`) repite el mismo
+   criterio para inicializar su `signal` — el `<script>` ya pintó lo
+   correcto, esto solo sincroniza el estado de Angular con el DOM.
+3. A partir de ahí, el toggle (`ThemeService.toggle()`, botón en el
+   navbar) siempre pisa la preferencia del sistema — una vez que el
+   usuario elige explícitamente, esa elección persiste en
+   `localStorage.theme` sin importar cambios futuros del SO.
+
+**Al agregar un componente nuevo:** no hace falta pensar en el tema —
+si todo sale de los tokens de esta tabla (nunca de un hex hardcodeado),
+el componente ya funciona en ambos. La única disciplina es la del
+principio 6: ninguna versión translúcida de un color se hardcodea, se
+deriva con `color-mix()`.
 
 ## Tipografía
 
@@ -147,7 +199,8 @@ Todas las transiciones respetan `prefers-reduced-motion` (regla global en
   `.btn-gradient`, enlaces en `--color-teal`.
 - **Navbar:** fondo `--color-ink`, indicador de notificación no leída en
   teal (no en el verde de "watching" — son conceptos distintos aunque
-  antes compartían el mismo hex por casualidad).
+  antes compartían el mismo hex por casualidad). Toggle de tema
+  claro/oscuro (ícono sol/luna) entre la campana y el menú de usuario.
 - **Series list:** tab activo con `--gradient-brand-soft`, stat cards con
   los cuatro `--status-*`, paginador de Material sin recolorear (usa el
   tema M3 tal cual).
@@ -166,10 +219,13 @@ Todas las transiciones respetan `prefers-reduced-motion` (regla global en
 Antes de añadir una funcionalidad nueva:
 
 1. ¿Necesita un color que no está en la tabla? Decide si es *marca*
-   (jerarquía de acción) o *semántico* (estado) antes de elegir el hue.
+   (jerarquía de acción) o *semántico* (estado) antes de elegir el hue,
+   y dale su propio valor claro y oscuro.
 2. ¿Necesita un espaciado o radio nuevo? Añade el token a `styles.scss`
    en vez de un valor suelto en el componente.
 3. ¿Es una acción destructiva? `.btn-danger` / `.btn-danger-solid`, nunca
    `color="warn"`.
-4. Actualiza este archivo con la decisión y el porqué, igual que las
+4. ¿Necesita una versión translúcida de un color existente? `color-mix()`
+   sobre el token, nunca un `rgba()` escrito a mano (principio 6).
+5. Actualiza este archivo con la decisión y el porqué, igual que las
    secciones anteriores.
