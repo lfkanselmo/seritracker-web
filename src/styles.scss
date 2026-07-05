@@ -25,6 +25,33 @@
     density: 0,
   ));
 
+  // Alinea los inputs (mat-form-field outline) y selects con los
+  // tokens de marca en vez del morado/violeta default de Material.
+  // Ver DESIGN_SYSTEM.md — sección "Inputs y selects".
+  @include mat.form-field-overrides((
+    outlined-outline-color: var(--color-border-strong),
+    outlined-hover-outline-color: var(--color-teal),
+    outlined-focus-outline-color: var(--color-teal),
+    outlined-label-text-color: var(--color-text-faint),
+    outlined-focus-label-text-color: var(--color-teal),
+    outlined-input-text-color: var(--color-text),
+    outlined-container-shape: var(--radius-sm),
+    enabled-select-arrow-color: var(--color-text-faint),
+  ));
+
+  @include mat.select-overrides((
+    panel-background-color: var(--color-surface),
+    enabled-trigger-text-color: var(--color-text),
+    placeholder-text-color: var(--color-text-faint),
+  ));
+
+  @include mat.option-overrides((
+    label-text-color: var(--color-text),
+    hover-state-layer-color: color-mix(in srgb, var(--color-teal) 10%, transparent),
+    selected-state-layer-color: color-mix(in srgb, var(--color-teal) 15%, transparent),
+    selected-state-label-text-color: var(--color-teal),
+  ));
+
   // ── Superficies y texto — oscuro (default) ───────────────────
   --color-ink: #0b0d12;
   --color-surface: #12151d;
@@ -106,6 +133,33 @@
     density: 0,
   ));
 
+  // Repetido porque mat.theme() reescribe estos custom properties en
+  // este mismo selector — sin este bloque, el tema claro pisaría el
+  // override de arriba con los defaults morados de Material.
+  @include mat.form-field-overrides((
+    outlined-outline-color: var(--color-border-strong),
+    outlined-hover-outline-color: var(--color-teal),
+    outlined-focus-outline-color: var(--color-teal),
+    outlined-label-text-color: var(--color-text-faint),
+    outlined-focus-label-text-color: var(--color-teal),
+    outlined-input-text-color: var(--color-text),
+    outlined-container-shape: var(--radius-sm),
+    enabled-select-arrow-color: var(--color-text-faint),
+  ));
+
+  @include mat.select-overrides((
+    panel-background-color: var(--color-surface),
+    enabled-trigger-text-color: var(--color-text),
+    placeholder-text-color: var(--color-text-faint),
+  ));
+
+  @include mat.option-overrides((
+    label-text-color: var(--color-text),
+    hover-state-layer-color: color-mix(in srgb, var(--color-teal) 10%, transparent),
+    selected-state-layer-color: color-mix(in srgb, var(--color-teal) 15%, transparent),
+    selected-state-label-text-color: var(--color-teal),
+  ));
+
   --color-ink: #f5f6f8;
   --color-surface: #ffffff;
   --color-surface-raised: #eef0f4;
@@ -157,6 +211,16 @@ h1, h2, h3, h4 {
 
 .mat-mdc-card {
   --mdc-elevated-card-container-color: var(--color-surface);
+}
+
+// El appearance="outline" de Material no tiene token de color de
+// fondo (se diseña transparente) — se lo rellenamos a mano para que
+// los inputs/selects de Material queden a tono con los inputs
+// hechos a medida (notes-textarea, episodes-input), que sí usan
+// --color-surface-raised. Ver DESIGN_SYSTEM.md.
+.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper {
+  background-color: var(--color-surface-raised);
+  border-radius: var(--radius-sm);
 }
 
 // ─────────────────────────────────────────────────────────────────

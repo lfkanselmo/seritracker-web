@@ -149,6 +149,62 @@ el componente ya funciona en ambos. La única disciplina es la del
 principio 6: ninguna versión translúcida de un color se hardcodea, se
 deriva con `color-mix()`.
 
+## Inputs y selects (Angular Material)
+
+Los `mat-form-field appearance="outline"` y `mat-select` traían el
+look default de M3 (borde neutro grisáceo, panel del select con el
+`surface-container` de Material) — visualmente desconectado del resto
+de la app, que sí deriva todo de los tokens de marca. Se corrigió con
+los mixins de override de Angular Material (`mat.form-field-overrides()`,
+`mat.select-overrides()`, `mat.option-overrides()`), apuntados a los
+mismos tokens que usa el resto del sistema, en vez de hardcodear un
+nuevo color:
+
+```scss
+@include mat.form-field-overrides((
+  outlined-outline-color: var(--color-border-strong),
+  outlined-hover-outline-color: var(--color-teal),
+  outlined-focus-outline-color: var(--color-teal),
+  outlined-label-text-color: var(--color-text-faint),
+  outlined-focus-label-text-color: var(--color-teal),
+  outlined-input-text-color: var(--color-text),
+  outlined-container-shape: var(--radius-sm),
+));
+
+@include mat.select-overrides((
+  panel-background-color: var(--color-surface),
+  enabled-trigger-text-color: var(--color-text),
+));
+
+@include mat.option-overrides((
+  hover-state-layer-color: color-mix(in srgb, var(--color-teal) 10%, transparent),
+  selected-state-layer-color: color-mix(in srgb, var(--color-teal) 15%, transparent),
+  selected-state-label-text-color: var(--color-teal),
+));
+```
+
+Estos tres mixins se llaman **dentro de cada bloque de tema** (`:root`
+y `:root[data-theme="light"]`), inmediatamente después de
+`mat.theme(...)` — `mat.theme()` escribe sus propios valores por
+defecto para estos mismos custom properties en el mismo selector, así
+que el override tiene que ir después para ganar, y tiene que repetirse
+en los dos bloques (aunque los valores sean los mismos `var(...)` en
+ambos) porque `:root[data-theme="light"]` tiene más especificidad que
+`:root` solo.
+
+El `appearance="outline"` de Material además no tiene token de color
+de fondo (se diseña transparente por spec) — se le agregó un fondo a
+mano en `.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper`
+con `--color-surface-raised`, el mismo tono que ya usan los inputs
+hechos a medida (`notes-textarea`, `episodes-input`), para que un
+input de Material y uno custom se vean como parte del mismo sistema.
+
+**Regla al agregar un campo nuevo:** cualquier `mat-form-field` o
+`mat-select` nuevo hereda esto automáticamente — no hace falta
+recolorearlo por componente. La única excepción documentada es el
+`mat-paginator` (ver "Cómo se aplica hoy"), que se deja con el tema M3
+tal cual a propósito.
+
 ## Tipografía
 
 | Rol | Familia | Token |
