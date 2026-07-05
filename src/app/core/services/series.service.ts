@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse, PageResponse } from '../models/api-response.model';
-import { UserSeries, SeriesStatus, CreateSeriesRequest, UpdateStatusRequest, UpdateRatingRequest, UpdateEpisodesRequest } from '../models/series.model';
+import { UserSeries, SeriesStatus, CreateSeriesRequest, UpdateStatusRequest, UpdateRatingRequest, UpdateEpisodesRequest, UpdateNotesRequest } from '../models/series.model';
 
 @Injectable({ providedIn: 'root' })
 export class SeriesService {
@@ -36,6 +36,10 @@ export class SeriesService {
 
   updateEpisodes(id: number, request: UpdateEpisodesRequest): Observable<ApiResponse<UserSeries>> {
     return this.http.patch<ApiResponse<UserSeries>>(`${this.apiUrl}/${id}/episodes`, request);
+  }
+
+  updateNotes(id: number, request: UpdateNotesRequest): Observable<ApiResponse<UserSeries>> {
+    return this.http.patch<ApiResponse<UserSeries>>(`${this.apiUrl}/${id}/notes`, request);
   }
 
   delete(id: number): Observable<ApiResponse<void>> {

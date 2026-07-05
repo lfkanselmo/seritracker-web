@@ -281,6 +281,35 @@
   font-size: 12px !important;
 }
 
+.notes-textarea {
+  width: 100%;
+  min-height: 90px;
+  resize: vertical;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  outline: none;
+
+  &:focus {
+    border-color: var(--color-teal);
+  }
+
+  &::placeholder {
+    color: var(--color-text-faint);
+  }
+}
+
+.notes-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
 .status-buttons {
   display: flex;
   gap: 8px;

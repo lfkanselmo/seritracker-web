@@ -102,6 +102,28 @@
       </div>
     }
 
+    <!-- Notes -->
+    <div class="detail-card">
+      <h2 class="card-title">{{ 'series.detail.notes' | transloco }}</h2>
+      <textarea
+        class="notes-textarea"
+        rows="4"
+        maxlength="2000"
+        [placeholder]="'series.detail.notesPlaceholder' | transloco"
+        [value]="notesDraft"
+        (input)="onNotesInput($event)">
+      </textarea>
+      <div class="notes-actions">
+        <button mat-stroked-button [disabled]="!notesDirty || isSavingNotes" (click)="onSaveNotes()">
+          @if (isSavingNotes) {
+            <mat-spinner diameter="18" />
+          } @else {
+            {{ 'series.detail.saveNotes' | transloco }}
+          }
+        </button>
+      </div>
+    </div>
+
     <!-- Change status -->
     <div class="detail-card">
       <h2 class="card-title">{{ 'series.detail.changeStatus' | transloco }}</h2>

@@ -52,12 +52,19 @@ export class SeriesDetailComponent implements OnInit {
   hasError = false;
   errorMessage = '';
 
+  notesDraft = '';
+  isSavingNotes = false;
+
   readonly statusConfig = STATUS_CONFIG;
   readonly statuses = Object.keys(STATUS_CONFIG) as SeriesStatus[];
 
   get progressPercent(): number {
     if (!this.series?.totalEpisodes) return 0;
     return Math.round((this.series.watchedEpisodes / this.series.totalEpisodes) * 100);
+  }
+
+  get notesDirty(): boolean {
+    return this.notesDraft !== (this.series?.notes ?? '');
   }
 
   get statusClass(): string {
@@ -84,6 +91,7 @@ export class SeriesDetailComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.series = response.data;
+          this.notesDraft = response.data.notes ?? '';
           this.isLoading = false;
           this.cdr.detectChanges();
         },
@@ -147,6 +155,31 @@ export class SeriesDetailComponent implements OnInit {
   onMarkAllWatched(): void {
     if (!this.series) return;
     this.updateEpisodes(this.series.totalEpisodes);
+  }
+
+  onNotesInput(event: Event): void {
+    this.notesDraft = (event.target as HTMLTextAreaElement).value;
+  }
+
+  onSaveNotes(): void {
+    if (!this.series) return;
+
+    this.isSavingNotes = true;
+    this.seriesService.updateNotes(this.series.id, { notes: this.notesDraft })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (response) => {
+          this.series = response.data;
+          this.notesDraft = response.data.notes ?? '';
+          this.isSavingNotes = false;
+          this.cdr.detectChanges();
+          this.snackBar.open(this.transloco.translate('series.detail.notesSaved'), '✓', { duration: 2000 });
+        },
+        error: () => {
+          this.isSavingNotes = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   onDeleteRequest(): void {

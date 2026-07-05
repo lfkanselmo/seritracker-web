@@ -41,6 +41,10 @@ export interface UpdateEpisodesRequest {
   watchedEpisodes: number;
 }
 
+export interface UpdateNotesRequest {
+  notes: string;
+}
+
 export const STATUS_CONFIG: Record<SeriesStatus, { color: string; icon: string }> = {
   WATCHING: { color: 'accent', icon: 'play_arrow' },
   WANT_TO_WATCH: { color: 'primary', icon: 'bookmark' },

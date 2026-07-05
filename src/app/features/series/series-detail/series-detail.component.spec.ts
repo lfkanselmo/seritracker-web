@@ -18,6 +18,7 @@ describe('SeriesDetailComponent', () => {
         updateStatus: ReturnType<typeof vi.fn>;
         updateRating: ReturnType<typeof vi.fn>;
         updateEpisodes: ReturnType<typeof vi.fn>;
+        updateNotes: ReturnType<typeof vi.fn>;
         delete: ReturnType<typeof vi.fn>;
     };
     let snackBarMock: { open: ReturnType<typeof vi.fn> };
@@ -51,6 +52,7 @@ describe('SeriesDetailComponent', () => {
             updateStatus: vi.fn(),
             updateRating: vi.fn(),
             updateEpisodes: vi.fn(),
+            updateNotes: vi.fn(),
             delete: vi.fn(),
         };
         snackBarMock = { open: vi.fn() };
@@ -164,6 +166,44 @@ describe('SeriesDetailComponent', () => {
             component.onMarkAllWatched();
 
             expect(seriesServiceMock.updateEpisodes).toHaveBeenCalledWith(1, { watchedEpisodes: 62 });
+        });
+    });
+
+    describe('notesDirty', () => {
+        it('should be false right after loading the series', () => {
+            setup();
+            component.ngOnInit();
+            expect(component.notesDirty).toBe(false);
+        });
+
+        it('should be true after editing the notes draft', () => {
+            setup();
+            component.ngOnInit();
+            component.notesDraft = 'new notes';
+            expect(component.notesDirty).toBe(true);
+        });
+    });
+
+    describe('onSaveNotes', () => {
+        it('should do nothing when there is no series loaded', () => {
+            setup();
+            component.onSaveNotes();
+            expect(seriesServiceMock.updateNotes).not.toHaveBeenCalled();
+        });
+
+        it('should save the notes and show a confirmation', () => {
+            setup();
+            component.ngOnInit();
+            const updated = { ...mockSeries, notes: 'Great show' };
+            seriesServiceMock.updateNotes.mockReturnValue(of({ success: true, data: updated, message: 'OK', timestamp: '' }));
+            component.notesDraft = 'Great show';
+
+            component.onSaveNotes();
+
+            expect(seriesServiceMock.updateNotes).toHaveBeenCalledWith(1, { notes: 'Great show' });
+            expect(component.series).toEqual(updated);
+            expect(component.isSavingNotes).toBe(false);
+            expect(snackBarMock.open).toHaveBeenCalledWith('Notas guardadas', '✓', { duration: 2000 });
         });
     });
 
