@@ -72,33 +72,62 @@
           <div class="progress-fill" [class]="statusClass" [style.width.%]="progressPercent"></div>
         </div>
 
-        <div class="episode-controls">
-          <button mat-icon-button
-                  [disabled]="series.watchedEpisodes === 0"
-                  (click)="onEpisodesChange(-1)">
-            <mat-icon>remove</mat-icon>
-          </button>
+        <!-- Próximo episodio -->
+        @if (nextEpisode) {
+          <div class="next-episode-banner">
+            <div class="next-episode-info">
+              <span class="next-episode-code">{{ episodeCode(nextEpisode.seasonNumber, nextEpisode.episodeNumber) }}</span>
+              <span class="next-episode-title">{{ nextEpisode.title }}</span>
+              @if (isFutureAirDate(nextEpisode.airDate)) {
+                <span class="next-episode-date">{{ 'series.detail.nextEpisodeAirsOn' | transloco }} {{ nextEpisode.airDate }}</span>
+              }
+            </div>
+            @if (!isFutureAirDate(nextEpisode.airDate)) {
+              <button mat-stroked-button class="mark-watched-btn" (click)="onMarkNextEpisodeWatched()">
+                {{ 'series.detail.markWatched' | transloco }}
+              </button>
+            }
+          </div>
+        }
 
-          <input
-            type="number"
-            class="episodes-input"
-            [value]="series.watchedEpisodes"
-            [min]="0"
-            [max]="series.totalEpisodes"
-            (change)="onEpisodesInput($event)">
+        <!-- Temporadas -->
+        @if (isLoadingSeasons && seasons.length === 0) {
+          <div class="season-loading"><mat-spinner diameter="24" /></div>
+        } @else if (seasons.length > 0) {
+          <mat-accordion class="seasons-accordion">
+            @for (season of seasons; track season.seasonNumber) {
+              <mat-expansion-panel (opened)="onSeasonExpand(season.seasonNumber)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>{{ 'series.detail.season' | transloco: { number: season.seasonNumber } }}</mat-panel-title>
+                  <mat-panel-description>{{ season.watchedCount }}/{{ season.episodeCount }}</mat-panel-description>
+                </mat-expansion-panel-header>
 
-          <button mat-icon-button
-                  [disabled]="series.watchedEpisodes === series.totalEpisodes"
-                  (click)="onEpisodesChange(1)">
-            <mat-icon>add</mat-icon>
-          </button>
-
-          <button mat-stroked-button class="mark-all-btn"
-                  (click)="onMarkAllWatched()">
-            <mat-icon>done_all</mat-icon>
-            {{ 'series.detail.markAll' | transloco }}
-          </button>
-        </div>
+                @if (loadingSeasonNumber === season.seasonNumber) {
+                  <div class="season-loading"><mat-spinner diameter="24" /></div>
+                } @else if (seasonEpisodes[season.seasonNumber]) {
+                  <div class="episode-list">
+                    @for (episode of seasonEpisodes[season.seasonNumber]; track episode.episodeNumber) {
+                      <label class="episode-row">
+                        <mat-checkbox
+                          [checked]="episode.watched"
+                          (change)="onToggleEpisode(season.seasonNumber, episode)">
+                        </mat-checkbox>
+                        <span class="episode-number">{{ episode.episodeNumber }}.</span>
+                        <span class="episode-title">{{ episode.title }}</span>
+                        @if (episode.airDate) {
+                          <span class="episode-date">{{ episode.airDate }}</span>
+                        }
+                      </label>
+                    }
+                  </div>
+                  <button mat-stroked-button class="watch-season-btn" (click)="onMarkSeasonWatched(season)">
+                    {{ 'series.detail.markSeasonWatched' | transloco }}
+                  </button>
+                }
+              </mat-expansion-panel>
+            }
+          </mat-accordion>
+        }
       </div>
     }
 

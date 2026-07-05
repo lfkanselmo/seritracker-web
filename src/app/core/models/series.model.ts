@@ -37,16 +37,39 @@ export interface UpdateRatingRequest {
   rating: number;
 }
 
-export interface UpdateEpisodesRequest {
-  watchedEpisodes: number;
-}
-
 export interface UpdateNotesRequest {
   notes: string;
 }
 
 export type SeriesSortBy = 'TITLE' | 'RATING' | 'CREATED_AT' | 'UPDATED_AT';
 export type SortDirection = 'ASC' | 'DESC';
+
+export interface SeasonProgress {
+  seasonNumber: number;
+  name: string;
+  episodeCount: number;
+  watchedCount: number;
+}
+
+export interface NextEpisode {
+  seasonNumber: number;
+  episodeNumber: number;
+  title: string;
+  airDate: string | null;
+}
+
+export interface SeasonsSummary {
+  seasons: SeasonProgress[];
+  nextEpisode: NextEpisode | null;
+}
+
+export interface EpisodeInfo {
+  seasonNumber: number;
+  episodeNumber: number;
+  title: string;
+  airDate: string | null;
+  watched: boolean;
+}
 
 export const STATUS_CONFIG: Record<SeriesStatus, { color: string; icon: string }> = {
   WATCHING: { color: 'accent', icon: 'play_arrow' },

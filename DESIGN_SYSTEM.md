@@ -196,14 +196,38 @@ El `appearance="outline"` de Material además no tiene token de color
 de fondo (se diseña transparente por spec) — se le agregó un fondo a
 mano en `.mat-form-field-appearance-outline .mat-mdc-text-field-wrapper`
 con `--color-surface-raised`, el mismo tono que ya usan los inputs
-hechos a medida (`notes-textarea`, `episodes-input`), para que un
-input de Material y uno custom se vean como parte del mismo sistema.
+hechos a medida (`notes-textarea`), para que un input de Material y
+uno custom se vean como parte del mismo sistema.
 
 **Regla al agregar un campo nuevo:** cualquier `mat-form-field` o
 `mat-select` nuevo hereda esto automáticamente — no hace falta
 recolorearlo por componente. La única excepción documentada es el
 `mat-paginator` (ver "Cómo se aplica hoy"), que se deja con el tema M3
 tal cual a propósito.
+
+### `mat-expansion-panel` y `mat-checkbox` (acordeón de temporadas)
+
+Mismo problema y misma solución que los inputs: el acordeón de
+temporadas de `series-detail` (`mat-expansion-panel`) fue el primer
+uso de este componente en la app, y traía el `surface`/`on-surface`
+default de M3 en vez de los tokens de marca. Se agregaron
+`mat.expansion-overrides()` y `mat.checkbox-overrides()` (mismos dos
+bloques de tema que el resto, ver arriba) apuntando `container-*`/
+`header-*` a `--color-surface`/`--color-text`/`--color-text-faint`, y
+`header-hover-state-layer-color` a un `color-mix()` de `--color-teal`.
+`mat-checkbox` no necesitó casi nada — sus estados "selected" ya usan
+el rol `primary` del tema M3 (que sale de la paleta de marca vía
+`ng generate @angular/material:theme-color`), así que el check ya sale
+teal sin tocar nada; sólo se fijó `label-text-color` a `--color-text`
+por consistencia.
+
+Además, `mat-expansion-panel` usa elevación (`box-shadow`) por default
+en vez de un borde — inconsistente con el resto de la app, que es
+plana y usa `border: 1px solid var(--color-border)` en todas las cards
+(`.detail-card`, `.stat-card`, etc.). Se sobreescribió con CSS plano en
+`series-detail.component.scss` (`.seasons-accordion .mat-expansion-panel`):
+`box-shadow: none`, borde y `border-radius: var(--radius-md)` como
+cualquier otra card.
 
 ## Tipografía
 
@@ -266,7 +290,11 @@ Todas las transiciones respetan `prefers-reduced-motion` (regla global en
   en verde sin importar el estado — corregido en este pase).
 - **Series detail:** poster con glow de marca, badge de estado con
   variantes de color, estado activo en "Cambiar estado" con
-  `--gradient-brand-soft`, zona de peligro con `.btn-danger`.
+  `--gradient-brand-soft`, zona de peligro con `.btn-danger`. El
+  banner de "próximo episodio a ver" usa `--gradient-brand-soft` como
+  fondo (misma jerarquía visual que el tab activo); el acordeón de
+  temporadas usa `mat-expansion-panel` recoloreado (ver sección
+  "Inputs y selects").
 - **Confirm dialog:** botón de confirmación destructivo con
   `.btn-danger-solid`.
 

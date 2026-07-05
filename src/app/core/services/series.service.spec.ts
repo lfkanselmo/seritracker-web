@@ -153,15 +153,53 @@ describe('SeriesService', () => {
         });
     });
 
-    describe('updateEpisodes', () => {
-        it('should call PATCH /series/:id/episodes', () => {
+    describe('getSeasonsSummary', () => {
+        it('should call GET /series/:id/seasons', () => {
+            const summary = { seasons: [], nextEpisode: null };
+            httpClientMock.get.mockReturnValue(of({ success: true, data: summary, message: 'OK', timestamp: '' }));
+
+            service.getSeasonsSummary(1).subscribe();
+
+            expect(httpClientMock.get).toHaveBeenCalledWith(
+                expect.stringContaining('/series/1/seasons')
+            );
+        });
+    });
+
+    describe('getSeasonEpisodes', () => {
+        it('should call GET /series/:id/seasons/:seasonNumber/episodes', () => {
+            httpClientMock.get.mockReturnValue(of({ success: true, data: { episodes: [] }, message: 'OK', timestamp: '' }));
+
+            service.getSeasonEpisodes(1, 2).subscribe();
+
+            expect(httpClientMock.get).toHaveBeenCalledWith(
+                expect.stringContaining('/series/1/seasons/2/episodes')
+            );
+        });
+    });
+
+    describe('markEpisode', () => {
+        it('should call PATCH /series/:id/seasons/:seasonNumber/episodes/:episodeNumber', () => {
             httpClientMock.patch.mockReturnValue(of(mockApiResponse));
 
-            service.updateEpisodes(1, { watchedEpisodes: 10 }).subscribe();
+            service.markEpisode(1, 2, 3, true).subscribe();
 
             expect(httpClientMock.patch).toHaveBeenCalledWith(
-                expect.stringContaining('/series/1/episodes'),
-                { watchedEpisodes: 10 }
+                expect.stringContaining('/series/1/seasons/2/episodes/3'),
+                { watched: true }
+            );
+        });
+    });
+
+    describe('markSeasonWatched', () => {
+        it('should call PATCH /series/:id/seasons/:seasonNumber/watch-all', () => {
+            httpClientMock.patch.mockReturnValue(of(mockApiResponse));
+
+            service.markSeasonWatched(1, 2, [1, 2, 3]).subscribe();
+
+            expect(httpClientMock.patch).toHaveBeenCalledWith(
+                expect.stringContaining('/series/1/seasons/2/watch-all'),
+                { episodeNumbers: [1, 2, 3] }
             );
         });
     });

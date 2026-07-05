@@ -52,6 +52,20 @@
     selected-state-label-text-color: var(--color-teal),
   ));
 
+  @include mat.expansion-overrides((
+    container-background-color: var(--color-surface),
+    container-text-color: var(--color-text),
+    header-text-color: var(--color-text),
+    header-description-color: var(--color-text-faint),
+    header-indicator-color: var(--color-text-faint),
+    header-hover-state-layer-color: color-mix(in srgb, var(--color-teal) 8%, transparent),
+    actions-divider-color: var(--color-border),
+  ));
+
+  @include mat.checkbox-overrides((
+    label-text-color: var(--color-text),
+  ));
+
   // ── Superficies y texto — oscuro (default) ───────────────────
   --color-ink: #0b0d12;
   --color-surface: #12151d;
@@ -158,6 +172,20 @@
     hover-state-layer-color: color-mix(in srgb, var(--color-teal) 10%, transparent),
     selected-state-layer-color: color-mix(in srgb, var(--color-teal) 15%, transparent),
     selected-state-label-text-color: var(--color-teal),
+  ));
+
+  @include mat.expansion-overrides((
+    container-background-color: var(--color-surface),
+    container-text-color: var(--color-text),
+    header-text-color: var(--color-text),
+    header-description-color: var(--color-text-faint),
+    header-indicator-color: var(--color-text-faint),
+    header-hover-state-layer-color: color-mix(in srgb, var(--color-teal) 8%, transparent),
+    actions-divider-color: var(--color-border),
+  ));
+
+  @include mat.checkbox-overrides((
+    label-text-color: var(--color-text),
   ));
 
   --color-ink: #f5f6f8;

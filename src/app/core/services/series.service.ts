@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse, PageResponse } from '../models/api-response.model';
-import { UserSeries, SeriesStatus, CreateSeriesRequest, UpdateStatusRequest, UpdateRatingRequest, UpdateEpisodesRequest, UpdateNotesRequest, SeriesSortBy, SortDirection } from '../models/series.model';
+import { UserSeries, SeriesStatus, CreateSeriesRequest, UpdateStatusRequest, UpdateRatingRequest, UpdateNotesRequest, SeriesSortBy, SortDirection, SeasonsSummary, EpisodeInfo } from '../models/series.model';
 
 export interface SeriesQueryOptions {
   status?: SeriesStatus;
@@ -47,12 +47,28 @@ export class SeriesService {
     return this.http.patch<ApiResponse<UserSeries>>(`${this.apiUrl}/${id}/rating`, request);
   }
 
-  updateEpisodes(id: number, request: UpdateEpisodesRequest): Observable<ApiResponse<UserSeries>> {
-    return this.http.patch<ApiResponse<UserSeries>>(`${this.apiUrl}/${id}/episodes`, request);
-  }
-
   updateNotes(id: number, request: UpdateNotesRequest): Observable<ApiResponse<UserSeries>> {
     return this.http.patch<ApiResponse<UserSeries>>(`${this.apiUrl}/${id}/notes`, request);
+  }
+
+  getSeasonsSummary(id: number): Observable<ApiResponse<SeasonsSummary>> {
+    return this.http.get<ApiResponse<SeasonsSummary>>(`${this.apiUrl}/${id}/seasons`);
+  }
+
+  getSeasonEpisodes(id: number, seasonNumber: number): Observable<ApiResponse<{ episodes: EpisodeInfo[] }>> {
+    return this.http.get<ApiResponse<{ episodes: EpisodeInfo[] }>>(`${this.apiUrl}/${id}/seasons/${seasonNumber}/episodes`);
+  }
+
+  markEpisode(id: number, seasonNumber: number, episodeNumber: number, watched: boolean): Observable<ApiResponse<UserSeries>> {
+    return this.http.patch<ApiResponse<UserSeries>>(
+      `${this.apiUrl}/${id}/seasons/${seasonNumber}/episodes/${episodeNumber}`, { watched }
+    );
+  }
+
+  markSeasonWatched(id: number, seasonNumber: number, episodeNumbers: number[]): Observable<ApiResponse<UserSeries>> {
+    return this.http.patch<ApiResponse<UserSeries>>(
+      `${this.apiUrl}/${id}/seasons/${seasonNumber}/watch-all`, { episodeNumbers }
+    );
   }
 
   delete(id: number): Observable<ApiResponse<void>> {

@@ -8,7 +8,7 @@ import { of, throwError } from 'rxjs';
 import { SeriesDetailComponent } from './series-detail.component';
 import { SeriesService } from '../../../core/services/series.service';
 import { ThemeService } from '../../../core/services/theme.service';
-import { UserSeries } from '../../../core/models/series.model';
+import { EpisodeInfo, SeasonProgress, UserSeries } from '../../../core/models/series.model';
 import { i18nTestingModule } from '../../../core/testing/i18n-testing';
 
 describe('SeriesDetailComponent', () => {
@@ -17,9 +17,12 @@ describe('SeriesDetailComponent', () => {
         getById: ReturnType<typeof vi.fn>;
         updateStatus: ReturnType<typeof vi.fn>;
         updateRating: ReturnType<typeof vi.fn>;
-        updateEpisodes: ReturnType<typeof vi.fn>;
         updateNotes: ReturnType<typeof vi.fn>;
         delete: ReturnType<typeof vi.fn>;
+        getSeasonsSummary: ReturnType<typeof vi.fn>;
+        getSeasonEpisodes: ReturnType<typeof vi.fn>;
+        markEpisode: ReturnType<typeof vi.fn>;
+        markSeasonWatched: ReturnType<typeof vi.fn>;
     };
     let snackBarMock: { open: ReturnType<typeof vi.fn> };
     let dialogMock: { open: ReturnType<typeof vi.fn> };
@@ -51,9 +54,14 @@ describe('SeriesDetailComponent', () => {
             getById: vi.fn().mockReturnValue(of({ success: true, data: mockSeries, message: 'OK', timestamp: '' })),
             updateStatus: vi.fn(),
             updateRating: vi.fn(),
-            updateEpisodes: vi.fn(),
             updateNotes: vi.fn(),
             delete: vi.fn(),
+            getSeasonsSummary: vi.fn().mockReturnValue(of({
+                success: true, data: { seasons: [], nextEpisode: null }, message: 'OK', timestamp: ''
+            })),
+            getSeasonEpisodes: vi.fn(),
+            markEpisode: vi.fn(),
+            markSeasonWatched: vi.fn(),
         };
         snackBarMock = { open: vi.fn() };
         dialogMock = { open: vi.fn() };
@@ -135,37 +143,103 @@ describe('SeriesDetailComponent', () => {
         });
     });
 
-    describe('onEpisodesChange', () => {
-        it('should clamp the new value between 0 and totalEpisodes', () => {
+    describe('loadSeasonsSummary', () => {
+        it('should populate seasons and next episode', () => {
+            const summary = {
+                seasons: [{ seasonNumber: 1, name: 'Season 1', episodeCount: 7, watchedCount: 3 }],
+                nextEpisode: { seasonNumber: 1, episodeNumber: 4, title: 'Cancer Man', airDate: null }
+            };
+            seriesServiceMock.getSeasonsSummary.mockReturnValue(of({ success: true, data: summary, message: 'OK', timestamp: '' }));
+
             setup();
             component.ngOnInit();
-            seriesServiceMock.updateEpisodes.mockReturnValue(of({ success: true, data: mockSeries, message: 'OK', timestamp: '' }));
 
-            component.onEpisodesChange(100);
-
-            expect(seriesServiceMock.updateEpisodes).toHaveBeenCalledWith(1, { watchedEpisodes: 62 });
-        });
-
-        it('should not go below 0', () => {
-            setup();
-            component.ngOnInit();
-            seriesServiceMock.updateEpisodes.mockReturnValue(of({ success: true, data: mockSeries, message: 'OK', timestamp: '' }));
-
-            component.onEpisodesChange(-100);
-
-            expect(seriesServiceMock.updateEpisodes).toHaveBeenCalledWith(1, { watchedEpisodes: 0 });
+            expect(seriesServiceMock.getSeasonsSummary).toHaveBeenCalledWith(1);
+            expect(component.seasons).toEqual(summary.seasons);
+            expect(component.nextEpisode).toEqual(summary.nextEpisode);
         });
     });
 
-    describe('onMarkAllWatched', () => {
-        it('should set watchedEpisodes to totalEpisodes', () => {
+    describe('onSeasonExpand', () => {
+        it('should fetch and cache the season episodes on first expand', () => {
+            const episodes: EpisodeInfo[] = [
+                { seasonNumber: 1, episodeNumber: 1, title: 'Pilot', airDate: null, watched: true }
+            ];
+            seriesServiceMock.getSeasonEpisodes.mockReturnValue(of({ success: true, data: { episodes }, message: 'OK', timestamp: '' }));
             setup();
             component.ngOnInit();
-            seriesServiceMock.updateEpisodes.mockReturnValue(of({ success: true, data: mockSeries, message: 'OK', timestamp: '' }));
 
-            component.onMarkAllWatched();
+            component.onSeasonExpand(1);
 
-            expect(seriesServiceMock.updateEpisodes).toHaveBeenCalledWith(1, { watchedEpisodes: 62 });
+            expect(seriesServiceMock.getSeasonEpisodes).toHaveBeenCalledWith(1, 1);
+            expect(component.seasonEpisodes[1]).toEqual(episodes);
+        });
+
+        it('should not refetch when the season is already cached', () => {
+            setup();
+            component.ngOnInit();
+            component.seasonEpisodes = { 1: [] };
+
+            component.onSeasonExpand(1);
+
+            expect(seriesServiceMock.getSeasonEpisodes).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('onToggleEpisode', () => {
+        it('should mark the episode watched and refresh the summary', () => {
+            const episode: EpisodeInfo = { seasonNumber: 1, episodeNumber: 1, title: 'Pilot', airDate: null, watched: false };
+            const updated = { ...mockSeries, watchedEpisodes: 11 };
+            seriesServiceMock.markEpisode.mockReturnValue(of({ success: true, data: updated, message: 'OK', timestamp: '' }));
+            setup();
+            component.ngOnInit();
+            component.seasonEpisodes = { 1: [episode] };
+
+            component.onToggleEpisode(1, episode);
+
+            expect(seriesServiceMock.markEpisode).toHaveBeenCalledWith(1, 1, 1, true);
+            expect(component.series).toEqual(updated);
+            expect(component.seasonEpisodes[1][0].watched).toBe(true);
+        });
+    });
+
+    describe('onMarkSeasonWatched', () => {
+        it('should mark every episode of the season as watched', () => {
+            const season: SeasonProgress = { seasonNumber: 1, name: 'Season 1', episodeCount: 3, watchedCount: 1 };
+            const updated = { ...mockSeries, watchedEpisodes: 3 };
+            seriesServiceMock.markSeasonWatched.mockReturnValue(of({ success: true, data: updated, message: 'OK', timestamp: '' }));
+            setup();
+            component.ngOnInit();
+
+            component.onMarkSeasonWatched(season);
+
+            expect(seriesServiceMock.markSeasonWatched).toHaveBeenCalledWith(1, 1, [1, 2, 3]);
+            expect(component.series).toEqual(updated);
+        });
+    });
+
+    describe('isFutureAirDate', () => {
+        it('should return false when airDate is null', () => {
+            setup();
+            expect(component.isFutureAirDate(null)).toBe(false);
+        });
+
+        it('should return true for a date in the future', () => {
+            setup();
+            const future = new Date(Date.now() + 86400000).toISOString();
+            expect(component.isFutureAirDate(future)).toBe(true);
+        });
+
+        it('should return false for a date in the past', () => {
+            setup();
+            expect(component.isFutureAirDate('2020-01-01')).toBe(false);
+        });
+    });
+
+    describe('episodeCode', () => {
+        it('should format the season/episode as SxxExx', () => {
+            setup();
+            expect(component.episodeCode(2, 3)).toBe('S02E03');
         });
     });
 
