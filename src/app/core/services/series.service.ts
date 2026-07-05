@@ -3,7 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse, PageResponse } from '../models/api-response.model';
-import { UserSeries, SeriesStatus, CreateSeriesRequest, UpdateStatusRequest, UpdateRatingRequest, UpdateEpisodesRequest, UpdateNotesRequest } from '../models/series.model';
+import { UserSeries, SeriesStatus, CreateSeriesRequest, UpdateStatusRequest, UpdateRatingRequest, UpdateEpisodesRequest, UpdateNotesRequest, SeriesSortBy, SortDirection } from '../models/series.model';
+
+export interface SeriesQueryOptions {
+  status?: SeriesStatus;
+  page?: number;
+  size?: number;
+  search?: string;
+  sortBy?: SeriesSortBy;
+  sortDir?: SortDirection;
+}
 
 @Injectable({ providedIn: 'root' })
 export class SeriesService {
@@ -12,9 +21,13 @@ export class SeriesService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(status?: SeriesStatus, page = 0, size = 20): Observable<ApiResponse<PageResponse<UserSeries>>> {
+  getAll(options: SeriesQueryOptions = {}): Observable<ApiResponse<PageResponse<UserSeries>>> {
+    const { status, page = 0, size = 20, search, sortBy, sortDir } = options;
     const params: Record<string, string> = { page: String(page), size: String(size) };
     if (status) params['status'] = status;
+    if (search) params['search'] = search;
+    if (sortBy) params['sortBy'] = sortBy;
+    if (sortDir) params['sortDir'] = sortDir;
     return this.http.get<ApiResponse<PageResponse<UserSeries>>>(this.apiUrl, { params });
   }
 

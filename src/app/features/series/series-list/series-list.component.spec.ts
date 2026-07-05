@@ -4,7 +4,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PageEvent } from '@angular/material/paginator';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 import { SeriesListComponent } from './series-list.component';
 import { SeriesService } from '../../../core/services/series.service';
@@ -81,7 +81,9 @@ describe('SeriesListComponent', () => {
         it('should populate the list and total on success', () => {
             component.loadSeries();
 
-            expect(seriesServiceMock.getAll).toHaveBeenCalledWith(undefined, 0, 20);
+            expect(seriesServiceMock.getAll).toHaveBeenCalledWith({
+                status: undefined, page: 0, size: 20, search: undefined, sortBy: 'CREATED_AT', sortDir: 'DESC'
+            });
             expect(component.seriesList).toHaveLength(2);
             expect(component.totalElements).toBe(2);
             expect(component.isLoading).toBe(false);
@@ -98,17 +100,22 @@ describe('SeriesListComponent', () => {
         });
     });
 
-    describe('filteredSeries', () => {
-        beforeEach(() => component.loadSeries());
+    describe('onSearchInput', () => {
+        beforeEach(() => vi.useFakeTimers());
+        afterEach(() => vi.useRealTimers());
 
-        it('should return the full list when there is no search query', () => {
-            expect(component.filteredSeries).toHaveLength(2);
-        });
+        it('should debounce and reload with the search term', () => {
+            const input = { value: 'breaking' } as HTMLInputElement;
+            component.pageIndex = 3;
 
-        it('should filter by title (case-insensitive)', () => {
-            component.searchQuery = 'breaking';
-            expect(component.filteredSeries).toHaveLength(1);
-            expect(component.filteredSeries[0].title).toBe('Breaking Bad');
+            component.onSearchInput({ target: input } as unknown as Event);
+            vi.advanceTimersByTime(400);
+
+            expect(component.searchQuery).toBe('breaking');
+            expect(component.pageIndex).toBe(0);
+            expect(seriesServiceMock.getAll).toHaveBeenCalledWith(
+                expect.objectContaining({ search: 'breaking' })
+            );
         });
     });
 
@@ -120,7 +127,9 @@ describe('SeriesListComponent', () => {
 
             expect(component.activeTab).toBe('WATCHING');
             expect(component.pageIndex).toBe(0);
-            expect(seriesServiceMock.getAll).toHaveBeenCalledWith('WATCHING', 0, 20);
+            expect(seriesServiceMock.getAll).toHaveBeenCalledWith(
+                expect.objectContaining({ status: 'WATCHING', page: 0, size: 20 })
+            );
         });
     });
 
@@ -132,7 +141,36 @@ describe('SeriesListComponent', () => {
 
             expect(component.pageIndex).toBe(2);
             expect(component.pageSize).toBe(50);
-            expect(seriesServiceMock.getAll).toHaveBeenCalledWith(undefined, 2, 50);
+            expect(seriesServiceMock.getAll).toHaveBeenCalledWith(
+                expect.objectContaining({ page: 2, size: 50 })
+            );
+        });
+    });
+
+    describe('onSortByChange', () => {
+        it('should update sortBy, reset the page index and reload', () => {
+            component.pageIndex = 3;
+
+            component.onSortByChange('TITLE');
+
+            expect(component.sortBy).toBe('TITLE');
+            expect(component.pageIndex).toBe(0);
+            expect(seriesServiceMock.getAll).toHaveBeenCalledWith(
+                expect.objectContaining({ sortBy: 'TITLE' })
+            );
+        });
+    });
+
+    describe('onSortDirToggle', () => {
+        it('should flip the sort direction and reload', () => {
+            expect(component.sortDir).toBe('DESC');
+
+            component.onSortDirToggle();
+
+            expect(component.sortDir).toBe('ASC');
+            expect(seriesServiceMock.getAll).toHaveBeenCalledWith(
+                expect.objectContaining({ sortDir: 'ASC' })
+            );
         });
     });
 

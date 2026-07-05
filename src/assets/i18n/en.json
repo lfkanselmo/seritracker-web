@@ -108,6 +108,7 @@
       "error": "Error loading series",
       "empty": "No series in this category",
       "addFirst": "Add first series",
+      "noResults": "No series found with that name",
       "selectPage": "Select page",
       "tabs": {
         "all": "All",
@@ -115,6 +116,15 @@
         "wantToWatch": "Want to watch",
         "completed": "Completed",
         "abandoned": "Abandoned"
+      },
+      "sort": {
+        "label": "Sort by",
+        "createdAt": "Date added",
+        "updatedAt": "Last updated",
+        "title": "Title",
+        "rating": "Rating",
+        "ascending": "Ascending order",
+        "descending": "Descending order"
       },
       "statusUpdated": "Status updated",
       "ratingSaved": "Rating saved",

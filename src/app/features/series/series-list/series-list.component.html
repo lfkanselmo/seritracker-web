@@ -30,6 +30,24 @@
     </div>
   }
 
+  <!-- Sort -->
+  <div class="sort-bar">
+    <mat-form-field appearance="outline" class="sort-field">
+      <mat-label>{{ 'series.list.sort.label' | transloco }}</mat-label>
+      <mat-select [value]="sortBy" (selectionChange)="onSortByChange($event.value)">
+        @for (option of sortOptions; track option.value) {
+          <mat-option [value]="option.value">{{ option.labelKey | transloco }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button
+      mat-icon-button
+      (click)="onSortDirToggle()"
+      [matTooltip]="(sortDir === 'ASC' ? 'series.list.sort.ascending' : 'series.list.sort.descending') | transloco">
+      <mat-icon>{{ sortDir === 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+    </button>
+  </div>
+
   <!-- Tabs -->
   <div class="tabs">
     @for (tab of tabs; track tab.labelKey) {
@@ -60,20 +78,24 @@
   }
 
   <!-- Empty -->
-  @if (!isLoading && !hasError && filteredSeries.length === 0) {
+  @if (!isLoading && !hasError && seriesList.length === 0) {
     <div class="state-container empty">
       <span class="empty-icon">📺</span>
-      <p>{{ 'series.list.empty' | transloco }}</p>
-      <button mat-raised-button class="btn-gradient" (click)="onAddSeries()">
-        {{ 'series.list.addFirst' | transloco }}
-      </button>
+      @if (searchQuery.trim()) {
+        <p>{{ 'series.list.noResults' | transloco }}</p>
+      } @else {
+        <p>{{ 'series.list.empty' | transloco }}</p>
+        <button mat-raised-button class="btn-gradient" (click)="onAddSeries()">
+          {{ 'series.list.addFirst' | transloco }}
+        </button>
+      }
     </div>
   }
 
   <!-- Grid -->
-  @if (!isLoading && filteredSeries.length > 0) {
-  <div class="series-grid" [@listStagger]="filteredSeries.length">
-    @for (series of filteredSeries; track series.id) {
+  @if (!isLoading && seriesList.length > 0) {
+  <div class="series-grid" [@listStagger]="seriesList.length">
+    @for (series of seriesList; track series.id) {
       <div @fadeIn>
         <app-series-card
           [series]="series"

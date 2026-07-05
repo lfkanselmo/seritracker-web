@@ -73,12 +73,25 @@ describe('SeriesService', () => {
         it('should call GET /series with status filter and custom page', () => {
             httpClientMock.get.mockReturnValue(of(mockPageResponse));
 
-            service.getAll('WATCHING', 2, 10).subscribe();
+            service.getAll({ status: 'WATCHING', page: 2, size: 10 }).subscribe();
 
             expect(httpClientMock.get).toHaveBeenCalledWith(
                 expect.stringContaining('/series'),
                 expect.objectContaining({
                     params: expect.objectContaining({ status: 'WATCHING', page: '2', size: '10' })
+                })
+            );
+        });
+
+        it('should call GET /series with search and sort params', () => {
+            httpClientMock.get.mockReturnValue(of(mockPageResponse));
+
+            service.getAll({ search: 'breaking', sortBy: 'TITLE', sortDir: 'ASC' }).subscribe();
+
+            expect(httpClientMock.get).toHaveBeenCalledWith(
+                expect.stringContaining('/series'),
+                expect.objectContaining({
+                    params: expect.objectContaining({ search: 'breaking', sortBy: 'TITLE', sortDir: 'ASC' })
                 })
             );
         });

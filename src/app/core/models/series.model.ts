@@ -45,6 +45,9 @@ export interface UpdateNotesRequest {
   notes: string;
 }
 
+export type SeriesSortBy = 'TITLE' | 'RATING' | 'CREATED_AT' | 'UPDATED_AT';
+export type SortDirection = 'ASC' | 'DESC';
+
 export const STATUS_CONFIG: Record<SeriesStatus, { color: string; icon: string }> = {
   WATCHING: { color: 'accent', icon: 'play_arrow' },
   WANT_TO_WATCH: { color: 'primary', icon: 'bookmark' },

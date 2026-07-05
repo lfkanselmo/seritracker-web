@@ -108,6 +108,7 @@
       "error": "Error al cargar las series",
       "empty": "No hay series en esta categoría",
       "addFirst": "Agregar primera serie",
+      "noResults": "No se encontraron series con ese nombre",
       "selectPage": "Seleccionar página",
       "tabs": {
         "all": "Todas",
@@ -115,6 +116,15 @@
         "wantToWatch": "Por ver",
         "completed": "Completadas",
         "abandoned": "Abandonadas"
+      },
+      "sort": {
+        "label": "Ordenar por",
+        "createdAt": "Fecha agregada",
+        "updatedAt": "Última actualización",
+        "title": "Título",
+        "rating": "Calificación",
+        "ascending": "Orden ascendente",
+        "descending": "Orden descendente"
       },
       "statusUpdated": "Estado actualizado",
       "ratingSaved": "Calificación guardada",

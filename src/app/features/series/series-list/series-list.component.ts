@@ -3,8 +3,11 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserSeries, SeriesStatus, STATUS_CONFIG } from '../../../core/models/series.model';
+import { UserSeries, SeriesStatus, SeriesSortBy, SortDirection, STATUS_CONFIG } from '../../../core/models/series.model';
 import { SeriesService } from '../../../core/services/series.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { CommonModule } from '@angular/common';
@@ -29,6 +32,7 @@ import { fadeIn, listStagger, tabFade } from '../../../shared/animations/app.ani
     MatProgressSpinnerModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatTooltipModule,
     MatPaginatorModule,
     NavbarComponent,
@@ -48,6 +52,7 @@ export class SeriesListComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private transloco = inject(TranslocoService);
+  private searchInput$ = new Subject<string>();
 
   // Estado de datos
   seriesList: UserSeries[] = [];
@@ -65,6 +70,8 @@ export class SeriesListComponent implements OnInit {
   activeTab: SeriesStatus | null = null;
   searchQuery = '';
   showSearch = false;
+  sortBy: SeriesSortBy = 'CREATED_AT';
+  sortDir: SortDirection = 'DESC';
 
   readonly tabs = [
     { labelKey: 'series.list.tabs.all', status: null },
@@ -74,13 +81,25 @@ export class SeriesListComponent implements OnInit {
     { labelKey: 'series.list.tabs.abandoned', status: 'ABANDONED' as SeriesStatus },
   ];
 
+  readonly sortOptions: { labelKey: string; value: SeriesSortBy }[] = [
+    { labelKey: 'series.list.sort.createdAt', value: 'CREATED_AT' },
+    { labelKey: 'series.list.sort.updatedAt', value: 'UPDATED_AT' },
+    { labelKey: 'series.list.sort.title', value: 'TITLE' },
+    { labelKey: 'series.list.sort.rating', value: 'RATING' },
+  ];
+
   readonly statusConfig = STATUS_CONFIG;
 
-  get filteredSeries(): UserSeries[] {
-    if (!this.searchQuery.trim()) return this.seriesList;
-    return this.seriesList.filter(s =>
-      s.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+  constructor() {
+    this.searchInput$.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(query => {
+      this.searchQuery = query;
+      this.pageIndex = 0;
+      this.loadSeries();
+    });
   }
 
   ngOnInit(): void {
@@ -91,7 +110,14 @@ export class SeriesListComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    this.seriesService.getAll(this.activeTab ?? undefined, this.pageIndex, this.pageSize)
+    this.seriesService.getAll({
+      status: this.activeTab ?? undefined,
+      page: this.pageIndex,
+      size: this.pageSize,
+      search: this.searchQuery.trim() || undefined,
+      sortBy: this.sortBy,
+      sortDir: this.sortDir,
+    })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -118,6 +144,18 @@ export class SeriesListComponent implements OnInit {
   onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
+    this.loadSeries();
+  }
+
+  onSortByChange(sortBy: SeriesSortBy): void {
+    this.sortBy = sortBy;
+    this.pageIndex = 0;
+    this.loadSeries();
+  }
+
+  onSortDirToggle(): void {
+    this.sortDir = this.sortDir === 'ASC' ? 'DESC' : 'ASC';
+    this.pageIndex = 0;
     this.loadSeries();
   }
 
@@ -174,7 +212,7 @@ export class SeriesListComponent implements OnInit {
   }
 
   onSearchInput(event: Event): void {
-    this.searchQuery = (event.target as HTMLInputElement).value;
+    this.searchInput$.next((event.target as HTMLInputElement).value);
   }
 
   onAddSeries(): void {

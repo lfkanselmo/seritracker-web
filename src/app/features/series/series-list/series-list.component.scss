@@ -121,6 +121,17 @@
   }
 }
 
+.sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+
+  .sort-field {
+    width: 180px;
+  }
+}
+
 .tabs {
   display: flex;
   gap: 6px;
