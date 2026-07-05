@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -32,6 +32,7 @@ private fb          = inject(FormBuilder);
 private authService = inject(AuthService);
 private router      = inject(Router);
 private destroyRef  = inject(DestroyRef);
+private cdr         = inject(ChangeDetectorRef);
 
 form = this.fb.group({
   name:     ['', Validators.required],
@@ -56,6 +57,7 @@ errorMessage = '';
         error: (err) => {
           this.errorMessage = err.error?.message ?? 'Error al registrarse';
           this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }

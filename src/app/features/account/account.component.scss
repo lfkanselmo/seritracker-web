@@ -1,0 +1,70 @@
+.page-container {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px 16px 60px;
+
+  @media (min-width: 768px) {
+    padding: 32px 20px 60px;
+  }
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.back-btn {
+  color: var(--color-text-dim) !important;
+  flex-shrink: 0;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+
+  @media (min-width: 768px) {
+    font-size: 24px;
+  }
+}
+
+.page-subtitle {
+  font-size: 12px;
+  color: var(--color-text-faint);
+  margin: 0;
+}
+
+.account-card {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.submit-btn {
+  margin-top: 8px;
+  height: 48px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+}
+
+.error-message {
+  color: var(--status-abandoned);
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}

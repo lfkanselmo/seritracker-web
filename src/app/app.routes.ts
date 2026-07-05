@@ -44,6 +44,13 @@ export const routes: Routes = [
     ]
   },
   {
+    path: 'account',
+    canActivate: [authGuard],
+    data: { animation: 'account' },
+    loadComponent: () => import('./features/account/account.component')
+      .then(m => m.AccountComponent)
+  },
+  {
     path: '**',
     redirectTo: 'series'
   }

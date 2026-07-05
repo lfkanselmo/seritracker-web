@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
-import { AuthResponse, LoginRequest, RegisterRequest } from '../models/user.model';
+import { AuthResponse, ChangePasswordRequest, LoginRequest, RegisterRequest } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -22,6 +22,10 @@ export class AuthService {
     return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/login`, request).pipe(
       tap(response => this.saveSession(response.data))
     );
+  }
+
+  changePassword(request: ChangePasswordRequest): Observable<ApiResponse<void>> {
+    return this.http.patch<ApiResponse<void>>(`${this.apiUrl}/password`, request);
   }
 
   logout(): void {

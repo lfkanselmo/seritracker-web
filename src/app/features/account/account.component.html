@@ -1,0 +1,79 @@
+<app-navbar />
+
+<div class="page-container" @pageFadeIn>
+
+  <!-- Header -->
+  <div class="page-header">
+    <button mat-icon-button (click)="onBack()" class="back-btn">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 class="page-title">Mi cuenta</h1>
+      <p class="page-subtitle">{{ userName }}</p>
+    </div>
+  </div>
+
+  <mat-card class="account-card">
+    <mat-card-header>
+      <mat-card-title>Cambiar contraseña</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" #formDirective="ngForm">
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña actual</mat-label>
+          <input matInput formControlName="currentPassword"
+                 [type]="hideCurrentPassword ? 'password' : 'text'">
+          <button mat-icon-button matSuffix type="button"
+                  (click)="hideCurrentPassword = !hideCurrentPassword">
+            <mat-icon>{{ hideCurrentPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.get('currentPassword')?.hasError('required') && form.get('currentPassword')?.touched) {
+            <mat-error>La contraseña actual es requerida</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nueva contraseña</mat-label>
+          <input matInput formControlName="newPassword"
+                 [type]="hideNewPassword ? 'password' : 'text'">
+          <button mat-icon-button matSuffix type="button"
+                  (click)="hideNewPassword = !hideNewPassword">
+            <mat-icon>{{ hideNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          @if (form.get('newPassword')?.hasError('required') && form.get('newPassword')?.touched) {
+            <mat-error>La nueva contraseña es requerida</mat-error>
+          }
+          @if (form.get('newPassword')?.hasError('minlength') && form.get('newPassword')?.touched) {
+            <mat-error>Mínimo 8 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Confirmar nueva contraseña</mat-label>
+          <input matInput formControlName="confirmPassword"
+                 [type]="hideNewPassword ? 'password' : 'text'">
+          @if (form.hasError('passwordsMismatch') && form.get('confirmPassword')?.touched) {
+            <mat-error>Las contraseñas no coinciden</mat-error>
+          }
+        </mat-form-field>
+
+        @if (errorMessage) {
+          <p class="error-message">{{ errorMessage }}</p>
+        }
+
+        <button mat-raised-button type="submit"
+                class="full-width submit-btn btn-gradient" [disabled]="isLoading">
+          @if (isLoading) {
+            <mat-spinner diameter="20" />
+          } @else {
+            Cambiar contraseña
+          }
+        </button>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+</div>
