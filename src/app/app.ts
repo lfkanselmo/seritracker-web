@@ -7,11 +7,8 @@ import { routeAnimations } from './shared/animations/app.animations';
   standalone: true,
   imports: [RouterOutlet],
   animations: [routeAnimations],
-  template: `
-    <div [@routeAnimations]="getRouteState(outlet)" style="position: relative">
-      <router-outlet #outlet="outlet" />
-    </div>
-  `
+  templateUrl: './app.html',
+  styleUrl: './app.scss'
 })
 export class AppComponent {
   getRouteState(outlet: RouterOutlet): string {
