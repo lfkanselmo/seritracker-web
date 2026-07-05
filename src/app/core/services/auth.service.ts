@@ -3,7 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
-import { AuthResponse, ChangePasswordRequest, LoginRequest, RegisterRequest } from '../models/user.model';
+import {
+  AuthResponse,
+  ChangePasswordRequest,
+  ForgotPasswordRequest,
+  LoginRequest,
+  RegisterRequest,
+  ResetPasswordRequest
+} from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -26,6 +33,14 @@ export class AuthService {
 
   changePassword(request: ChangePasswordRequest): Observable<ApiResponse<void>> {
     return this.http.patch<ApiResponse<void>>(`${this.apiUrl}/password`, request);
+  }
+
+  forgotPassword(request: ForgotPasswordRequest): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/forgot-password`, request);
+  }
+
+  resetPassword(request: ResetPasswordRequest): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${this.apiUrl}/reset-password`, request);
   }
 
   logout(): void {

@@ -62,4 +62,26 @@ describe('AuthService', () => {
             { currentPassword: 'old123', newPassword: 'new12345' }
         );
     });
+
+    it('should POST to /auth/forgot-password with the given email', () => {
+        httpMock.post.mockReturnValue(of({ success: true, data: undefined, message: 'OK', timestamp: '' }));
+
+        service.forgotPassword({ email: 'user@test.com' }).subscribe();
+
+        expect(httpMock.post).toHaveBeenCalledWith(
+            expect.stringContaining('/auth/forgot-password'),
+            { email: 'user@test.com' }
+        );
+    });
+
+    it('should POST to /auth/reset-password with the token and new password', () => {
+        httpMock.post.mockReturnValue(of({ success: true, data: undefined, message: 'OK', timestamp: '' }));
+
+        service.resetPassword({ token: 'abc123', newPassword: 'new12345' }).subscribe();
+
+        expect(httpMock.post).toHaveBeenCalledWith(
+            expect.stringContaining('/auth/reset-password'),
+            { token: 'abc123', newPassword: 'new12345' }
+        );
+    });
 });
