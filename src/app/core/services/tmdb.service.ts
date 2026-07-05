@@ -17,8 +17,4 @@ export class TmdbService {
       params: { q: query }
     });
   }
-
-  getDetails(tmdbId: number): Observable<ApiResponse<TmdbSeries>> {
-    return this.http.get<ApiResponse<TmdbSeries>>(`${this.apiUrl}/series/${tmdbId}`);
-  }
 }

@@ -1,6 +1,5 @@
-import { Component, OnInit, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, DestroyRef, ChangeDetectorRef, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,7 +19,6 @@ import { Notification } from '../../core/models/series.model';
   selector: 'app-navbar',
   standalone: true,
   imports: [
-    CommonModule,
     RouterLink,
     MatToolbarModule,
     MatButtonModule,
@@ -40,6 +38,7 @@ export class NavbarComponent implements OnInit {
   private notificationService = inject(NotificationService);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
+  private cdr = inject(ChangeDetectorRef);
   themeService = inject(ThemeService);
   languageService = inject(LanguageService);
 
@@ -65,6 +64,7 @@ export class NavbarComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.notifications = response.data.content;
+          this.cdr.detectChanges();
         },
         error: () => { }
       });
@@ -79,6 +79,7 @@ export class NavbarComponent implements OnInit {
           this.notifications = this.notifications.map(n =>
             n.id === notification.id ? { ...n, read: true } : n
           );
+          this.cdr.detectChanges();
         },
         error: () => { }
       });

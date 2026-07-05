@@ -2,7 +2,6 @@
 
 <div class="page-container" @fadeIn>
 
-  <!-- Header -->
   <div class="page-header">
     <div class="header-left">
       <h1 class="page-title">{{ 'series.list.title' | transloco }}</h1>
@@ -19,7 +18,6 @@
     </div>
   </div>
 
-  <!-- Search bar -->
   @if (showSearch) {
     <div class="search-bar">
       <mat-form-field appearance="outline" class="search-field">
@@ -30,7 +28,6 @@
     </div>
   }
 
-  <!-- Sort -->
   <div class="sort-bar">
     <mat-form-field appearance="outline" class="sort-field">
       <mat-label>{{ 'series.list.sort.label' | transloco }}</mat-label>
@@ -48,7 +45,6 @@
     </button>
   </div>
 
-  <!-- Tabs -->
   <div class="tabs">
     @for (tab of tabs; track tab.labelKey) {
       <button
@@ -60,7 +56,6 @@
     }
   </div>
 
-  <!-- Loading -->
   @if (isLoading) {
     <div class="state-container">
       <mat-spinner diameter="48" />
@@ -68,7 +63,6 @@
     </div>
   }
 
-  <!-- Error -->
   @if (hasError && !isLoading) {
     <div class="state-container error">
       <mat-icon>error_outline</mat-icon>
@@ -77,7 +71,6 @@
     </div>
   }
 
-  <!-- Empty -->
   @if (!isLoading && !hasError && seriesList.length === 0) {
     <div class="state-container empty">
       <span class="empty-icon">📺</span>
@@ -92,7 +85,6 @@
     </div>
   }
 
-  <!-- Grid -->
   @if (!isLoading && seriesList.length > 0) {
   <div class="series-grid" [@listStagger]="seriesList.length">
     @for (series of seriesList; track series.id) {

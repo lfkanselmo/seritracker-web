@@ -2,14 +2,12 @@
 
 <div class="page-container" @pageFadeIn>
 
-  <!-- Loading -->
   @if (isLoading) {
     <div class="state-container">
       <mat-spinner diameter="48" />
     </div>
   }
 
-  <!-- Error -->
   @if (hasError && !isLoading) {
     <div class="state-container error">
       <mat-icon>error_outline</mat-icon>
@@ -20,13 +18,11 @@
 
   @if (series && !isLoading) {
 
-    <!-- Back -->
     <button mat-button class="back-btn" (click)="onBack()">
       <mat-icon>arrow_back</mat-icon>
       {{ 'series.detail.back' | transloco }}
     </button>
 
-    <!-- Hero -->
     <div class="hero" @fadeIn>
       <div class="poster-container">
         @if (series.posterUrl) {
@@ -40,12 +36,10 @@
         <h1 class="series-title">{{ series.title }}</h1>
         <p class="series-meta">{{ series.network }}</p>
 
-        <!-- Status badge -->
         <div class="status-badge" [class]="statusClass">
           {{ series.status | seriesStatus }}
         </div>
 
-        <!-- Rating -->
         <div class="rating-section">
           <p class="section-label">{{ 'series.detail.yourRating' | transloco }}</p>
           <app-star-rating
@@ -56,7 +50,6 @@
       </div>
     </div>
 
-    <!-- Episode progress -->
     @if (series.status !== 'WANT_TO_WATCH') {
       <div class="detail-card">
         <h2 class="card-title">{{ 'series.detail.episodeProgress' | transloco }}</h2>
@@ -72,7 +65,6 @@
           <div class="progress-fill" [class]="statusClass" [style.width.%]="progressPercent"></div>
         </div>
 
-        <!-- Próximo episodio -->
         @if (nextEpisode) {
           <div class="next-episode-banner">
             <div class="next-episode-info">
@@ -90,7 +82,6 @@
           </div>
         }
 
-        <!-- Temporadas -->
         @if (isLoadingSeasons && seasons.length === 0) {
           <div class="season-loading"><mat-spinner diameter="24" /></div>
         } @else if (seasons.length > 0) {
@@ -131,7 +122,6 @@
       </div>
     }
 
-    <!-- Notes -->
     <div class="detail-card">
       <h2 class="card-title">{{ 'series.detail.notes' | transloco }}</h2>
       <textarea
@@ -153,7 +143,6 @@
       </div>
     </div>
 
-    <!-- Change status -->
     <div class="detail-card">
       <h2 class="card-title">{{ 'series.detail.changeStatus' | transloco }}</h2>
       <div class="status-buttons">
@@ -170,7 +159,6 @@
       </div>
     </div>
 
-    <!-- Danger zone -->
     <div class="detail-card danger">
       <h2 class="card-title danger-title">{{ 'series.detail.dangerZone' | transloco }}</h2>
       <button mat-stroked-button class="btn-danger" (click)="onDeleteRequest()">

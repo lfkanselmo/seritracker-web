@@ -1,7 +1,6 @@
 <mat-card class="series-card" (click)="onCardClick()">
   <div class="card-inner">
 
-    <!-- Poster -->
     <div class="poster-container">
       @if (series.posterUrl) {
         <img
@@ -15,13 +14,11 @@
         </div>
       }
 
-      <!-- Status badge -->
       <div class="status-badge" [class]="statusClass">
         {{ series.status | seriesStatus }}
       </div>
     </div>
 
-    <!-- Info -->
     <div class="series-info">
 
       <div class="series-header">
@@ -29,14 +26,12 @@
         <span class="series-network">{{ series.network }}</span>
       </div>
 
-      <!-- Rating -->
       <app-star-rating
         [value]="series.rating"
         (ratingChange)="onRatingChange($event)"
         (click)="$event.stopPropagation()">
       </app-star-rating>
 
-      <!-- Progress -->
       @if (series.status !== 'WANT_TO_WATCH') {
         <div class="progress-section">
           <div class="progress-header">
@@ -54,7 +49,6 @@
     </div>
   </div>
 
-  <!-- Actions -->
   <div class="card-actions" (click)="$event.stopPropagation()">
     @for (status of statusEntries; track status) {
       <button

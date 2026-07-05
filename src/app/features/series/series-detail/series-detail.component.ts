@@ -1,6 +1,6 @@
 import { Component, OnInit, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -10,19 +10,19 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserSeries, SeriesStatus, STATUS_CONFIG, SeasonProgress, NextEpisode, EpisodeInfo } from '../../../core/models/series.model';
+import { UserSeries, SeriesStatus, STATUS_CONFIG, STATUS_CLASS, calculateProgressPercent, SeasonProgress, NextEpisode, EpisodeInfo } from '../../../core/models/series.model';
 import { SeriesService } from '../../../core/services/series.service';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
 import { SeriesStatusPipe } from '../../../shared/pipes/series-status.pipe';
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { confirmDeleteSeries } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { pageFadeIn, fadeIn } from '../../../shared/animations/app.animations';
+import { extractErrorMessage } from '../../../core/utils/http-error.util';
 
 @Component({
   selector: 'app-series-detail',
   standalone: true,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -68,8 +68,8 @@ export class SeriesDetailComponent implements OnInit {
   readonly statuses = Object.keys(STATUS_CONFIG) as SeriesStatus[];
 
   get progressPercent(): number {
-    if (!this.series?.totalEpisodes) return 0;
-    return Math.round((this.series.watchedEpisodes / this.series.totalEpisodes) * 100);
+    if (!this.series) return 0;
+    return calculateProgressPercent(this.series.watchedEpisodes, this.series.totalEpisodes);
   }
 
   get notesDirty(): boolean {
@@ -77,13 +77,7 @@ export class SeriesDetailComponent implements OnInit {
   }
 
   get statusClass(): string {
-    const map: Record<SeriesStatus, string> = {
-      WATCHING: 'watching',
-      WANT_TO_WATCH: 'want-to',
-      COMPLETED: 'completed',
-      ABANDONED: 'abandoned',
-    };
-    return this.series ? map[this.series.status] : '';
+    return this.series ? STATUS_CLASS[this.series.status] : '';
   }
 
   ngOnInit(): void {
@@ -105,10 +99,11 @@ export class SeriesDetailComponent implements OnInit {
           this.cdr.detectChanges();
           this.loadSeasonsSummary();
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           this.hasError = true;
-          this.errorMessage = err.error?.message ?? this.transloco.translate('series.detail.error');
+          this.errorMessage = extractErrorMessage(err, this.transloco, 'series.detail.error');
           this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }
@@ -279,17 +274,7 @@ export class SeriesDetailComponent implements OnInit {
   onDeleteRequest(): void {
     if (!this.series) return;
 
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '380px',
-      data: {
-        title: this.transloco.translate('dialog.deleteSeriesTitle'),
-        message: this.transloco.translate('dialog.deleteSeriesMessage', { title: this.series.title }),
-        confirm: this.transloco.translate('dialog.delete'),
-        cancel: this.transloco.translate('dialog.cancel')
-      }
-    });
-
-    dialogRef.afterClosed()
+    confirmDeleteSeries(this.dialog, this.transloco, this.series.title)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(confirmed => {
         if (confirmed) this.deleteSeries();

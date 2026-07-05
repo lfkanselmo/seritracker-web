@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,7 +6,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoModule } from '@jsverse/transloco';
-import { UserSeries, SeriesStatus, STATUS_CONFIG } from '../../../core/models/series.model';
+import { UserSeries, SeriesStatus, STATUS_CONFIG, STATUS_CLASS, calculateProgressPercent } from '../../../core/models/series.model';
 import { SeriesStatusPipe } from '../../pipes/series-status.pipe';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 
@@ -15,7 +14,6 @@ import { StarRatingComponent } from '../star-rating/star-rating.component';
   selector: 'app-series-card',
   standalone: true,
   imports: [
-    CommonModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
@@ -42,8 +40,7 @@ export class SeriesCardComponent {
   readonly statuses = Object.keys(STATUS_CONFIG) as SeriesStatus[];
 
   get progressPercent(): number {
-    if (!this.series.totalEpisodes) return 0;
-    return Math.round((this.series.watchedEpisodes / this.series.totalEpisodes) * 100);
+    return calculateProgressPercent(this.series.watchedEpisodes, this.series.totalEpisodes);
   }
 
   get statusEntries() {
@@ -51,13 +48,7 @@ export class SeriesCardComponent {
   }
 
   get statusClass(): string {
-    const map: Record<SeriesStatus, string> = {
-      WATCHING: 'watching',
-      WANT_TO_WATCH: 'want-to',
-      COMPLETED: 'completed',
-      ABANDONED: 'abandoned',
-    };
-    return map[this.series.status];
+    return STATUS_CLASS[this.series.status];
   }
 
   onCardClick(): void {

@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../core/services/auth.service';
+import { extractErrorMessage } from '../../../core/utils/http-error.util';
 
 @Component({
   selector: 'app-forgot-password',
@@ -58,11 +60,11 @@ export class ForgotPasswordComponent {
           this.submitted = true;
           this.cdr.detectChanges();
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           // El backend responde 200 siempre que el request sea válido —
           // un error acá es de rate limiting o de red, no revela si el
           // email existe o no.
-          this.errorMessage = err.error?.message ?? this.transloco.translate('auth.forgotPassword.error');
+          this.errorMessage = extractErrorMessage(err, this.transloco, 'auth.forgotPassword.error');
           this.isLoading = false;
           this.cdr.detectChanges();
         }

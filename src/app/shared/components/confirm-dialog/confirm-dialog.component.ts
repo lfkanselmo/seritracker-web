@@ -1,12 +1,32 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslocoService } from '@jsverse/transloco';
+import { Observable } from 'rxjs';
 
 export interface ConfirmDialogData {
   title:   string;
   message: string;
   confirm: string;
   cancel:  string;
+}
+
+export function confirmDeleteSeries(
+  dialog: MatDialog,
+  transloco: TranslocoService,
+  seriesTitle: string
+): Observable<boolean | undefined> {
+  const dialogRef = dialog.open(ConfirmDialogComponent, {
+    width: '380px',
+    data: {
+      title: transloco.translate('dialog.deleteSeriesTitle'),
+      message: transloco.translate('dialog.deleteSeriesMessage', { title: seriesTitle }),
+      confirm: transloco.translate('dialog.delete'),
+      cancel: transloco.translate('dialog.cancel')
+    }
+  });
+
+  return dialogRef.afterClosed();
 }
 
 @Component({

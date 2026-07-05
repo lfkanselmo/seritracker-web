@@ -78,6 +78,18 @@ export const STATUS_CONFIG: Record<SeriesStatus, { color: string; icon: string }
   ABANDONED: { color: 'warn', icon: 'close' },
 };
 
+export const STATUS_CLASS: Record<SeriesStatus, string> = {
+  WATCHING: 'watching',
+  WANT_TO_WATCH: 'want-to',
+  COMPLETED: 'completed',
+  ABANDONED: 'abandoned',
+};
+
+export function calculateProgressPercent(watchedEpisodes: number, totalEpisodes: number): number {
+  if (!totalEpisodes) return 0;
+  return Math.round((watchedEpisodes / totalEpisodes) * 100);
+}
+
 export interface Notification {
   id: number;
   tmdbId: number;

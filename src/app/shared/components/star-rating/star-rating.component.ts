@@ -1,11 +1,9 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-star-rating',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [],
   templateUrl: './star-rating.component.html',
   styleUrl:    './star-rating.component.scss'
 })

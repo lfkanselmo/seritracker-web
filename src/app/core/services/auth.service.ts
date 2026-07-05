@@ -8,6 +8,7 @@ import {
   ChangePasswordRequest,
   ForgotPasswordRequest,
   LoginRequest,
+  RefreshTokenRequest,
   RegisterRequest,
   ResetPasswordRequest
 } from '../models/user.model';
@@ -32,8 +33,8 @@ export class AuthService {
   }
 
   refresh(): Observable<ApiResponse<AuthResponse>> {
-    const refreshToken = this.getRefreshToken();
-    return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
+    const request: RefreshTokenRequest = { refreshToken: this.getRefreshToken() ?? '' };
+    return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/refresh`, request).pipe(
       tap(response => this.saveSession(response.data))
     );
   }
@@ -56,7 +57,8 @@ export class AuthService {
 
     if (refreshToken) {
       // Revocación best-effort — el logout local no depende de la red.
-      this.http.post(`${this.apiUrl}/logout`, { refreshToken }).subscribe({ error: () => {} });
+      const request: RefreshTokenRequest = { refreshToken };
+      this.http.post(`${this.apiUrl}/logout`, request).subscribe({ error: () => {} });
     }
   }
 

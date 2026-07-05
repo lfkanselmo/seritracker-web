@@ -19,7 +19,6 @@ describe('TmdbService', () => {
     };
 
     const mockListResponse = { success: true, data: [mockTmdbSeries], message: 'OK', timestamp: '' };
-    const mockSingleResponse = { success: true, data: mockTmdbSeries, message: 'OK', timestamp: '' };
 
     beforeEach(() => {
         httpClientMock = { get: vi.fn() };
@@ -59,21 +58,6 @@ describe('TmdbService', () => {
             service.search('xyzunknown').subscribe(response => {
                 expect(response.data).toHaveLength(0);
             });
-        });
-    });
-
-    describe('getDetails', () => {
-        it('should call GET /tmdb/series/:tmdbId', () => {
-            httpClientMock.get.mockReturnValue(of(mockSingleResponse));
-
-            service.getDetails(1396).subscribe(response => {
-                expect(response.data.tmdbId).toBe(1396);
-                expect(response.data.title).toBe('Breaking Bad');
-            });
-
-            expect(httpClientMock.get).toHaveBeenCalledWith(
-                expect.stringContaining('/tmdb/series/1396')
-            );
         });
     });
 });

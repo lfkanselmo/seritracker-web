@@ -2,7 +2,6 @@
 
 <div class="page-container" @pageFadeIn>
 
-  <!-- Header -->
   <div class="page-header">
     <button mat-icon-button (click)="onBack()" class="back-btn">
       <mat-icon>arrow_back</mat-icon>
@@ -13,14 +12,12 @@
     </div>
   </div>
 
-  <!-- Search input -->
   <mat-form-field appearance="outline" class="search-field">
     <mat-label>{{ 'series.search.searchLabel' | transloco }}</mat-label>
     <input matInput [formControl]="searchControl" [placeholder]="'series.search.searchPlaceholder' | transloco" autofocus>
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
 
-  <!-- Searching -->
   @if (isSearching) {
     <div class="state-container">
       <mat-spinner diameter="40" />
@@ -28,7 +25,6 @@
     </div>
   }
 
-  <!-- No results -->
   @if (hasSearched && !isSearching && results.length === 0) {
     <div class="state-container">
       <mat-icon>search_off</mat-icon>
@@ -36,13 +32,11 @@
     </div>
   }
 
-  <!-- Results -->
   @if (!isSearching && results.length > 0) {
   <div class="results-list" [@listStagger]="results.length">
     @for (series of results; track series.tmdbId) {
       <div class="result-card" @fadeIn>
 
-          <!-- Poster -->
           <div class="result-poster">
             @if (series.posterUrl) {
               <img [src]="series.posterUrl" [alt]="series.title" loading="lazy">
@@ -51,7 +45,6 @@
             }
           </div>
 
-          <!-- Info -->
           <div class="result-info">
             <h3 class="result-title">{{ series.title }}</h3>
             @if (series.network) {
@@ -59,7 +52,6 @@
             }
           </div>
 
-          <!-- Add buttons -->
           <div class="result-actions">
             @if (isAdding === series.tmdbId) {
               <mat-spinner diameter="24" />

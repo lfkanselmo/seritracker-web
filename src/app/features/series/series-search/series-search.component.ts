@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -18,12 +18,12 @@ import { SeriesService } from '../../../core/services/series.service';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { SeriesStatusPipe } from '../../../shared/pipes/series-status.pipe';
 import { pageFadeIn, listStagger, fadeIn } from '../../../shared/animations/app.animations';
+import { extractErrorMessage } from '../../../core/utils/http-error.util';
 
 @Component({
   selector: 'app-series-search',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
@@ -101,8 +101,8 @@ export class SeriesSearchComponent {
           this.isAdding = null;
           this.cdr.detectChanges();
         },
-        error: (err) => {
-          const message = err.error?.message ?? this.transloco.translate('series.search.addError');
+        error: (err: HttpErrorResponse) => {
+          const message = extractErrorMessage(err, this.transloco, 'series.search.addError');
           this.snackBar.open(message, '✕', { duration: 3000 });
           this.isAdding = null;
           this.cdr.detectChanges();

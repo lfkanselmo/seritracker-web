@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroupDirective, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -13,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth.service';
 import { NavbarComponent } from '../../layout/navbar/navbar.component';
 import { pageFadeIn } from '../../shared/animations/app.animations';
+import { extractErrorMessage } from '../../core/utils/http-error.util';
 
 function passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
   const newPassword = group.get('newPassword')?.value;
@@ -82,8 +84,8 @@ export class AccountComponent {
           this.snackBar.open(this.transloco.translate('account.success'), '✓', { duration: 2500 });
           this.cdr.detectChanges();
         },
-        error: (err) => {
-          this.errorMessage = err.error?.message ?? this.transloco.translate('account.error');
+        error: (err: HttpErrorResponse) => {
+          this.errorMessage = extractErrorMessage(err, this.transloco, 'account.error');
           this.isLoading = false;
           this.cdr.detectChanges();
         }

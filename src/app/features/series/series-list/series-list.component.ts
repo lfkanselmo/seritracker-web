@@ -1,5 +1,6 @@
 import { Component, OnInit, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
@@ -9,8 +10,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserSeries, SeriesStatus, SeriesSortBy, SortDirection, STATUS_CONFIG } from '../../../core/models/series.model';
 import { SeriesService } from '../../../core/services/series.service';
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { CommonModule } from '@angular/common';
+import { confirmDeleteSeries } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -21,12 +21,12 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { SeriesCardComponent } from '../../../shared/components/series-card/series-card.component';
 import { fadeIn, listStagger, tabFade } from '../../../shared/animations/app.animations';
+import { extractErrorMessage } from '../../../core/utils/http-error.util';
 
 @Component({
   selector: 'app-series-list',
   standalone: true,
   imports: [
-    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -126,9 +126,9 @@ export class SeriesListComponent implements OnInit {
           this.isLoading = false;
           this.cdr.detectChanges();
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           this.hasError = true;
-          this.errorMessage = err.error?.message ?? this.transloco.translate('series.list.error');
+          this.errorMessage = extractErrorMessage(err, this.transloco, 'series.list.error');
           this.isLoading = false;
           this.cdr.detectChanges();
         }
@@ -190,17 +190,7 @@ export class SeriesListComponent implements OnInit {
   }
 
   onDeleteRequest(series: UserSeries): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '380px',
-      data: {
-        title: this.transloco.translate('dialog.deleteSeriesTitle'),
-        message: this.transloco.translate('dialog.deleteSeriesMessage', { title: series.title }),
-        confirm: this.transloco.translate('dialog.delete'),
-        cancel: this.transloco.translate('dialog.cancel')
-      }
-    });
-
-    dialogRef.afterClosed()
+    confirmDeleteSeries(this.dialog, this.transloco, series.title)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(confirmed => {
         if (confirmed) this.deleteSeries(series);

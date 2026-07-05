@@ -41,19 +41,6 @@ export const listStagger = trigger('listStagger', [
     ])
 ]);
 
-// ── Slide out al eliminar ──────────────────────────────────────────
-export const slideOut = trigger('slideOut', [
-    transition(':leave', [
-        animate('200ms ease-in', style({
-            opacity: 0,
-            transform: 'translateX(-100%)',
-            height: 0,
-            margin: 0,
-            padding: 0
-        }))
-    ])
-]);
-
 // ── Fade entre tabs ────────────────────────────────────────────────
 export const tabFade = trigger('tabFade', [
     transition(':enter', [
