@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -27,6 +28,7 @@ function passwordsMatchValidator(group: AbstractControl): ValidationErrors | nul
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TranslocoModule,
   ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss'
@@ -39,6 +41,7 @@ export class ResetPasswordComponent implements OnInit {
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
+  private transloco = inject(TranslocoService);
 
   form = this.fb.group({
     newPassword: ['', [Validators.required, Validators.minLength(8)]],
@@ -74,7 +77,7 @@ export class ResetPasswordComponent implements OnInit {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          this.errorMessage = err.error?.message ?? 'Error al restablecer la contraseña';
+          this.errorMessage = err.error?.message ?? this.transloco.translate('auth.resetPassword.error');
           this.isLoading = false;
           this.cdr.detectChanges();
         }

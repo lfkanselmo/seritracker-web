@@ -9,6 +9,7 @@ import { SeriesDetailComponent } from './series-detail.component';
 import { SeriesService } from '../../../core/services/series.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { UserSeries } from '../../../core/models/series.model';
+import { i18nTestingModule } from '../../../core/testing/i18n-testing';
 
 describe('SeriesDetailComponent', () => {
     let component: SeriesDetailComponent;
@@ -56,7 +57,7 @@ describe('SeriesDetailComponent', () => {
         dialogMock = { open: vi.fn() };
 
         TestBed.configureTestingModule({
-            imports: [SeriesDetailComponent],
+            imports: [SeriesDetailComponent, i18nTestingModule()],
             providers: [
                 provideRouter([]),
                 provideNoopAnimations(),

@@ -9,12 +9,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { TmdbSeries, SeriesStatus, STATUS_CONFIG } from '../../../core/models/series.model';
 import { TmdbService } from '../../../core/services/tmdb.service';
 import { SeriesService } from '../../../core/services/series.service';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
+import { SeriesStatusPipe } from '../../../shared/pipes/series-status.pipe';
 import { pageFadeIn, listStagger, fadeIn } from '../../../shared/animations/app.animations';
 
 @Component({
@@ -30,6 +32,8 @@ import { pageFadeIn, listStagger, fadeIn } from '../../../shared/animations/app.
     MatProgressSpinnerModule,
     MatChipsModule,
     NavbarComponent,
+    SeriesStatusPipe,
+    TranslocoModule,
   ],
   animations: [pageFadeIn, listStagger, fadeIn],
   templateUrl: './series-search.component.html',
@@ -43,6 +47,7 @@ export class SeriesSearchComponent {
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
+  private transloco = inject(TranslocoService);
 
   searchControl = new FormControl('');
 
@@ -56,13 +61,6 @@ export class SeriesSearchComponent {
   ];
 
   readonly statusConfig = STATUS_CONFIG;
-
-  readonly statusLabels: Record<SeriesStatus, string> = {
-    WATCHING: 'Viendo',
-    WANT_TO_WATCH: 'Por ver',
-    COMPLETED: 'Completada',
-    ABANDONED: 'Abandonada'
-  };
 
   constructor() {
     this.searchControl.valueChanges.pipe(
@@ -83,7 +81,7 @@ export class SeriesSearchComponent {
       },
       error: () => {
         this.isSearching = false;
-        this.snackBar.open('Error al buscar series', '✕', { duration: 3000 });
+        this.snackBar.open(this.transloco.translate('series.search.error'), '✕', { duration: 3000 });
         this.cdr.detectChanges();
       }
     });
@@ -99,12 +97,12 @@ export class SeriesSearchComponent {
     }).pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.snackBar.open(`"${series.title}" agregada a tu lista`, '✓', { duration: 3000 });
+          this.snackBar.open(this.transloco.translate('series.search.added', { title: series.title }), '✓', { duration: 3000 });
           this.isAdding = null;
           this.cdr.detectChanges();
         },
         error: (err) => {
-          const message = err.error?.message ?? 'Error al agregar serie';
+          const message = err.error?.message ?? this.transloco.translate('series.search.addError');
           this.snackBar.open(message, '✕', { duration: 3000 });
           this.isAdding = null;
           this.cdr.detectChanges();

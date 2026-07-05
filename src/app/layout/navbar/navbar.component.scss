@@ -141,6 +141,16 @@
   }
 }
 
+.lang-btn {
+  .lang-code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--color-text-dim);
+  }
+}
+
 .mark-read-btn {
   flex-shrink: 0;
   width: 28px !important;

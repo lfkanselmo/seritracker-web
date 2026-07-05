@@ -19,9 +19,9 @@
 
   <mat-menu #notifMenu="matMenu" class="notif-menu">
     <div class="notif-header">
-      <span>Notificaciones</span>
+      <span>{{ 'notifications.title' | transloco }}</span>
       @if (unreadCount > 0) {
-        <span class="notif-count">{{ unreadCount }} nueva(s)</span>
+        <span class="notif-count">{{ 'notifications.unread' | transloco: { count: unreadCount } }}</span>
       }
     </div>
     <mat-divider />
@@ -29,7 +29,7 @@
     @if (notifications.length === 0) {
       <div class="notif-empty">
         <mat-icon>notifications_none</mat-icon>
-        <p>Sin notificaciones</p>
+        <p>{{ 'notifications.empty' | transloco }}</p>
       </div>
     }
 
@@ -40,7 +40,7 @@
           <div class="notif-detail">
             <span class="notif-episode">{{ notif.episodeCode }}</span>
             <span class="notif-date" [class.today]="notif.isToday" [class.tomorrow]="notif.isTomorrow">
-              {{ notif.isToday ? '¡Hoy!' : notif.isTomorrow ? 'Mañana' : notif.airDate }}
+              {{ notif.isToday ? ('notifications.today' | transloco) : notif.isTomorrow ? ('notifications.tomorrow' | transloco) : notif.airDate }}
             </span>
           </div>
         </div>
@@ -56,9 +56,15 @@
     }
   </mat-menu>
 
+  <!-- Idioma -->
+  <button mat-icon-button class="lang-btn" (click)="languageService.toggle()"
+          [matTooltip]="(languageService.lang() === 'es' ? 'nav.langToEnglish' : 'nav.langToSpanish') | transloco">
+    <span class="lang-code">{{ languageService.lang().toUpperCase() }}</span>
+  </button>
+
   <!-- Tema claro/oscuro -->
   <button mat-icon-button (click)="themeService.toggle()"
-          [matTooltip]="themeService.theme() === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'">
+          [matTooltip]="(themeService.theme() === 'dark' ? 'nav.themeToLight' : 'nav.themeToDark') | transloco">
     <mat-icon>{{ themeService.theme() === 'dark' ? 'dark_mode' : 'light_mode' }}</mat-icon>
   </button>
 
@@ -75,11 +81,11 @@
     <mat-divider />
     <button mat-menu-item routerLink="/account">
       <mat-icon>settings</mat-icon>
-      <span>Mi cuenta</span>
+      <span>{{ 'nav.myAccount' | transloco }}</span>
     </button>
     <button mat-menu-item (click)="onLogout()">
       <mat-icon>logout</mat-icon>
-      <span>Cerrar sesión</span>
+      <span>{{ 'nav.logout' | transloco }}</span>
     </button>
   </mat-menu>
 

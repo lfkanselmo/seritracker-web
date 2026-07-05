@@ -8,10 +8,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { ThemeService } from '../../core/services/theme.service';
+import { LanguageService } from '../../core/services/language.service';
 import { Notification } from '../../core/models/series.model';
 
 @Component({
@@ -27,6 +29,7 @@ import { Notification } from '../../core/models/series.model';
     MatBadgeModule,
     MatDividerModule,
     MatTooltipModule,
+    TranslocoModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
@@ -38,6 +41,7 @@ export class NavbarComponent implements OnInit {
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   themeService = inject(ThemeService);
+  languageService = inject(LanguageService);
 
   notifications: Notification[] = [];
 

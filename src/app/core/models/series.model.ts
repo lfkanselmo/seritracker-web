@@ -41,11 +41,11 @@ export interface UpdateEpisodesRequest {
   watchedEpisodes: number;
 }
 
-export const STATUS_CONFIG: Record<SeriesStatus, { label: string; color: string; icon: string }> = {
-  WATCHING: { label: 'Viendo', color: 'accent', icon: 'play_arrow' },
-  WANT_TO_WATCH: { label: 'Por ver', color: 'primary', icon: 'bookmark' },
-  COMPLETED: { label: 'Completada', color: 'warn', icon: 'check' },
-  ABANDONED: { label: 'Abandonada', color: 'warn', icon: 'close' },
+export const STATUS_CONFIG: Record<SeriesStatus, { color: string; icon: string }> = {
+  WATCHING: { color: 'accent', icon: 'play_arrow' },
+  WANT_TO_WATCH: { color: 'primary', icon: 'bookmark' },
+  COMPLETED: { color: 'warn', icon: 'check' },
+  ABANDONED: { color: 'warn', icon: 'close' },
 };
 
 export interface Notification {

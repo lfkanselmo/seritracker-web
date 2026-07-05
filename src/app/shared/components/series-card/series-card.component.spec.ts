@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SeriesCardComponent } from './series-card.component';
 import { UserSeries } from '../../../core/models/series.model';
+import { i18nTestingModule } from '../../../core/testing/i18n-testing';
 
 describe('SeriesCardComponent', () => {
     let component: SeriesCardComponent;
@@ -23,7 +24,7 @@ describe('SeriesCardComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [SeriesCardComponent]
+            imports: [SeriesCardComponent, i18nTestingModule()]
         });
 
         const fixture = TestBed.createComponent(SeriesCardComponent);

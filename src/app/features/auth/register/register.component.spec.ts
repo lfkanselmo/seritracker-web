@@ -4,6 +4,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 import { RegisterComponent } from './register.component';
 import { AuthService } from '../../../core/services/auth.service';
+import { i18nTestingModule } from '../../../core/testing/i18n-testing';
 
 describe('RegisterComponent', () => {
     let component: RegisterComponent;
@@ -14,7 +15,7 @@ describe('RegisterComponent', () => {
         authServiceMock = { register: vi.fn() };
 
         TestBed.configureTestingModule({
-            imports: [RegisterComponent],
+            imports: [RegisterComponent, i18nTestingModule()],
             providers: [
                 provideRouter([]),
                 { provide: AuthService, useValue: authServiceMock },

@@ -9,6 +9,7 @@ import { TmdbService } from '../../../core/services/tmdb.service';
 import { SeriesService } from '../../../core/services/series.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { TmdbSeries } from '../../../core/models/series.model';
+import { i18nTestingModule } from '../../../core/testing/i18n-testing';
 
 describe('SeriesSearchComponent', () => {
     let component: SeriesSearchComponent;
@@ -34,7 +35,7 @@ describe('SeriesSearchComponent', () => {
         snackBarMock = { open: vi.fn() };
 
         TestBed.configureTestingModule({
-            imports: [SeriesSearchComponent],
+            imports: [SeriesSearchComponent, i18nTestingModule()],
             providers: [
                 provideRouter([]),
                 provideNoopAnimations(),

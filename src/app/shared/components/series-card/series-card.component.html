@@ -40,7 +40,7 @@
       @if (series.status !== 'WANT_TO_WATCH') {
         <div class="progress-section">
           <div class="progress-header">
-            <span class="progress-label">Progreso</span>
+            <span class="progress-label">{{ 'series.card.progress' | transloco }}</span>
             <span class="progress-value">
               {{ series.watchedEpisodes }}/{{ series.totalEpisodes }} ep · {{ progressPercent }}%
             </span>
@@ -60,7 +60,7 @@
       <button
         mat-stroked-button
         class="status-btn"
-        [matTooltip]="statusConfig[status].label"
+        [matTooltip]="status | seriesStatus"
         (click)="onStatusChange(status)">
         <mat-icon>{{ statusConfig[status].icon }}</mat-icon>
         <span>{{ status | seriesStatus }}</span>
@@ -70,7 +70,7 @@
     <button
       mat-icon-button
       class="delete-btn"
-      matTooltip="Eliminar"
+      [matTooltip]="'series.card.delete' | transloco"
       (click)="onDeleteRequest()">
       <mat-icon>delete</mat-icon>
     </button>

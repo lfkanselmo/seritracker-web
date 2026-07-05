@@ -10,6 +10,7 @@ import { SeriesListComponent } from './series-list.component';
 import { SeriesService } from '../../../core/services/series.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { UserSeries } from '../../../core/models/series.model';
+import { i18nTestingModule } from '../../../core/testing/i18n-testing';
 
 describe('SeriesListComponent', () => {
     let component: SeriesListComponent;
@@ -56,7 +57,7 @@ describe('SeriesListComponent', () => {
         snackBarMock = { open: vi.fn() };
 
         TestBed.configureTestingModule({
-            imports: [SeriesListComponent],
+            imports: [SeriesListComponent, i18nTestingModule()],
             providers: [
                 provideRouter([]),
                 provideNoopAnimations(),

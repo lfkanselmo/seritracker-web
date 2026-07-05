@@ -14,6 +14,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { SeriesCardComponent } from '../../../shared/components/series-card/series-card.component';
 import { fadeIn, listStagger, tabFade } from '../../../shared/animations/app.animations';
@@ -32,6 +33,7 @@ import { fadeIn, listStagger, tabFade } from '../../../shared/animations/app.ani
     MatPaginatorModule,
     NavbarComponent,
     SeriesCardComponent,
+    TranslocoModule,
   ],
   animations: [fadeIn, listStagger, tabFade],
   templateUrl: './series-list.component.html',
@@ -45,6 +47,7 @@ export class SeriesListComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
+  private transloco = inject(TranslocoService);
 
   // Estado de datos
   seriesList: UserSeries[] = [];
@@ -64,11 +67,11 @@ export class SeriesListComponent implements OnInit {
   showSearch = false;
 
   readonly tabs = [
-    { label: 'Todas', status: null },
-    { label: 'Viendo', status: 'WATCHING' as SeriesStatus },
-    { label: 'Por ver', status: 'WANT_TO_WATCH' as SeriesStatus },
-    { label: 'Completadas', status: 'COMPLETED' as SeriesStatus },
-    { label: 'Abandonadas', status: 'ABANDONED' as SeriesStatus },
+    { labelKey: 'series.list.tabs.all', status: null },
+    { labelKey: 'series.list.tabs.watching', status: 'WATCHING' as SeriesStatus },
+    { labelKey: 'series.list.tabs.wantToWatch', status: 'WANT_TO_WATCH' as SeriesStatus },
+    { labelKey: 'series.list.tabs.completed', status: 'COMPLETED' as SeriesStatus },
+    { labelKey: 'series.list.tabs.abandoned', status: 'ABANDONED' as SeriesStatus },
   ];
 
   readonly statusConfig = STATUS_CONFIG;
@@ -99,7 +102,7 @@ export class SeriesListComponent implements OnInit {
         },
         error: (err) => {
           this.hasError = true;
-          this.errorMessage = err.error?.message ?? 'Error al cargar las series';
+          this.errorMessage = err.error?.message ?? this.transloco.translate('series.list.error');
           this.isLoading = false;
           this.cdr.detectChanges();
         }
@@ -126,7 +129,7 @@ export class SeriesListComponent implements OnInit {
           this.seriesList = this.seriesList.map(s =>
             s.id === series.id ? response.data : s
           );
-          this.snackBar.open('Estado actualizado', '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.list.statusUpdated'), '✓', { duration: 2000 });
           this.cdr.detectChanges();
         },
         error: () => { } // el interceptor ya muestra el error
@@ -141,7 +144,7 @@ export class SeriesListComponent implements OnInit {
           this.seriesList = this.seriesList.map(s =>
             s.id === series.id ? response.data : s
           );
-          this.snackBar.open('Calificación guardada', '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.list.ratingSaved'), '✓', { duration: 2000 });
           this.cdr.detectChanges();
         },
         error: () => { }
@@ -152,10 +155,10 @@ export class SeriesListComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '380px',
       data: {
-        title: '¿Eliminar serie?',
-        message: `¿Estás seguro de que quieres eliminar "${series.title}" de tu lista?`,
-        confirm: 'Eliminar',
-        cancel: 'Cancelar'
+        title: this.transloco.translate('dialog.deleteSeriesTitle'),
+        message: this.transloco.translate('dialog.deleteSeriesMessage', { title: series.title }),
+        confirm: this.transloco.translate('dialog.delete'),
+        cancel: this.transloco.translate('dialog.cancel')
       }
     });
 
@@ -183,7 +186,7 @@ export class SeriesListComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.snackBar.open('Serie eliminada', '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.list.deleted'), '✓', { duration: 2000 });
           this.loadSeries();
         },
         error: () => { }

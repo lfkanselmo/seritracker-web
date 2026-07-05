@@ -1,0 +1,167 @@
+{
+  "common": {
+    "add": "Agregar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "delete": "Eliminar",
+    "retry": "Reintentar",
+    "back": "Volver",
+    "search": "Buscar"
+  },
+  "nav": {
+    "myAccount": "Mi cuenta",
+    "logout": "Cerrar sesión",
+    "themeToLight": "Cambiar a tema claro",
+    "themeToDark": "Cambiar a tema oscuro",
+    "langToEnglish": "Switch to English",
+    "langToSpanish": "Cambiar a español"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "unread": "{{count}} nueva(s)",
+    "empty": "Sin notificaciones",
+    "today": "¡Hoy!",
+    "tomorrow": "Mañana"
+  },
+  "status": {
+    "WATCHING": "Viendo",
+    "WANT_TO_WATCH": "Por ver",
+    "COMPLETED": "Completada",
+    "ABANDONED": "Abandonada"
+  },
+  "auth": {
+    "login": {
+      "subtitle": "Inicia sesión en tu cuenta",
+      "email": "Email",
+      "emailRequired": "El email es requerido",
+      "emailInvalid": "Email inválido",
+      "password": "Contraseña",
+      "passwordRequired": "La contraseña es requerida",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "submit": "Iniciar sesión",
+      "noAccount": "¿No tienes cuenta?",
+      "register": "Regístrate",
+      "error": "Error al iniciar sesión"
+    },
+    "register": {
+      "subtitle": "Crea tu cuenta",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "nameRequired": "El nombre es requerido",
+      "email": "Email",
+      "emailRequired": "El email es requerido",
+      "emailInvalid": "Email inválido",
+      "password": "Contraseña",
+      "passwordRequired": "La contraseña es requerida",
+      "passwordMinLength": "Mínimo 8 caracteres",
+      "submit": "Crear cuenta",
+      "hasAccount": "¿Ya tienes cuenta?",
+      "login": "Inicia sesión",
+      "error": "Error al registrarse"
+    },
+    "forgotPassword": {
+      "subtitle": "Recuperar contraseña",
+      "instructions": "Ingresá tu email y, si tenés una cuenta, te enviamos un link para restablecer tu contraseña.",
+      "email": "Email",
+      "emailRequired": "El email es requerido",
+      "emailInvalid": "Email inválido",
+      "submit": "Enviar link de recuperación",
+      "confirmation": "Si el email que ingresaste tiene una cuenta, vas a recibir un link para restablecer tu contraseña en los próximos minutos.",
+      "backToLogin": "Volver a iniciar sesión",
+      "error": "Error al procesar la solicitud"
+    },
+    "resetPassword": {
+      "subtitle": "Restablecer contraseña",
+      "invalidLink": "Este link no es válido. Pedí uno nuevo desde la pantalla de recuperación de contraseña.",
+      "newPassword": "Nueva contraseña",
+      "newPasswordRequired": "La nueva contraseña es requerida",
+      "passwordMinLength": "Mínimo 8 caracteres",
+      "confirmPassword": "Confirmar nueva contraseña",
+      "passwordsMismatch": "Las contraseñas no coinciden",
+      "submit": "Restablecer contraseña",
+      "confirmation": "Tu contraseña se actualizó correctamente.",
+      "goToLogin": "Iniciar sesión",
+      "error": "Error al restablecer la contraseña"
+    }
+  },
+  "account": {
+    "title": "Mi cuenta",
+    "changePassword": "Cambiar contraseña",
+    "currentPassword": "Contraseña actual",
+    "currentPasswordRequired": "La contraseña actual es requerida",
+    "newPassword": "Nueva contraseña",
+    "newPasswordRequired": "La nueva contraseña es requerida",
+    "passwordMinLength": "Mínimo 8 caracteres",
+    "confirmPassword": "Confirmar nueva contraseña",
+    "passwordsMismatch": "Las contraseñas no coinciden",
+    "submit": "Cambiar contraseña",
+    "success": "Contraseña actualizada",
+    "error": "Error al cambiar la contraseña"
+  },
+  "series": {
+    "list": {
+      "title": "Mi Lista",
+      "subtitle": "{{count}} series en esta categoría",
+      "searchLabel": "Buscar en mi lista",
+      "add": "Agregar",
+      "loading": "Cargando tus series…",
+      "error": "Error al cargar las series",
+      "empty": "No hay series en esta categoría",
+      "addFirst": "Agregar primera serie",
+      "selectPage": "Seleccionar página",
+      "tabs": {
+        "all": "Todas",
+        "watching": "Viendo",
+        "wantToWatch": "Por ver",
+        "completed": "Completadas",
+        "abandoned": "Abandonadas"
+      },
+      "statusUpdated": "Estado actualizado",
+      "ratingSaved": "Calificación guardada",
+      "deleted": "Serie eliminada"
+    },
+    "search": {
+      "title": "Agregar Serie",
+      "subtitle": "Busca series en The Movie Database",
+      "searchLabel": "Buscar serie…",
+      "searchPlaceholder": "Ej: Breaking Bad, Arcane…",
+      "searching": "Buscando…",
+      "noResults": "No se encontraron resultados",
+      "error": "Error al buscar series",
+      "added": "\"{{title}}\" agregada a tu lista",
+      "addError": "Error al agregar serie"
+    },
+    "detail": {
+      "error": "Error al cargar la serie",
+      "back": "Volver a mi lista",
+      "yourRating": "Tu calificación",
+      "episodeProgress": "Progreso de episodios",
+      "episodes": "episodios",
+      "markAll": "Marcar todo",
+      "changeStatus": "Cambiar estado",
+      "dangerZone": "Zona de peligro",
+      "removeFromList": "Eliminar de mi lista",
+      "statusUpdated": "Estado actualizado",
+      "ratingSaved": "Calificación guardada",
+      "deleted": "Serie eliminada"
+    },
+    "card": {
+      "progress": "Progreso",
+      "delete": "Eliminar"
+    }
+  },
+  "dialog": {
+    "deleteSeriesTitle": "¿Eliminar serie?",
+    "deleteSeriesMessage": "¿Estás seguro de que quieres eliminar \"{{title}}\" de tu lista?",
+    "delete": "Eliminar",
+    "cancel": "Cancelar"
+  },
+  "errors": {
+    "noConnection": "Sin conexión con el servidor",
+    "sessionExpired": "Tu sesión expiró, inicia sesión nuevamente",
+    "forbidden": "No tienes permisos para realizar esta acción",
+    "notFound": "Recurso no encontrado",
+    "serverError": "Error interno del servidor. Intenta más tarde",
+    "unexpected": "Ocurrió un error inesperado"
+  }
+}

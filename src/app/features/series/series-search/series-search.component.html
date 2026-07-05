@@ -8,15 +8,15 @@
       <mat-icon>arrow_back</mat-icon>
     </button>
     <div>
-      <h1 class="page-title">Agregar Serie</h1>
-      <p class="page-subtitle">Busca series en The Movie Database</p>
+      <h1 class="page-title">{{ 'series.search.title' | transloco }}</h1>
+      <p class="page-subtitle">{{ 'series.search.subtitle' | transloco }}</p>
     </div>
   </div>
 
   <!-- Search input -->
   <mat-form-field appearance="outline" class="search-field">
-    <mat-label>Buscar serie…</mat-label>
-    <input matInput [formControl]="searchControl" placeholder="Ej: Breaking Bad, Arcane…" autofocus>
+    <mat-label>{{ 'series.search.searchLabel' | transloco }}</mat-label>
+    <input matInput [formControl]="searchControl" [placeholder]="'series.search.searchPlaceholder' | transloco" autofocus>
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
 
@@ -24,7 +24,7 @@
   @if (isSearching) {
     <div class="state-container">
       <mat-spinner diameter="40" />
-      <p>Buscando…</p>
+      <p>{{ 'series.search.searching' | transloco }}</p>
     </div>
   }
 
@@ -32,7 +32,7 @@
   @if (hasSearched && !isSearching && results.length === 0) {
     <div class="state-container">
       <mat-icon>search_off</mat-icon>
-      <p>No se encontraron resultados</p>
+      <p>{{ 'series.search.noResults' | transloco }}</p>
     </div>
   }
 
@@ -69,7 +69,7 @@
                   mat-stroked-button
                   class="add-btn"
                   (click)="onAddSeries(series, status)">
-                  {{ statusLabels[status] }}
+                  {{ status | seriesStatus }}
                 </button>
               }
             }

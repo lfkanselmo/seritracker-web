@@ -8,6 +8,7 @@ import { AccountComponent } from './account.component';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { ThemeService } from '../../core/services/theme.service';
+import { i18nTestingModule } from '../../core/testing/i18n-testing';
 
 describe('AccountComponent', () => {
     let component: AccountComponent;
@@ -43,7 +44,7 @@ describe('AccountComponent', () => {
         snackBarMock = { open: vi.fn() };
 
         TestBed.configureTestingModule({
-            imports: [AccountComponent],
+            imports: [AccountComponent, i18nTestingModule()],
             providers: [
                 provideRouter([]),
                 provideNoopAnimations(),

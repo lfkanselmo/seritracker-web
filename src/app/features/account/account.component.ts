@@ -8,6 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../core/services/auth.service';
 import { NavbarComponent } from '../../layout/navbar/navbar.component';
@@ -31,6 +32,7 @@ function passwordsMatchValidator(group: AbstractControl): ValidationErrors | nul
     MatIconModule,
     MatProgressSpinnerModule,
     NavbarComponent,
+    TranslocoModule,
   ],
   animations: [pageFadeIn],
   templateUrl: './account.component.html',
@@ -44,6 +46,7 @@ export class AccountComponent {
   private snackBar = inject(MatSnackBar);
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
+  private transloco = inject(TranslocoService);
 
   form = this.fb.group({
     currentPassword: ['', Validators.required],
@@ -76,11 +79,11 @@ export class AccountComponent {
         next: () => {
           this.isLoading = false;
           this.formDirective.resetForm();
-          this.snackBar.open('Contraseña actualizada', '✓', { duration: 2500 });
+          this.snackBar.open(this.transloco.translate('account.success'), '✓', { duration: 2500 });
           this.cdr.detectChanges();
         },
         error: (err) => {
-          this.errorMessage = err.error?.message ?? 'Error al cambiar la contraseña';
+          this.errorMessage = err.error?.message ?? this.transloco.translate('account.error');
           this.isLoading = false;
           this.cdr.detectChanges();
         }

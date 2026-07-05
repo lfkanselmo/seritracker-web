@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UserSeries, SeriesStatus, STATUS_CONFIG } from '../../../core/models/series.model';
 import { SeriesService } from '../../../core/services/series.service';
@@ -26,6 +27,7 @@ import { pageFadeIn, fadeIn } from '../../../shared/animations/app.animations';
     NavbarComponent,
     StarRatingComponent,
     SeriesStatusPipe,
+    TranslocoModule,
   ],
   animations: [pageFadeIn, fadeIn],
   templateUrl: './series-detail.component.html',
@@ -40,6 +42,7 @@ export class SeriesDetailComponent implements OnInit {
   private dialog = inject(MatDialog);
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
+  private transloco = inject(TranslocoService);
 
   // Estado de datos
   series: UserSeries | null = null;
@@ -86,7 +89,7 @@ export class SeriesDetailComponent implements OnInit {
         },
         error: (err) => {
           this.hasError = true;
-          this.errorMessage = err.error?.message ?? 'Error al cargar la serie';
+          this.errorMessage = err.error?.message ?? this.transloco.translate('series.detail.error');
           this.isLoading = false;
         }
       });
@@ -101,7 +104,7 @@ export class SeriesDetailComponent implements OnInit {
         next: (response) => {
           this.series = response.data;
           this.cdr.detectChanges();
-          this.snackBar.open('Estado actualizado', '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.detail.statusUpdated'), '✓', { duration: 2000 });
         },
         error: () => { }
       });
@@ -116,7 +119,7 @@ export class SeriesDetailComponent implements OnInit {
         next: (response) => {
           this.series = response.data;
           this.cdr.detectChanges();
-          this.snackBar.open('Calificación guardada', '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.detail.ratingSaved'), '✓', { duration: 2000 });
         },
         error: () => { }
       });
@@ -152,10 +155,10 @@ export class SeriesDetailComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '380px',
       data: {
-        title: '¿Eliminar serie?',
-        message: `¿Estás seguro de que quieres eliminar "${this.series.title}" de tu lista?`,
-        confirm: 'Eliminar',
-        cancel: 'Cancelar'
+        title: this.transloco.translate('dialog.deleteSeriesTitle'),
+        message: this.transloco.translate('dialog.deleteSeriesMessage', { title: this.series.title }),
+        confirm: this.transloco.translate('dialog.delete'),
+        cancel: this.transloco.translate('dialog.cancel')
       }
     });
 
@@ -191,7 +194,7 @@ export class SeriesDetailComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.snackBar.open('Serie eliminada', '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.detail.deleted'), '✓', { duration: 2000 });
           this.router.navigate(['/series']);
         },
         error: () => { }

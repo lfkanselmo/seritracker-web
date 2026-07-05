@@ -1,11 +1,16 @@
+import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SeriesStatusPipe } from './series-status.pipe';
+import { i18nTestingModule } from '../../core/testing/i18n-testing';
 
 describe('SeriesStatusPipe', () => {
     let pipe: SeriesStatusPipe;
 
     beforeEach(() => {
-        pipe = new SeriesStatusPipe();
+        TestBed.configureTestingModule({
+            imports: [i18nTestingModule()],
+        });
+        pipe = TestBed.runInInjectionContext(() => new SeriesStatusPipe());
     });
 
     it('should be created', () => {

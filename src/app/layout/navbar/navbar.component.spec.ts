@@ -6,7 +6,9 @@ import { NavbarComponent } from './navbar.component';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { ThemeService } from '../../core/services/theme.service';
+import { LanguageService } from '../../core/services/language.service';
 import { Notification } from '../../core/models/series.model';
+import { i18nTestingModule } from '../../core/testing/i18n-testing';
 
 describe('NavbarComponent', () => {
     let component: NavbarComponent;
@@ -21,6 +23,10 @@ describe('NavbarComponent', () => {
     };
     let themeServiceMock: {
         theme: ReturnType<typeof vi.fn>;
+        toggle: ReturnType<typeof vi.fn>;
+    };
+    let languageServiceMock: {
+        lang: ReturnType<typeof vi.fn>;
         toggle: ReturnType<typeof vi.fn>;
     };
     let navigateSpy: ReturnType<typeof vi.spyOn>;
@@ -56,14 +62,19 @@ describe('NavbarComponent', () => {
             theme: vi.fn().mockReturnValue('dark'),
             toggle: vi.fn(),
         };
+        languageServiceMock = {
+            lang: vi.fn().mockReturnValue('es'),
+            toggle: vi.fn(),
+        };
 
         TestBed.configureTestingModule({
-            imports: [NavbarComponent],
+            imports: [NavbarComponent, i18nTestingModule()],
             providers: [
                 provideRouter([]),
                 { provide: AuthService, useValue: authServiceMock },
                 { provide: NotificationService, useValue: notificationServiceMock },
                 { provide: ThemeService, useValue: themeServiceMock },
+                { provide: LanguageService, useValue: languageServiceMock },
             ]
         });
 
@@ -156,6 +167,17 @@ describe('NavbarComponent', () => {
         it('should delegate toggling to ThemeService', () => {
             component.themeService.toggle();
             expect(themeServiceMock.toggle).toHaveBeenCalled();
+        });
+    });
+
+    describe('languageService', () => {
+        it('should expose the current language', () => {
+            expect(component.languageService.lang()).toBe('es');
+        });
+
+        it('should delegate toggling to LanguageService', () => {
+            component.languageService.toggle();
+            expect(languageServiceMock.toggle).toHaveBeenCalled();
         });
     });
 });

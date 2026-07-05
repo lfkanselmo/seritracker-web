@@ -14,7 +14,7 @@
     <div class="state-container error">
       <mat-icon>error_outline</mat-icon>
       <p>{{ errorMessage }}</p>
-      <button mat-raised-button (click)="onBack()">Volver</button>
+      <button mat-raised-button (click)="onBack()">{{ 'common.back' | transloco }}</button>
     </div>
   }
 
@@ -23,7 +23,7 @@
     <!-- Back -->
     <button mat-button class="back-btn" (click)="onBack()">
       <mat-icon>arrow_back</mat-icon>
-      Volver a mi lista
+      {{ 'series.detail.back' | transloco }}
     </button>
 
     <!-- Hero -->
@@ -47,7 +47,7 @@
 
         <!-- Rating -->
         <div class="rating-section">
-          <p class="section-label">Tu calificación</p>
+          <p class="section-label">{{ 'series.detail.yourRating' | transloco }}</p>
           <app-star-rating
             [value]="series.rating"
             (ratingChange)="onRatingChange($event)">
@@ -59,12 +59,12 @@
     <!-- Episode progress -->
     @if (series.status !== 'WANT_TO_WATCH') {
       <div class="detail-card">
-        <h2 class="card-title">Progreso de episodios</h2>
+        <h2 class="card-title">{{ 'series.detail.episodeProgress' | transloco }}</h2>
 
         <div class="progress-stats">
           <span class="progress-number">{{ series.watchedEpisodes }}</span>
           <span class="progress-divider">/</span>
-          <span class="progress-total">{{ series.totalEpisodes }} episodios</span>
+          <span class="progress-total">{{ series.totalEpisodes }} {{ 'series.detail.episodes' | transloco }}</span>
           <span class="progress-pct">{{ progressPercent }}%</span>
         </div>
 
@@ -96,7 +96,7 @@
           <button mat-stroked-button class="mark-all-btn"
                   (click)="onMarkAllWatched()">
             <mat-icon>done_all</mat-icon>
-            Marcar todo
+            {{ 'series.detail.markAll' | transloco }}
           </button>
         </div>
       </div>
@@ -104,7 +104,7 @@
 
     <!-- Change status -->
     <div class="detail-card">
-      <h2 class="card-title">Cambiar estado</h2>
+      <h2 class="card-title">{{ 'series.detail.changeStatus' | transloco }}</h2>
       <div class="status-buttons">
         @for (status of statuses; track status) {
           <button
@@ -121,10 +121,10 @@
 
     <!-- Danger zone -->
     <div class="detail-card danger">
-      <h2 class="card-title danger-title">Zona de peligro</h2>
+      <h2 class="card-title danger-title">{{ 'series.detail.dangerZone' | transloco }}</h2>
       <button mat-stroked-button class="btn-danger" (click)="onDeleteRequest()">
         <mat-icon>delete</mat-icon>
-        Eliminar de mi lista
+        {{ 'series.detail.removeFromList' | transloco }}
       </button>
     </div>
 

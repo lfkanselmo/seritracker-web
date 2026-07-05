@@ -5,16 +5,16 @@
   <!-- Header -->
   <div class="page-header">
     <div class="header-left">
-      <h1 class="page-title">Mi Lista</h1>
-      <p class="page-subtitle">{{ totalElements }} series en esta categoría</p>
+      <h1 class="page-title">{{ 'series.list.title' | transloco }}</h1>
+      <p class="page-subtitle">{{ 'series.list.subtitle' | transloco: { count: totalElements } }}</p>
     </div>
     <div class="header-actions">
-      <button mat-icon-button (click)="showSearch = !showSearch" matTooltip="Buscar">
+      <button mat-icon-button (click)="showSearch = !showSearch" [matTooltip]="'common.search' | transloco">
         <mat-icon>search</mat-icon>
       </button>
       <button mat-raised-button class="btn-gradient" (click)="onAddSeries()">
         <mat-icon>add</mat-icon>
-        Agregar
+        {{ 'series.list.add' | transloco }}
       </button>
     </div>
   </div>
@@ -23,7 +23,7 @@
   @if (showSearch) {
     <div class="search-bar">
       <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Buscar en mi lista</mat-label>
+        <mat-label>{{ 'series.list.searchLabel' | transloco }}</mat-label>
         <input matInput [value]="searchQuery" (input)="onSearchInput($event)">
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
@@ -32,12 +32,12 @@
 
   <!-- Tabs -->
   <div class="tabs">
-    @for (tab of tabs; track tab.label) {
+    @for (tab of tabs; track tab.labelKey) {
       <button
         class="tab-btn"
         [class.active]="activeTab === tab.status"
         (click)="onTabChange(tab.status)">
-        {{ tab.label }}
+        {{ tab.labelKey | transloco }}
       </button>
     }
   </div>
@@ -46,7 +46,7 @@
   @if (isLoading) {
     <div class="state-container">
       <mat-spinner diameter="48" />
-      <p>Cargando tus series…</p>
+      <p>{{ 'series.list.loading' | transloco }}</p>
     </div>
   }
 
@@ -55,7 +55,7 @@
     <div class="state-container error">
       <mat-icon>error_outline</mat-icon>
       <p>{{ errorMessage }}</p>
-      <button mat-raised-button (click)="loadSeries()">Reintentar</button>
+      <button mat-raised-button (click)="loadSeries()">{{ 'common.retry' | transloco }}</button>
     </div>
   }
 
@@ -63,9 +63,9 @@
   @if (!isLoading && !hasError && filteredSeries.length === 0) {
     <div class="state-container empty">
       <span class="empty-icon">📺</span>
-      <p>No hay series en esta categoría</p>
+      <p>{{ 'series.list.empty' | transloco }}</p>
       <button mat-raised-button class="btn-gradient" (click)="onAddSeries()">
-        Agregar primera serie
+        {{ 'series.list.addFirst' | transloco }}
       </button>
     </div>
   }
@@ -92,7 +92,7 @@
     [pageSize]="pageSize"
     [pageSizeOptions]="pageSizeOptions"
     (page)="onPageChange($event)"
-    aria-label="Seleccionar página">
+    [attr.aria-label]="'series.list.selectPage' | transloco">
   </mat-paginator>
 }
 

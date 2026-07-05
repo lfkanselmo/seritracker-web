@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -22,6 +23,7 @@ import { AuthService } from '../../../core/services/auth.service';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TranslocoModule,
   ],
   templateUrl: './login.component.html',
   styleUrl:    './login.component.scss'
@@ -33,6 +35,7 @@ private authService = inject(AuthService);
 private router = inject(Router);
 private destroyRef = inject(DestroyRef);
 private cdr = inject(ChangeDetectorRef);
+private transloco = inject(TranslocoService);
 
 form = this.fb.group({
   email:    ['', [Validators.required, Validators.email]],
@@ -54,7 +57,7 @@ errorMessage = '';
       .subscribe({
         next:  () => this.router.navigate(['/series']),
         error: (err) => {
-          this.errorMessage = err.error?.message ?? 'Error al iniciar sesión';
+          this.errorMessage = err.error?.message ?? this.transloco.translate('auth.login.error');
           this.isLoading = false;
           this.cdr.detectChanges();
         }

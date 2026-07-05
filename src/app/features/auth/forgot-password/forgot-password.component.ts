@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -22,6 +23,7 @@ import { AuthService } from '../../../core/services/auth.service';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    TranslocoModule,
   ],
   templateUrl: './forgot-password.component.html',
   styleUrl: './forgot-password.component.scss'
@@ -32,6 +34,7 @@ export class ForgotPasswordComponent {
   private authService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
   private cdr = inject(ChangeDetectorRef);
+  private transloco = inject(TranslocoService);
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
@@ -59,7 +62,7 @@ export class ForgotPasswordComponent {
           // El backend responde 200 siempre que el request sea válido —
           // un error acá es de rate limiting o de red, no revela si el
           // email existe o no.
-          this.errorMessage = err.error?.message ?? 'Error al procesar la solicitud';
+          this.errorMessage = err.error?.message ?? this.transloco.translate('auth.forgotPassword.error');
           this.isLoading = false;
           this.cdr.detectChanges();
         }

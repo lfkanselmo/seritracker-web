@@ -4,6 +4,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { of, throwError } from 'rxjs';
 import { ResetPasswordComponent } from './reset-password.component';
 import { AuthService } from '../../../core/services/auth.service';
+import { i18nTestingModule } from '../../../core/testing/i18n-testing';
 
 describe('ResetPasswordComponent', () => {
     let component: ResetPasswordComponent;
@@ -17,7 +18,7 @@ describe('ResetPasswordComponent', () => {
         authServiceMock = { resetPassword: vi.fn() };
 
         TestBed.configureTestingModule({
-            imports: [ResetPasswordComponent],
+            imports: [ResetPasswordComponent, i18nTestingModule()],
             providers: [
                 provideRouter([]),
                 { provide: AuthService, useValue: authServiceMock },

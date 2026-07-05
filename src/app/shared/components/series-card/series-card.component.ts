@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslocoModule } from '@jsverse/transloco';
 import { UserSeries, SeriesStatus, STATUS_CONFIG } from '../../../core/models/series.model';
 import { SeriesStatusPipe } from '../../pipes/series-status.pipe';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
@@ -23,6 +24,7 @@ import { StarRatingComponent } from '../star-rating/star-rating.component';
     MatTooltipModule,
     SeriesStatusPipe,
     StarRatingComponent,
+    TranslocoModule,
   ],
   templateUrl: './series-card.component.html',
   styleUrl:    './series-card.component.scss'

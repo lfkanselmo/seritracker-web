@@ -1,0 +1,167 @@
+{
+  "common": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "retry": "Retry",
+    "back": "Back",
+    "search": "Search"
+  },
+  "nav": {
+    "myAccount": "My account",
+    "logout": "Log out",
+    "themeToLight": "Switch to light theme",
+    "themeToDark": "Switch to dark theme",
+    "langToEnglish": "Switch to English",
+    "langToSpanish": "Cambiar a español"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unread": "{{count}} new",
+    "empty": "No notifications",
+    "today": "Today!",
+    "tomorrow": "Tomorrow"
+  },
+  "status": {
+    "WATCHING": "Watching",
+    "WANT_TO_WATCH": "Want to watch",
+    "COMPLETED": "Completed",
+    "ABANDONED": "Abandoned"
+  },
+  "auth": {
+    "login": {
+      "subtitle": "Sign in to your account",
+      "email": "Email",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email",
+      "password": "Password",
+      "passwordRequired": "Password is required",
+      "forgotPassword": "Forgot your password?",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "register": "Sign up",
+      "error": "Error signing in"
+    },
+    "register": {
+      "subtitle": "Create your account",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "nameRequired": "Name is required",
+      "email": "Email",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email",
+      "password": "Password",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Minimum 8 characters",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "login": "Sign in",
+      "error": "Error signing up"
+    },
+    "forgotPassword": {
+      "subtitle": "Recover password",
+      "instructions": "Enter your email and, if you have an account, we'll send you a link to reset your password.",
+      "email": "Email",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email",
+      "submit": "Send recovery link",
+      "confirmation": "If the email you entered has an account, you'll receive a link to reset your password in the next few minutes.",
+      "backToLogin": "Back to sign in",
+      "error": "Error processing the request"
+    },
+    "resetPassword": {
+      "subtitle": "Reset password",
+      "invalidLink": "This link isn't valid. Request a new one from the password recovery screen.",
+      "newPassword": "New password",
+      "newPasswordRequired": "New password is required",
+      "passwordMinLength": "Minimum 8 characters",
+      "confirmPassword": "Confirm new password",
+      "passwordsMismatch": "Passwords don't match",
+      "submit": "Reset password",
+      "confirmation": "Your password was updated successfully.",
+      "goToLogin": "Sign in",
+      "error": "Error resetting the password"
+    }
+  },
+  "account": {
+    "title": "My account",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "currentPasswordRequired": "Current password is required",
+    "newPassword": "New password",
+    "newPasswordRequired": "New password is required",
+    "passwordMinLength": "Minimum 8 characters",
+    "confirmPassword": "Confirm new password",
+    "passwordsMismatch": "Passwords don't match",
+    "submit": "Change password",
+    "success": "Password updated",
+    "error": "Error changing the password"
+  },
+  "series": {
+    "list": {
+      "title": "My List",
+      "subtitle": "{{count}} series in this category",
+      "searchLabel": "Search my list",
+      "add": "Add",
+      "loading": "Loading your series…",
+      "error": "Error loading series",
+      "empty": "No series in this category",
+      "addFirst": "Add first series",
+      "selectPage": "Select page",
+      "tabs": {
+        "all": "All",
+        "watching": "Watching",
+        "wantToWatch": "Want to watch",
+        "completed": "Completed",
+        "abandoned": "Abandoned"
+      },
+      "statusUpdated": "Status updated",
+      "ratingSaved": "Rating saved",
+      "deleted": "Series deleted"
+    },
+    "search": {
+      "title": "Add Series",
+      "subtitle": "Search series on The Movie Database",
+      "searchLabel": "Search series…",
+      "searchPlaceholder": "E.g. Breaking Bad, Arcane…",
+      "searching": "Searching…",
+      "noResults": "No results found",
+      "error": "Error searching series",
+      "added": "\"{{title}}\" added to your list",
+      "addError": "Error adding series"
+    },
+    "detail": {
+      "error": "Error loading the series",
+      "back": "Back to my list",
+      "yourRating": "Your rating",
+      "episodeProgress": "Episode progress",
+      "episodes": "episodes",
+      "markAll": "Mark all watched",
+      "changeStatus": "Change status",
+      "dangerZone": "Danger zone",
+      "removeFromList": "Remove from my list",
+      "statusUpdated": "Status updated",
+      "ratingSaved": "Rating saved",
+      "deleted": "Series deleted"
+    },
+    "card": {
+      "progress": "Progress",
+      "delete": "Delete"
+    }
+  },
+  "dialog": {
+    "deleteSeriesTitle": "Delete series?",
+    "deleteSeriesMessage": "Are you sure you want to delete \"{{title}}\" from your list?",
+    "delete": "Delete",
+    "cancel": "Cancel"
+  },
+  "errors": {
+    "noConnection": "No connection to the server",
+    "sessionExpired": "Your session expired, please sign in again",
+    "forbidden": "You don't have permission to perform this action",
+    "notFound": "Resource not found",
+    "serverError": "Internal server error. Try again later",
+    "unexpected": "An unexpected error occurred"
+  }
+}
