@@ -15,15 +15,15 @@
   justify-content: center;
   padding: 80px 20px;
   gap: 16px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-faint);
 
   mat-icon { font-size: 48px; width: 48px; height: 48px; }
   p { font-size: 16px; margin: 0; }
-  &.error { color: #FF6B6B; }
+  &.error { color: var(--status-abandoned); }
 }
 
 .back-btn {
-  color: rgba(255, 255, 255, 0.5) !important;
+  color: var(--color-text-dim) !important;
   margin-bottom: 16px;
 
   @media (min-width: 768px) {
@@ -57,21 +57,21 @@
   width: 120px;
   height: 180px;
   object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-glow-brand);
 
   @media (min-width: 600px) {
     width: 160px;
     height: 240px;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
   }
 }
 
 .poster-placeholder {
   width: 120px;
   height: 180px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,7 +80,7 @@
   @media (min-width: 600px) {
     width: 160px;
     height: 240px;
-    border-radius: 16px;
+    border-radius: var(--radius-lg);
     font-size: 48px;
   }
 }
@@ -94,9 +94,10 @@
 }
 
 .series-title {
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 700;
-  color: white;
+  color: var(--color-text);
   margin: 0;
   line-height: 1.2;
 
@@ -107,17 +108,14 @@
 
 .series-meta {
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-faint);
   margin: 0;
 }
 
 .status-badge {
   display: inline-flex;
   padding: 6px 14px;
-  border-radius: 8px;
-  background: rgba(0, 229, 160, 0.1);
-  border: 1px solid rgba(0, 229, 160, 0.3);
-  color: #00E5A0;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -128,6 +126,11 @@
   @media (min-width: 600px) {
     margin: 0;
   }
+
+  &.watching  { background: rgba(0, 229, 160, 0.1);  border: 1px solid rgba(0, 229, 160, 0.3);  color: var(--status-watching); }
+  &.want-to   { background: rgba(108, 142, 255, 0.1); border: 1px solid rgba(108, 142, 255, 0.3); color: var(--status-want); }
+  &.completed { background: rgba(255, 209, 102, 0.1); border: 1px solid rgba(255, 209, 102, 0.3); color: var(--status-completed); }
+  &.abandoned { background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); color: var(--status-abandoned); }
 }
 
 .rating-section {
@@ -143,16 +146,16 @@
 
 .section-label {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-faint);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0;
 }
 
 .detail-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: 20px 16px;
   margin-bottom: 14px;
 
@@ -170,7 +173,7 @@
 .card-title {
   font-size: 12px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-dim);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 16px;
@@ -190,9 +193,10 @@
 }
 
 .progress-number {
+  font-family: var(--font-display);
   font-size: 30px;
   font-weight: 800;
-  color: white;
+  color: var(--color-text);
 
   @media (min-width: 768px) {
     font-size: 36px;
@@ -201,19 +205,20 @@
 
 .progress-divider {
   font-size: 18px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-faint);
 }
 
 .progress-total {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-dim);
 }
 
 .progress-pct {
   margin-left: auto;
+  font-family: var(--font-display);
   font-size: 20px;
   font-weight: 700;
-  color: #00E5A0;
+  color: var(--color-teal);
 
   @media (min-width: 768px) {
     font-size: 24px;
@@ -222,18 +227,23 @@
 
 .progress-bar {
   height: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 99px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
   margin-bottom: 16px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: #00E5A0;
-  border-radius: 99px;
-  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: progressLoad 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  border-radius: var(--radius-full);
+  transition: width 0.8s var(--ease-standard);
+  animation: progressLoad 0.8s var(--ease-standard) forwards;
+  background: var(--gradient-brand);
+
+  &.watching  { background: var(--gradient-brand); }
+  &.want-to   { background: var(--status-want); }
+  &.completed { background: var(--status-completed); }
+  &.abandoned { background: var(--status-abandoned); }
 }
 
 @keyframes progressLoad {
@@ -251,10 +261,11 @@
   width: 64px;
   text-align: center;
   padding: 8px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text);
+  font-family: var(--font-mono);
   font-size: 14px;
   outline: none;
 
@@ -265,8 +276,8 @@
 }
 
 .mark-all-btn {
-  border-color: rgba(255, 209, 102, 0.3) !important;
-  color: #FFD166 !important;
+  border-color: rgba(245, 166, 35, 0.3) !important;
+  color: var(--color-amber) !important;
   font-size: 12px !important;
 }
 
@@ -277,19 +288,19 @@
 }
 
 .status-btn {
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  color: rgba(255, 255, 255, 0.4) !important;
+  border-color: var(--color-border-strong) !important;
+  color: var(--color-text-faint) !important;
   font-size: 12px !important;
-  transition: all 0.15s;
+  transition: all var(--dur-fast) var(--ease-standard);
 
   &.active {
-    border-color: #00E5A0 !important;
-    color: #00E5A0 !important;
-    background: rgba(0, 229, 160, 0.08) !important;
+    border-color: var(--color-teal) !important;
+    color: var(--color-teal) !important;
+    background: var(--gradient-brand-soft) !important;
   }
 
   &:hover:not(.active) {
-    border-color: rgba(255, 255, 255, 0.3) !important;
-    color: rgba(255, 255, 255, 0.7) !important;
+    border-color: var(--color-border-strong) !important;
+    color: var(--color-text-dim) !important;
   }
 }

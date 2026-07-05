@@ -1,22 +1,169 @@
 @use '@angular/material' as mat;
+@use './styles/theme-colors' as theme;
+
+// ─────────────────────────────────────────────────────────────────
+// Tema de Angular Material — M3, fijado a modo oscuro.
+// Paletas generadas desde los colores de marca (ng generate
+// @angular/material:theme-color). Ver DESIGN_SYSTEM.md.
+// ─────────────────────────────────────────────────────────────────
+:root {
+  @include mat.theme((
+    color: (
+      theme-type: dark,
+      primary: theme.$primary-palette,
+      tertiary: theme.$tertiary-palette,
+    ),
+    typography: (
+      plain-family: 'Inter',
+      brand-family: 'Sora',
+      bold-weight: 700,
+      medium-weight: 600,
+      regular-weight: 400,
+    ),
+    density: 0,
+  ));
+
+  // ── Superficies y texto ──────────────────────────────────────
+  --color-ink: #0b0d12;
+  --color-surface: #12151d;
+  --color-surface-raised: #171b26;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
+  --color-text: #eef1f6;
+  --color-text-dim: rgba(238, 241, 246, 0.58);
+  --color-text-faint: rgba(238, 241, 246, 0.36);
+
+  // ── Acento de marca — degradado Ambilight ────────────────────
+  --color-teal: #2dd4bf;
+  --color-amber: #f5a623;
+  --gradient-brand: linear-gradient(90deg, var(--color-teal), var(--color-amber));
+  --gradient-brand-soft: linear-gradient(135deg, rgba(45, 212, 191, 0.35), rgba(245, 166, 35, 0.35));
+  --shadow-glow-brand: 0 20px 60px -24px rgba(45, 212, 191, 0.45), 0 24px 70px -20px rgba(245, 166, 35, 0.3);
+  --shadow-glow-brand-sm: 0 8px 24px -10px rgba(45, 212, 191, 0.5);
+
+  // ── Color semántico — independiente del acento de marca ──────
+  --status-watching: #00e5a0;
+  --status-want: #6c8eff;
+  --status-completed: #ffd166;
+  --status-abandoned: #ff6b6b;
+
+  // ── Tipografía ────────────────────────────────────────────────
+  --font-display: 'Sora', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+
+  // ── Espaciado ─────────────────────────────────────────────────
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  // ── Radios ────────────────────────────────────────────────────
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  // ── Movimiento ────────────────────────────────────────────────
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
 
 html, body {
   height: 100%;
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  background: #0F1117;
-  color: white;
+  font-family: var(--font-body);
+  background: var(--color-ink);
+  color: var(--color-text);
 }
 
 * { box-sizing: border-box; }
 
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.15);
-  border-radius: 99px;
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
 }
 
 .mat-mdc-card {
-  --mdc-elevated-card-container-color: #1a1d2e;
+  --mdc-elevated-card-container-color: var(--color-surface);
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Utilidades de marca — reutilizables en toda la app.
+// Ver DESIGN_SYSTEM.md.
+// ─────────────────────────────────────────────────────────────────
+
+// CTA primario con el degradado de marca. Úsese en el botón de
+// mayor jerarquía de cada pantalla (uno solo por vista).
+.btn-gradient {
+  background-image: var(--gradient-brand) !important;
+  color: #06110f !important;
+  border: none !important;
+  box-shadow: var(--shadow-glow-brand-sm);
+  transition: box-shadow var(--dur-base) var(--ease-standard), transform var(--dur-fast) var(--ease-standard);
+
+  &:hover:not(:disabled) {
+    box-shadow: var(--shadow-glow-brand);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    box-shadow: none;
+  }
+}
+
+// Texto con el degradado de marca — para números/valores destacados.
+.text-gradient {
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+// Acciones destructivas — deliberadamente fuera del sistema de
+// variantes de color de Material (mat.theme() no themiza "warn" sin
+// mat.color-variants-backwards-compatibility). Úsese en vez de
+// color="warn" para que el rojo semántico siempre se aplique.
+.btn-danger {
+  color: var(--status-abandoned) !important;
+  border-color: rgba(255, 107, 107, 0.35) !important;
+  transition: background var(--dur-base) var(--ease-standard);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 107, 107, 0.08) !important;
+  }
+}
+
+.btn-danger-solid {
+  background-color: var(--status-abandoned) !important;
+  color: #2a0a0a !important;
+  border: none !important;
+  transition: background-color var(--dur-base) var(--ease-standard);
+
+  &:hover:not(:disabled) {
+    background-color: #ff8080 !important;
+  }
 }

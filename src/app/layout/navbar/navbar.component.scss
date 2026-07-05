@@ -1,6 +1,6 @@
 .navbar {
-  background: #0F1117 !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: var(--color-ink) !important;
+  border-bottom: 1px solid var(--color-border);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -12,7 +12,8 @@
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  color: white;
+  color: var(--color-text);
+  font-family: var(--font-display);
 }
 
 .brand-icon {
@@ -23,7 +24,7 @@
 .brand-name {
   font-size: 18px;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.01em;
 
   @media (max-width: 480px) {
     font-size: 16px;
@@ -39,7 +40,7 @@
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-dim);
   font-size: 14px;
 }
 
@@ -54,13 +55,13 @@
   padding: 10px 16px;
   font-size: 13px;
   font-weight: 600;
-  color: white;
+  color: var(--color-text);
   pointer-events: none;
 }
 
 .notif-count {
   font-size: 11px;
-  color: #FF6B6B;
+  color: var(--color-amber);
   font-weight: 700;
 }
 
@@ -69,7 +70,7 @@
   flex-direction: column;
   align-items: center;
   padding: 20px 16px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-faint);
   pointer-events: none;
 
   mat-icon {
@@ -94,8 +95,8 @@
   border-left: 3px solid transparent;
 
   &.unread {
-    border-left-color: #00E5A0;
-    background: rgba(0, 229, 160, 0.04) !important;
+    border-left-color: var(--color-teal);
+    background: rgba(45, 212, 191, 0.05) !important;
   }
 }
 
@@ -107,7 +108,7 @@
 .notif-title {
   font-size: 13px;
   font-weight: 600;
-  color: white;
+  color: var(--color-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -120,21 +121,22 @@
 }
 
 .notif-episode {
+  font-family: var(--font-mono);
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-faint);
 }
 
 .notif-date {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-faint);
 
   &.today {
-    color: #00E5A0;
+    color: var(--color-teal);
     font-weight: 700;
   }
 
   &.tomorrow {
-    color: #FFD166;
+    color: var(--color-amber);
     font-weight: 600;
   }
 }
@@ -143,7 +145,7 @@
   flex-shrink: 0;
   width: 28px !important;
   height: 28px !important;
-  color: #00E5A0 !important;
+  color: var(--color-teal) !important;
 
   mat-icon {
     font-size: 16px !important;

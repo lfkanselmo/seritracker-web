@@ -41,7 +41,7 @@
         <p class="series-meta">{{ series.network }}</p>
 
         <!-- Status badge -->
-        <div class="status-badge">
+        <div class="status-badge" [class]="statusClass">
           {{ series.status | seriesStatus }}
         </div>
 
@@ -69,7 +69,7 @@
         </div>
 
         <div class="progress-bar">
-          <div class="progress-fill" [style.width.%]="progressPercent"></div>
+          <div class="progress-fill" [class]="statusClass" [style.width.%]="progressPercent"></div>
         </div>
 
         <div class="episode-controls">
@@ -122,7 +122,7 @@
     <!-- Danger zone -->
     <div class="detail-card danger">
       <h2 class="card-title danger-title">Zona de peligro</h2>
-      <button mat-stroked-button color="warn" (click)="onDeleteRequest()">
+      <button mat-stroked-button class="btn-danger" (click)="onDeleteRequest()">
         <mat-icon>delete</mat-icon>
         Eliminar de mi lista
       </button>

@@ -40,8 +40,8 @@
           <p class="error-message">{{ errorMessage }}</p>
         }
 
-        <button mat-raised-button color="primary" type="submit"
-                class="full-width submit-btn" [disabled]="isLoading">
+        <button mat-raised-button type="submit"
+                class="full-width submit-btn btn-gradient" [disabled]="isLoading">
           @if (isLoading) {
             <mat-spinner diameter="20" />
           } @else {

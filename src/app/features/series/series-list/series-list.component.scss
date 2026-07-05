@@ -26,9 +26,10 @@
 }
 
 .page-title {
+  font-family: var(--font-display);
   font-size: 22px;
   font-weight: 700;
-  color: white;
+  color: var(--color-text);
   margin: 0;
 
   @media (min-width: 768px) {
@@ -38,7 +39,7 @@
 
 .page-subtitle {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-faint);
   margin: 0;
 }
 
@@ -67,9 +68,9 @@
 }
 
 .stat-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 12px 8px;
   text-align: center;
   display: flex;
@@ -80,16 +81,17 @@
     padding: 16px 12px;
   }
 
-  &.watching  .stat-value { color: #00E5A0; }
-  &.want-to   .stat-value { color: #6C8EFF; }
-  &.completed .stat-value { color: #FFD166; }
-  &.abandoned .stat-value { color: #FF6B6B; }
+  &.watching  .stat-value { color: var(--status-watching); }
+  &.want-to   .stat-value { color: var(--status-want); }
+  &.completed .stat-value { color: var(--status-completed); }
+  &.abandoned .stat-value { color: var(--status-abandoned); }
 }
 
 .stat-value {
+  font-family: var(--font-display);
   font-size: 20px;
   font-weight: 800;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-text-dim);
 
   @media (min-width: 768px) {
     font-size: 26px;
@@ -98,7 +100,7 @@
 
 .stat-label {
   font-size: 9px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-faint);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
@@ -140,7 +142,7 @@
     right: 0;
     flex-shrink: 0;
     width: 32px;
-    background: linear-gradient(to right, transparent, #0F1117);
+    background: linear-gradient(to right, transparent, var(--color-ink));
     pointer-events: none;
 
     @media (min-width: 768px) {
@@ -156,25 +158,25 @@
 
 .tab-btn {
   padding: 8px 14px;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
   background: transparent;
   border: 1px solid transparent;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--color-text-faint);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--dur-fast) var(--ease-standard);
   white-space: nowrap;
   flex-shrink: 0;
 
   &:hover {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--color-text-dim);
   }
 
   &.active {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: white;
+    background: var(--gradient-brand-soft);
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
   }
 }
 
@@ -185,11 +187,11 @@
   justify-content: center;
   padding: 60px 20px;
   gap: 16px;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-faint);
 
   mat-icon { font-size: 48px; width: 48px; height: 48px; }
   p { font-size: 16px; margin: 0; text-align: center; }
-  &.error { color: #FF6B6B; }
+  &.error { color: var(--status-abandoned); }
 }
 
 .empty-icon {

@@ -16,7 +16,7 @@
       }
 
       <!-- Status badge -->
-      <div class="status-badge">
+      <div class="status-badge" [class]="statusClass">
         {{ series.status | seriesStatus }}
       </div>
     </div>
@@ -46,7 +46,7 @@
             </span>
           </div>
           <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="progressPercent"></div>
+            <div class="progress-fill" [class]="statusClass" [style.width.%]="progressPercent"></div>
           </div>
         </div>
       }

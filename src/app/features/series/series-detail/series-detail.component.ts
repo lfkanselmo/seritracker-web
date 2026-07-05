@@ -57,6 +57,16 @@ export class SeriesDetailComponent implements OnInit {
     return Math.round((this.series.watchedEpisodes / this.series.totalEpisodes) * 100);
   }
 
+  get statusClass(): string {
+    const map: Record<SeriesStatus, string> = {
+      WATCHING: 'watching',
+      WANT_TO_WATCH: 'want-to',
+      COMPLETED: 'completed',
+      ABANDONED: 'abandoned',
+    };
+    return this.series ? map[this.series.status] : '';
+  }
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.loadSeries(id);

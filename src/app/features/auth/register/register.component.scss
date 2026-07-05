@@ -3,21 +3,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0F1117;
+  background: var(--color-ink);
   padding: 20px;
 }
 
 .auth-card {
   width: 100%;
   max-width: 420px;
-  background: #1a1d2e;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 30px 80px -40px rgba(45, 212, 191, 0.25);
 }
 
 .app-title {
+  font-family: var(--font-display);
   font-size: 24px;
   font-weight: 700;
-  color: white;
+  color: var(--color-text);
 }
 
 .full-width {
@@ -27,23 +30,25 @@
 .submit-btn {
   margin-top: 16px;
   height: 48px;
-  font-size: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
 }
 
 .error-message {
-  color: #f44336;
+  color: var(--status-abandoned);
   font-size: 14px;
   margin: 8px 0;
 }
 
 .login-link {
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-dim);
   font-size: 14px;
   width: 100%;
 
   a {
-    color: #7c4dff;
+    color: var(--color-teal);
     text-decoration: none;
     font-weight: 600;
 

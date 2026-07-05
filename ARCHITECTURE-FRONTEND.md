@@ -14,6 +14,21 @@
 
 ---
 
+## Sistema de diseño
+
+La identidad visual ("Ambilight" — degradado teal→amber, inspirado en el
+bias lighting de un televisor) está documentada completa en
+[`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md): paleta, tipografía, espaciado,
+radios, motion y las utilidades de marca (`.btn-gradient`, `.text-gradient`,
+`.btn-danger`, `.btn-danger-solid`).
+
+Regla de oro para cualquier componente nuevo: **ningún hex, `px` de
+espaciado/radio o duración de transición se escribe a mano** — todo sale
+de una custom property definida en `src/styles.scss`. Si el token que
+necesitás no existe, se agrega ahí primero.
+
+---
+
 ## Estructura de Carpetas
 
 ```
@@ -372,4 +387,6 @@ loadSeries(): void {
 ✅ ¿Los métodos de evento empiezan con on?
 ✅ ¿El bloque error no repite lo que ya hace el interceptor?
 ✅ ¿El commit sigue el formato feat/fix/refactor?
+✅ ¿Los colores/espaciados/radios usan tokens de styles.scss (ver DESIGN_SYSTEM.md)?
+✅ ¿Las acciones destructivas usan .btn-danger / .btn-danger-solid (nunca color="warn")?
 ```

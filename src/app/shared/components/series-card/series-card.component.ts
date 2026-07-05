@@ -48,6 +48,16 @@ export class SeriesCardComponent {
     return this.statuses.filter(s => s !== this.series.status);
   }
 
+  get statusClass(): string {
+    const map: Record<SeriesStatus, string> = {
+      WATCHING: 'watching',
+      WANT_TO_WATCH: 'want-to',
+      COMPLETED: 'completed',
+      ABANDONED: 'abandoned',
+    };
+    return map[this.series.status];
+  }
+
   onCardClick(): void {
     this.cardClick.emit();
   }
