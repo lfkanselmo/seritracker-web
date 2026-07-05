@@ -5,10 +5,15 @@ export interface User {
 }
 
 export interface AuthResponse {
-  token: string;
+  accessToken: string;
+  refreshToken: string;
   email: string;
   name: string;
   userId: number;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
 }
 
 export interface LoginRequest {

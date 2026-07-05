@@ -5,11 +5,15 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { refreshInterceptor } from './core/interceptors/refresh.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    // Orden importa: refreshInterceptor va último para que sea el primero
+    // en ver un 401 (más cerca del backend) e intente renovar el token
+    // antes de que errorInterceptor asuma que la sesión expiró.
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor, refreshInterceptor])),
     provideAnimationsAsync(),
   ]
 };

@@ -21,35 +21,92 @@ describe('AuthService', () => {
             ]
         });
         service = TestBed.inject(AuthService);
+        localStorage.clear();
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    it('should return null token when not logged in', () => {
-        localStorage.clear();
-        expect(service.getToken()).toBeNull();
+    it('should return null access token when not logged in', () => {
+        expect(service.getAccessToken()).toBeNull();
+    });
+
+    it('should return null refresh token when not logged in', () => {
+        expect(service.getRefreshToken()).toBeNull();
     });
 
     it('should return false when not logged in', () => {
-        localStorage.clear();
         expect(service.isLoggedIn()).toBe(false);
     });
 
     it('should return null userName when not logged in', () => {
-        localStorage.clear();
         expect(service.getUserName()).toBeNull();
     });
 
-    it('should clear session on logout', () => {
-        localStorage.setItem('token', 'test_token');
+    it('should save the access token, refresh token and userName on login', () => {
+        httpMock.post.mockReturnValue(of({
+            success: true,
+            data: { accessToken: 'access123', refreshToken: 'refresh123', email: 'user@test.com', name: 'Test', userId: 1 },
+            message: 'OK',
+            timestamp: ''
+        }));
+
+        service.login({ email: 'user@test.com', password: 'password123' }).subscribe();
+
+        expect(service.getAccessToken()).toBe('access123');
+        expect(service.getRefreshToken()).toBe('refresh123');
+        expect(service.getUserName()).toBe('Test');
+        expect(service.isLoggedIn()).toBe(true);
+    });
+
+    it('should clear the session on logout', () => {
+        localStorage.setItem('accessToken', 'access123');
+        localStorage.setItem('refreshToken', 'refresh123');
         localStorage.setItem('userName', 'Test');
+        httpMock.post.mockReturnValue(of({}));
 
         service.logout();
 
-        expect(service.getToken()).toBeNull();
+        expect(service.getAccessToken()).toBeNull();
+        expect(service.getRefreshToken()).toBeNull();
         expect(service.getUserName()).toBeNull();
+    });
+
+    it('should revoke the refresh token on the server on logout, best-effort', () => {
+        localStorage.setItem('refreshToken', 'refresh123');
+        httpMock.post.mockReturnValue(of({}));
+
+        service.logout();
+
+        expect(httpMock.post).toHaveBeenCalledWith(
+            expect.stringContaining('/auth/logout'),
+            { refreshToken: 'refresh123' }
+        );
+    });
+
+    it('should not call the server on logout when there is no refresh token', () => {
+        service.logout();
+        expect(httpMock.post).not.toHaveBeenCalled();
+    });
+
+    it('should POST to /auth/refresh with the stored refresh token and save the new session', () => {
+        localStorage.setItem('refreshToken', 'old-refresh');
+        httpMock.post.mockReturnValue(of({
+            success: true,
+            data: { accessToken: 'new-access', refreshToken: 'new-refresh', email: 'user@test.com', name: 'Test', userId: 1 },
+            message: 'OK',
+            timestamp: ''
+        }));
+
+        service.refresh().subscribe();
+
+        expect(httpMock.post).toHaveBeenCalledWith(
+            expect.stringContaining('/auth/refresh'),
+            { refreshToken: 'old-refresh' }
+        );
+        expect(service.getAccessToken()).toBe('new-access');
+        expect(service.getRefreshToken()).toBe('new-refresh');
     });
 
     it('should PATCH to /auth/password with the given credentials', () => {

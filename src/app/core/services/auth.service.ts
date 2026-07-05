@@ -31,6 +31,13 @@ export class AuthService {
     );
   }
 
+  refresh(): Observable<ApiResponse<AuthResponse>> {
+    const refreshToken = this.getRefreshToken();
+    return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/refresh`, { refreshToken }).pipe(
+      tap(response => this.saveSession(response.data))
+    );
+  }
+
   changePassword(request: ChangePasswordRequest): Observable<ApiResponse<void>> {
     return this.http.patch<ApiResponse<void>>(`${this.apiUrl}/password`, request);
   }
@@ -44,12 +51,21 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userName');
+    const refreshToken = this.getRefreshToken();
+    this.clearSession();
+
+    if (refreshToken) {
+      // Revocación best-effort — el logout local no depende de la red.
+      this.http.post(`${this.apiUrl}/logout`, { refreshToken }).subscribe({ error: () => {} });
+    }
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('token');
+  getAccessToken(): string | null {
+    return localStorage.getItem('accessToken');
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
   }
 
   getUserName(): string | null {
@@ -57,11 +73,18 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return !!this.getAccessToken();
   }
 
   private saveSession(auth: AuthResponse): void {
-    localStorage.setItem('token', auth.token);
+    localStorage.setItem('accessToken', auth.accessToken);
+    localStorage.setItem('refreshToken', auth.refreshToken);
     localStorage.setItem('userName', auth.name);
+  }
+
+  private clearSession(): void {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userName');
   }
 }
