@@ -1,0 +1,95 @@
+<app-navbar />
+
+<div class="page-container" @pageFadeIn>
+
+  <div class="page-header">
+    <h1 class="page-title">{{ 'stats.title' | transloco }}</h1>
+    <p class="page-subtitle">{{ 'stats.subtitle' | transloco }}</p>
+  </div>
+
+  @if (isLoading) {
+    <div class="state-container">
+      <mat-spinner diameter="48" />
+    </div>
+  }
+
+  @if (hasError && !isLoading) {
+    <div class="state-container error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button (click)="loadStats()">{{ 'common.retry' | transloco }}</button>
+    </div>
+  }
+
+  @if (!isLoading && !hasError && stats) {
+
+    @if (stats.totalEpisodesWatched === 0) {
+      <div class="state-container empty">
+        <span class="empty-icon">📊</span>
+        <p>{{ 'stats.noData' | transloco }}</p>
+      </div>
+    } @else {
+
+      <div class="stats-grid" @fadeIn>
+        <div class="stat-card">
+          <span class="stat-value">{{ stats.totalEpisodesWatched }}</span>
+          <span class="stat-label">{{ 'stats.totalEpisodesWatched' | transloco }}</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ formatWatchTime(stats.totalMinutesWatched) }}</span>
+          <span class="stat-label">{{ 'stats.totalWatchTime' | transloco }}</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ stats.totalSeriesTracked }}</span>
+          <span class="stat-label">{{ 'stats.seriesTracked' | transloco }}</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ stats.totalSeriesCompleted }}</span>
+          <span class="stat-label">{{ 'stats.seriesCompleted' | transloco }}</span>
+        </div>
+      </div>
+
+      <div class="year-summary" @fadeIn>
+        <h2 class="section-title">{{ 'stats.yearSummaryTitle' | transloco: { year: stats.currentYear.year } }}</h2>
+
+        @if (stats.currentYear.episodesWatched === 0) {
+          <p class="year-empty">{{ 'stats.noYearData' | transloco }}</p>
+        } @else {
+          <div class="year-grid">
+            <div class="year-card">
+              <mat-icon>local_fire_department</mat-icon>
+              <div class="year-card-text">
+                <span class="year-value">{{ stats.currentYear.longestStreakDays }}</span>
+                <span class="year-label">{{ 'stats.longestStreak' | transloco }}</span>
+              </div>
+            </div>
+
+            @if (stats.currentYear.mostWatchedSeriesTitle) {
+              <div class="year-card">
+                <mat-icon>emoji_events</mat-icon>
+                <div class="year-card-text">
+                  <span class="year-value">{{ stats.currentYear.mostWatchedSeriesTitle }}</span>
+                  <span class="year-label">
+                    {{ 'stats.mostWatchedSeries' | transloco: { count: stats.currentYear.mostWatchedSeriesEpisodeCount } }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+
+          @if (stats.currentYear.topGenres.length > 0) {
+            <div class="genre-list">
+              <span class="genre-list-label">{{ 'stats.topGenres' | transloco }}</span>
+              <div class="genre-chips">
+                @for (genre of stats.currentYear.topGenres; track genre.genre) {
+                  <span class="genre-chip">{{ genre.genre }} · {{ genre.episodeCount }}</span>
+                }
+              </div>
+            </div>
+          }
+        }
+      </div>
+    }
+  }
+
+</div>

@@ -70,6 +70,13 @@ export const routes: Routes = [
       .then(m => m.CalendarComponent)
   },
   {
+    path: 'stats',
+    canActivate: [authGuard],
+    data: { animation: 'stats' },
+    loadComponent: () => import('./features/stats/stats.component')
+      .then(m => m.StatsComponent)
+  },
+  {
     path: '**',
     redirectTo: 'series'
   }

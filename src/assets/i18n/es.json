@@ -15,7 +15,8 @@
     "themeToDark": "Cambiar a tema oscuro",
     "langToEnglish": "Switch to English",
     "langToSpanish": "Cambiar a español",
-    "calendar": "Calendario de estrenos"
+    "calendar": "Calendario de estrenos",
+    "stats": "Estadísticas"
   },
   "notifications": {
     "title": "Notificaciones",
@@ -31,6 +32,21 @@
     "empty": "No hay estrenos próximos",
     "today": "Hoy",
     "tomorrow": "Mañana"
+  },
+  "stats": {
+    "title": "Estadísticas",
+    "subtitle": "Tu actividad como espectador",
+    "error": "No pudimos cargar las estadísticas",
+    "noData": "Todavía no marcaste ningún episodio como visto",
+    "totalEpisodesWatched": "Episodios vistos",
+    "totalWatchTime": "Tiempo visto",
+    "seriesTracked": "Series en tu lista",
+    "seriesCompleted": "Series completadas",
+    "yearSummaryTitle": "Resumen {{year}}",
+    "noYearData": "Todavía no viste episodios este año",
+    "longestStreak": "Racha más larga (días)",
+    "mostWatchedSeries": "Serie más vista · {{count}} episodios",
+    "topGenres": "Géneros favoritos del año"
   },
   "status": {
     "WATCHING": "Viendo",

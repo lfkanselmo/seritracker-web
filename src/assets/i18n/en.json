@@ -15,7 +15,8 @@
     "themeToDark": "Switch to dark theme",
     "langToEnglish": "Switch to English",
     "langToSpanish": "Cambiar a español",
-    "calendar": "Release calendar"
+    "calendar": "Release calendar",
+    "stats": "Stats"
   },
   "notifications": {
     "title": "Notifications",
@@ -31,6 +32,21 @@
     "empty": "No upcoming releases",
     "today": "Today",
     "tomorrow": "Tomorrow"
+  },
+  "stats": {
+    "title": "Stats",
+    "subtitle": "Your viewing activity",
+    "error": "We couldn't load your stats",
+    "noData": "You haven't marked any episode as watched yet",
+    "totalEpisodesWatched": "Episodes watched",
+    "totalWatchTime": "Time watched",
+    "seriesTracked": "Series tracked",
+    "seriesCompleted": "Series completed",
+    "yearSummaryTitle": "{{year}} recap",
+    "noYearData": "You haven't watched anything this year yet",
+    "longestStreak": "Longest streak (days)",
+    "mostWatchedSeries": "Most watched · {{count}} episodes",
+    "topGenres": "Favorite genres this year"
   },
   "status": {
     "WATCHING": "Watching",
