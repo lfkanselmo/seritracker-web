@@ -46,7 +46,44 @@
     "noYearData": "Todavía no viste episodios este año",
     "longestStreak": "Racha más larga (días)",
     "mostWatchedSeries": "Serie más vista · {{count}} episodios",
-    "topGenres": "Géneros favoritos del año"
+    "topGenres": "Géneros favoritos del año",
+    "currentStreak": "Racha actual",
+    "currentStreakDays": "{{count}} días",
+    "achievements": "Logros"
+  },
+  "badges": {
+    "FIRST_EPISODE": {
+      "name": "Primeros pasos",
+      "description": "Marcá tu primer episodio como visto"
+    },
+    "BINGE_WATCHER": {
+      "name": "Maratonista",
+      "description": "Mirá 100 episodios"
+    },
+    "TRUE_FAN": {
+      "name": "Fanático de verdad",
+      "description": "Mirá 500 episodios"
+    },
+    "FIRST_COMPLETE": {
+      "name": "Finalizador",
+      "description": "Completá tu primera serie"
+    },
+    "COLLECTOR": {
+      "name": "Coleccionista",
+      "description": "Completá 5 series"
+    },
+    "WEEK_STREAK": {
+      "name": "Racha semanal",
+      "description": "Mantené una racha de 7 días"
+    },
+    "MONTH_STREAK": {
+      "name": "Racha mensual",
+      "description": "Mantené una racha de 30 días"
+    },
+    "GENRE_EXPLORER": {
+      "name": "Explorador de géneros",
+      "description": "Mirá series de 5 géneros distintos"
+    }
   },
   "status": {
     "WATCHING": "Viendo",

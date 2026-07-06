@@ -47,6 +47,10 @@
           <span class="stat-value">{{ stats.totalSeriesCompleted }}</span>
           <span class="stat-label">{{ 'stats.seriesCompleted' | transloco }}</span>
         </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ stats.currentStreakDays }}</span>
+          <span class="stat-label">{{ 'stats.currentStreak' | transloco }}</span>
+        </div>
       </div>
 
       <div class="year-summary" @fadeIn>
@@ -88,6 +92,27 @@
             </div>
           }
         }
+      </div>
+
+      <div class="achievements" @fadeIn>
+        <h2 class="section-title">{{ 'stats.achievements' | transloco }}</h2>
+        <div class="badge-grid">
+          @for (badge of stats.badges; track trackBadge($index, badge)) {
+            <div class="badge-card" [class.earned]="badge.earned">
+              <mat-icon class="badge-icon">{{ badgeIcon(badge.code) }}</mat-icon>
+              <div class="badge-text">
+                <span class="badge-name">{{ 'badges.' + badge.code + '.name' | transloco }}</span>
+                <span class="badge-description">{{ 'badges.' + badge.code + '.description' | transloco }}</span>
+                @if (!badge.earned) {
+                  <div class="badge-progress">
+                    <div class="badge-progress-bar" [style.width.%]="(badge.progressCurrent / badge.progressTarget) * 100"></div>
+                  </div>
+                  <span class="badge-progress-label">{{ badge.progressCurrent }}/{{ badge.progressTarget }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
       </div>
     }
   }

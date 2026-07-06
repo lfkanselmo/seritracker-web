@@ -90,6 +90,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 20px;
+  margin-bottom: 20px;
 }
 
 .section-title {
@@ -180,4 +181,81 @@
   border: 1px solid var(--color-border);
   border-radius: 999px;
   padding: 4px 10px;
+}
+
+.achievements {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.badge-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.badge-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  opacity: 0.5;
+  filter: grayscale(1);
+  transition: opacity var(--dur-base) var(--ease-standard), filter var(--dur-base) var(--ease-standard);
+
+  &.earned {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+.badge-icon {
+  flex-shrink: 0;
+  color: var(--color-amber);
+}
+
+.badge-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.badge-name {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.badge-description {
+  font-size: 11px;
+  color: var(--color-text-faint);
+}
+
+.badge-progress {
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.badge-progress-bar {
+  height: 100%;
+  background: var(--color-teal);
+  border-radius: 999px;
+}
+
+.badge-progress-label {
+  font-size: 10px;
+  color: var(--color-text-faint);
 }

@@ -18,6 +18,8 @@ describe('StatsComponent', () => {
         totalMinutesWatched: 5400,
         totalSeriesTracked: 8,
         totalSeriesCompleted: 3,
+        currentStreakDays: 5,
+        badges: [{ code: 'FIRST_EPISODE', earned: true, progressCurrent: 1, progressTarget: 1 }],
         currentYear: {
             year: 2026,
             episodesWatched: 40,
@@ -83,6 +85,20 @@ describe('StatsComponent', () => {
 
         it('should return 0h when there is no watch time', () => {
             expect(component.formatWatchTime(0)).toBe('0h');
+        });
+    });
+
+    describe('badgeIcon', () => {
+        it('should return the icon mapped to a badge code', () => {
+            expect(component.badgeIcon('FIRST_EPISODE')).toBe('play_circle');
+            expect(component.badgeIcon('MONTH_STREAK')).toBe('whatshot');
+        });
+    });
+
+    describe('trackBadge', () => {
+        it('should track badges by their code', () => {
+            const badge = { code: 'COLLECTOR' as const, earned: false, progressCurrent: 2, progressTarget: 5 };
+            expect(component.trackBadge(0, badge)).toBe('COLLECTOR');
         });
     });
 });

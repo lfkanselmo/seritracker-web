@@ -46,7 +46,44 @@
     "noYearData": "You haven't watched anything this year yet",
     "longestStreak": "Longest streak (days)",
     "mostWatchedSeries": "Most watched · {{count}} episodes",
-    "topGenres": "Favorite genres this year"
+    "topGenres": "Favorite genres this year",
+    "currentStreak": "Current streak",
+    "currentStreakDays": "{{count}} days",
+    "achievements": "Achievements"
+  },
+  "badges": {
+    "FIRST_EPISODE": {
+      "name": "First steps",
+      "description": "Mark your first episode as watched"
+    },
+    "BINGE_WATCHER": {
+      "name": "Binge watcher",
+      "description": "Watch 100 episodes"
+    },
+    "TRUE_FAN": {
+      "name": "True fan",
+      "description": "Watch 500 episodes"
+    },
+    "FIRST_COMPLETE": {
+      "name": "Finisher",
+      "description": "Complete your first series"
+    },
+    "COLLECTOR": {
+      "name": "Collector",
+      "description": "Complete 5 series"
+    },
+    "WEEK_STREAK": {
+      "name": "Week streak",
+      "description": "Keep a 7-day streak"
+    },
+    "MONTH_STREAK": {
+      "name": "Month streak",
+      "description": "Keep a 30-day streak"
+    },
+    "GENRE_EXPLORER": {
+      "name": "Genre explorer",
+      "description": "Watch series from 5 different genres"
+    }
   },
   "status": {
     "WATCHING": "Watching",

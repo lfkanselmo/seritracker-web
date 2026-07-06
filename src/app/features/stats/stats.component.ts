@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserStats } from '../../core/models/stats.model';
+import { UserStats, Badge, BadgeCode, BADGE_ICONS } from '../../core/models/stats.model';
 import { StatsService } from '../../core/services/stats.service';
 import { NavbarComponent } from '../../layout/navbar/navbar.component';
 import { extractErrorMessage } from '../../core/utils/http-error.util';
@@ -37,6 +37,8 @@ export class StatsComponent implements OnInit {
   isLoading = false;
   hasError = false;
   errorMessage = '';
+
+  readonly badgeIcons = BADGE_ICONS;
 
   ngOnInit(): void {
     this.loadStats();
@@ -71,5 +73,13 @@ export class StatsComponent implements OnInit {
 
     if (days > 0) return `${days}d ${hours}h`;
     return `${hours}h`;
+  }
+
+  badgeIcon(code: BadgeCode): string {
+    return this.badgeIcons[code];
+  }
+
+  trackBadge(_index: number, badge: Badge): BadgeCode {
+    return badge.code;
   }
 }

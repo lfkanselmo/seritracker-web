@@ -14,6 +14,8 @@ describe('StatsService', () => {
         totalMinutesWatched: 5400,
         totalSeriesTracked: 8,
         totalSeriesCompleted: 3,
+        currentStreakDays: 5,
+        badges: [{ code: 'FIRST_EPISODE', earned: true, progressCurrent: 1, progressTarget: 1 }],
         currentYear: {
             year: 2026,
             episodesWatched: 40,
