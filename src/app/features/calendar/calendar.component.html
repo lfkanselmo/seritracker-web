@@ -1,0 +1,67 @@
+<app-navbar />
+
+<div class="page-container" @pageFadeIn>
+
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">{{ 'calendar.title' | transloco }}</h1>
+      <p class="page-subtitle">{{ 'calendar.subtitle' | transloco }}</p>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <div class="state-container">
+      <mat-spinner diameter="48" />
+    </div>
+  }
+
+  @if (hasError && !isLoading) {
+    <div class="state-container error">
+      <mat-icon>error_outline</mat-icon>
+      <p>{{ errorMessage }}</p>
+      <button mat-raised-button (click)="loadUpcoming()">{{ 'common.retry' | transloco }}</button>
+    </div>
+  }
+
+  @if (!isLoading && !hasError && upcomingEpisodes.length === 0) {
+    <div class="state-container empty">
+      <span class="empty-icon">🗓️</span>
+      <p>{{ 'calendar.empty' | transloco }}</p>
+    </div>
+  }
+
+  @if (!isLoading && upcomingEpisodes.length > 0) {
+    <div class="calendar-list" [@listStagger]="upcomingEpisodes.length">
+      @for (group of groupedByDate; track group.date) {
+        <div class="day-group" @fadeIn>
+          <div class="day-header">
+            <span class="day-date">{{ formatDayHeader(group.date) }}</span>
+            @if (group.isToday) {
+              <span class="day-badge today">{{ 'calendar.today' | transloco }}</span>
+            } @else if (group.isTomorrow) {
+              <span class="day-badge tomorrow">{{ 'calendar.tomorrow' | transloco }}</span>
+            }
+          </div>
+
+          @for (episode of group.episodes; track episode.userSeriesId) {
+            <button class="episode-row" (click)="onEpisodeClick(episode)">
+              @if (episode.posterUrl) {
+                <img [src]="episode.posterUrl" [alt]="episode.seriesTitle" class="episode-poster">
+              } @else {
+                <div class="episode-poster-placeholder">📺</div>
+              }
+              <div class="episode-info">
+                <span class="episode-series-title">{{ episode.seriesTitle }}</span>
+                <span class="episode-detail">
+                  {{ episodeCode(episode.seasonNumber, episode.episodeNumber) }} · {{ episode.episodeTitle }}
+                </span>
+              </div>
+              <mat-icon class="episode-chevron">chevron_right</mat-icon>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+
+</div>

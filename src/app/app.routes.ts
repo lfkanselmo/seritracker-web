@@ -63,6 +63,13 @@ export const routes: Routes = [
       .then(m => m.AccountComponent)
   },
   {
+    path: 'calendar',
+    canActivate: [authGuard],
+    data: { animation: 'calendar' },
+    loadComponent: () => import('./features/calendar/calendar.component')
+      .then(m => m.CalendarComponent)
+  },
+  {
     path: '**',
     redirectTo: 'series'
   }

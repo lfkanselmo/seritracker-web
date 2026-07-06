@@ -90,6 +90,11 @@ export function calculateProgressPercent(watchedEpisodes: number, totalEpisodes:
   return Math.round((watchedEpisodes / totalEpisodes) * 100);
 }
 
+export function formatEpisodeCode(seasonNumber: number, episodeNumber: number): string {
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `S${pad(seasonNumber)}E${pad(episodeNumber)}`;
+}
+
 export interface Notification {
   id: number;
   tmdbId: number;
@@ -98,6 +103,19 @@ export interface Notification {
   airDate: string;
   sentAt: string;
   read: boolean;
+  isToday: boolean;
+  isTomorrow: boolean;
+}
+
+export interface UpcomingEpisode {
+  userSeriesId: number;
+  tmdbId: number;
+  seriesTitle: string;
+  posterUrl: string | null;
+  seasonNumber: number;
+  episodeNumber: number;
+  episodeTitle: string;
+  airDate: string;
   isToday: boolean;
   isTomorrow: boolean;
 }

@@ -14,13 +14,22 @@
     "themeToLight": "Switch to light theme",
     "themeToDark": "Switch to dark theme",
     "langToEnglish": "Switch to English",
-    "langToSpanish": "Cambiar a español"
+    "langToSpanish": "Cambiar a español",
+    "calendar": "Release calendar"
   },
   "notifications": {
     "title": "Notifications",
     "unread": "{{count}} new",
     "empty": "No notifications",
     "today": "Today!",
+    "tomorrow": "Tomorrow"
+  },
+  "calendar": {
+    "title": "Release calendar",
+    "subtitle": "Upcoming episodes for the series you're watching",
+    "error": "We couldn't load the calendar",
+    "empty": "No upcoming releases",
+    "today": "Today",
     "tomorrow": "Tomorrow"
   },
   "status": {

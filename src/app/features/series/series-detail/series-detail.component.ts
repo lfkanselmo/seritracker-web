@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserSeries, SeriesStatus, STATUS_CONFIG, STATUS_CLASS, calculateProgressPercent, SeasonProgress, NextEpisode, EpisodeInfo } from '../../../core/models/series.model';
+import { UserSeries, SeriesStatus, STATUS_CONFIG, STATUS_CLASS, calculateProgressPercent, formatEpisodeCode, SeasonProgress, NextEpisode, EpisodeInfo } from '../../../core/models/series.model';
 import { SeriesService } from '../../../core/services/series.service';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
@@ -160,8 +160,7 @@ export class SeriesDetailComponent implements OnInit {
   }
 
   episodeCode(seasonNumber: number, episodeNumber: number): string {
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    return `S${pad(seasonNumber)}E${pad(episodeNumber)}`;
+    return formatEpisodeCode(seasonNumber, episodeNumber);
   }
 
   isFutureAirDate(airDate: string | null): boolean {

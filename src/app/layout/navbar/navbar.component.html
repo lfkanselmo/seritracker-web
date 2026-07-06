@@ -7,6 +7,10 @@
 
   <span class="spacer"></span>
 
+  <button mat-icon-button routerLink="/calendar" [matTooltip]="'nav.calendar' | transloco">
+    <mat-icon>calendar_month</mat-icon>
+  </button>
+
   <button mat-icon-button [matMenuTriggerFor]="notifMenu" class="notif-btn">
     <mat-icon
       [matBadge]="unreadCount > 0 ? unreadCount : null"

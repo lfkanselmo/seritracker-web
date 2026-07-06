@@ -14,13 +14,22 @@
     "themeToLight": "Cambiar a tema claro",
     "themeToDark": "Cambiar a tema oscuro",
     "langToEnglish": "Switch to English",
-    "langToSpanish": "Cambiar a español"
+    "langToSpanish": "Cambiar a español",
+    "calendar": "Calendario de estrenos"
   },
   "notifications": {
     "title": "Notificaciones",
     "unread": "{{count}} nueva(s)",
     "empty": "Sin notificaciones",
     "today": "¡Hoy!",
+    "tomorrow": "Mañana"
+  },
+  "calendar": {
+    "title": "Calendario de estrenos",
+    "subtitle": "Próximos episodios de las series que estás viendo",
+    "error": "No pudimos cargar el calendario",
+    "empty": "No hay estrenos próximos",
+    "today": "Hoy",
     "tomorrow": "Mañana"
   },
   "status": {
