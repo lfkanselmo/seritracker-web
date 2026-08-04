@@ -102,7 +102,6 @@ describe('refreshInterceptor', () => {
         httpMock.expectOne('/api/v1/series').flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
         httpMock.expectOne('/api/v1/notifications').flush('Unauthorized', { status: 401, statusText: 'Unauthorized' });
 
-        // Ambas requests fallidas comparten la misma renovación en curso.
         expect(authServiceMock.refresh).toHaveBeenCalledTimes(1);
 
         refreshSubject.next({

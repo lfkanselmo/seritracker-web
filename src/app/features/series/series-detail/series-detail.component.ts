@@ -48,13 +48,11 @@ export class SeriesDetailComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private transloco = inject(TranslocoService);
 
-  // Estado de datos
   series: UserSeries | null = null;
   seasons: SeasonProgress[] = [];
   nextEpisode: NextEpisode | null = null;
   seasonEpisodes: Record<number, EpisodeInfo[]> = {};
 
-  // Estado de UI
   isLoading = false;
   hasError = false;
   errorMessage = '';

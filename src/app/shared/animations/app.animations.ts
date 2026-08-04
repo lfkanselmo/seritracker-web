@@ -8,7 +8,6 @@ import {
     group,
 } from '@angular/animations';
 
-// ── Fade in simple ─────────────────────────────────────────────────
 export const fadeIn = trigger('fadeIn', [
     transition(':enter', [
         style({ opacity: 0, transform: 'translateY(12px)' }),
@@ -16,7 +15,6 @@ export const fadeIn = trigger('fadeIn', [
     ])
 ]);
 
-// ── Fade in para páginas ───────────────────────────────────────────
 export const pageFadeIn = trigger('pageFadeIn', [
     transition(':enter', [
         style({ opacity: 0 }),
@@ -24,7 +22,6 @@ export const pageFadeIn = trigger('pageFadeIn', [
     ])
 ]);
 
-// ── Stagger para listas ────────────────────────────────────────────
 export const listStagger = trigger('listStagger', [
     transition('* => *', [
         query(':enter', [
@@ -41,7 +38,6 @@ export const listStagger = trigger('listStagger', [
     ])
 ]);
 
-// ── Fade entre tabs ────────────────────────────────────────────────
 export const tabFade = trigger('tabFade', [
     transition(':enter', [
         style({ opacity: 0, transform: 'translateY(6px)' }),
@@ -52,7 +48,6 @@ export const tabFade = trigger('tabFade', [
     ])
 ]);
 
-// ── Animación de rutas ─────────────────────────────────────────────
 export const routeAnimations = trigger('routeAnimations', [
     transition('* <=> *', [
         query(':enter, :leave', [

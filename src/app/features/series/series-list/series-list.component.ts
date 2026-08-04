@@ -54,16 +54,13 @@ export class SeriesListComponent implements OnInit {
   private transloco = inject(TranslocoService);
   private searchInput$ = new Subject<string>();
 
-  // Estado de datos
   seriesList: UserSeries[] = [];
   totalElements = 0;
 
-  // Estado de paginación
   pageIndex = 0;
   pageSize = 20;
   readonly pageSizeOptions = [10, 20, 50];
 
-  // Estado de UI
   isLoading = false;
   hasError = false;
   errorMessage = '';
