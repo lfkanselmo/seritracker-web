@@ -1,7 +1,6 @@
 <app-navbar />
 
 <div class="page-container" @pageFadeIn>
-
   @if (isLoading) {
     <div class="state-container">
       <mat-spinner diameter="48" />
@@ -17,7 +16,6 @@
   }
 
   @if (series && !isLoading) {
-
     <button mat-button class="back-btn" (click)="onBack()">
       <mat-icon>arrow_back</mat-icon>
       {{ 'series.detail.back' | transloco }}
@@ -26,7 +24,7 @@
     <div class="hero" @fadeIn>
       <div class="poster-container">
         @if (series.posterUrl) {
-          <img [src]="series.posterUrl" [alt]="series.title" class="poster">
+          <img [src]="series.posterUrl" [alt]="series.title" class="poster" />
         } @else {
           <div class="poster-placeholder">📺</div>
         }
@@ -42,131 +40,166 @@
 
         <div class="rating-section">
           <p class="section-label">{{ 'series.detail.yourRating' | transloco }}</p>
-          <app-star-rating
-            [value]="series.rating"
-            (ratingChange)="onRatingChange($event)">
+          <app-star-rating [value]="series.rating" (ratingChange)="onRatingChange($event)">
           </app-star-rating>
         </div>
       </div>
     </div>
 
-    @if (series.status !== 'WANT_TO_WATCH') {
-      <div class="detail-card">
-        <h2 class="card-title">{{ 'series.detail.episodeProgress' | transloco }}</h2>
+    <div class="detail-body">
+      @if (series.status !== 'WANT_TO_WATCH') {
+        <div class="detail-main">
+          <div class="detail-card">
+            <h2 class="card-title">{{ 'series.detail.episodeProgress' | transloco }}</h2>
 
-        <div class="progress-stats">
-          <span class="progress-number">{{ series.watchedEpisodes }}</span>
-          <span class="progress-divider">/</span>
-          <span class="progress-total">{{ series.totalEpisodes }} {{ 'series.detail.episodes' | transloco }}</span>
-          <span class="progress-pct">{{ progressPercent }}%</span>
-        </div>
-
-        <div class="progress-bar">
-          <div class="progress-fill" [class]="statusClass" [style.width.%]="progressPercent"></div>
-        </div>
-
-        @if (nextEpisode) {
-          <div class="next-episode-banner">
-            <div class="next-episode-info">
-              <span class="next-episode-code">{{ episodeCode(nextEpisode.seasonNumber, nextEpisode.episodeNumber) }}</span>
-              <span class="next-episode-title">{{ nextEpisode.title }}</span>
-              @if (isFutureAirDate(nextEpisode.airDate)) {
-                <span class="next-episode-date">{{ 'series.detail.nextEpisodeAirsOn' | transloco }} {{ nextEpisode.airDate }}</span>
-              }
+            <div class="progress-stats">
+              <span class="progress-number">{{ series.watchedEpisodes }}</span>
+              <span class="progress-divider">/</span>
+              <span class="progress-total"
+                >{{ series.totalEpisodes }} {{ 'series.detail.episodes' | transloco }}</span
+              >
+              <span class="progress-pct">{{ progressPercent }}%</span>
             </div>
-            @if (!isFutureAirDate(nextEpisode.airDate)) {
-              <button mat-stroked-button class="mark-watched-btn" (click)="onMarkNextEpisodeWatched()">
-                {{ 'series.detail.markWatched' | transloco }}
+
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                [class]="statusClass"
+                [style.width.%]="progressPercent"
+              ></div>
+            </div>
+
+            @if (nextEpisode) {
+              <div class="next-episode-banner">
+                <div class="next-episode-info">
+                  <span class="next-episode-code">{{
+                    episodeCode(nextEpisode.seasonNumber, nextEpisode.episodeNumber)
+                  }}</span>
+                  <span class="next-episode-title">{{ nextEpisode.title }}</span>
+                  @if (isFutureAirDate(nextEpisode.airDate)) {
+                    <span class="next-episode-date"
+                      >{{ 'series.detail.nextEpisodeAirsOn' | transloco }}
+                      {{ nextEpisode.airDate }}</span
+                    >
+                  }
+                </div>
+                @if (!isFutureAirDate(nextEpisode.airDate)) {
+                  <button
+                    mat-stroked-button
+                    class="mark-watched-btn"
+                    (click)="onMarkNextEpisodeWatched()"
+                  >
+                    {{ 'series.detail.markWatched' | transloco }}
+                  </button>
+                }
+              </div>
+            }
+
+            @if (isLoadingSeasons && seasons.length === 0) {
+              <div class="season-loading"><mat-spinner diameter="24" /></div>
+            } @else if (seasons.length > 0) {
+              <mat-accordion class="seasons-accordion">
+                @for (season of seasons; track season.seasonNumber) {
+                  <mat-expansion-panel (opened)="onSeasonExpand(season.seasonNumber)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>{{
+                        'series.detail.season' | transloco: { number: season.seasonNumber }
+                      }}</mat-panel-title>
+                      <mat-panel-description
+                        >{{ season.watchedCount }}/{{ season.episodeCount }}</mat-panel-description
+                      >
+                    </mat-expansion-panel-header>
+
+                    @if (loadingSeasonNumber === season.seasonNumber) {
+                      <div class="season-loading"><mat-spinner diameter="24" /></div>
+                    } @else if (seasonEpisodes[season.seasonNumber]) {
+                      <div class="episode-list">
+                        @for (
+                          episode of seasonEpisodes[season.seasonNumber];
+                          track episode.episodeNumber
+                        ) {
+                          <label class="episode-row">
+                            <mat-checkbox
+                              [checked]="episode.watched"
+                              (change)="onToggleEpisode(season.seasonNumber, episode)"
+                            >
+                            </mat-checkbox>
+                            <span class="episode-number">{{ episode.episodeNumber }}.</span>
+                            <span class="episode-title">{{ episode.title }}</span>
+                            @if (episode.airDate) {
+                              <span class="episode-date">{{ episode.airDate }}</span>
+                            }
+                          </label>
+                        }
+                      </div>
+                      <button
+                        mat-stroked-button
+                        class="watch-season-btn"
+                        (click)="onMarkSeasonWatched(season)"
+                      >
+                        {{ 'series.detail.markSeasonWatched' | transloco }}
+                      </button>
+                    }
+                  </mat-expansion-panel>
+                }
+              </mat-accordion>
+            }
+          </div>
+        </div>
+      }
+
+      <div class="detail-sidebar">
+        <div class="detail-card">
+          <h2 class="card-title">{{ 'series.detail.notes' | transloco }}</h2>
+          <textarea
+            class="notes-textarea"
+            rows="4"
+            maxlength="2000"
+            [placeholder]="'series.detail.notesPlaceholder' | transloco"
+            [value]="notesDraft"
+            (input)="onNotesInput($event)"
+          >
+          </textarea>
+          <div class="notes-actions">
+            <button
+              mat-stroked-button
+              [disabled]="!notesDirty || isSavingNotes"
+              (click)="onSaveNotes()"
+            >
+              @if (isSavingNotes) {
+                <mat-spinner diameter="18" />
+              } @else {
+                {{ 'series.detail.saveNotes' | transloco }}
+              }
+            </button>
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <h2 class="card-title">{{ 'series.detail.changeStatus' | transloco }}</h2>
+          <div class="status-buttons">
+            @for (status of statuses; track status) {
+              <button
+                mat-stroked-button
+                class="status-btn"
+                [class.active]="series.status === status"
+                (click)="onStatusChange(status)"
+              >
+                <mat-icon>{{ statusConfig[status].icon }}</mat-icon>
+                {{ status | seriesStatus }}
               </button>
             }
           </div>
-        }
+        </div>
 
-        @if (isLoadingSeasons && seasons.length === 0) {
-          <div class="season-loading"><mat-spinner diameter="24" /></div>
-        } @else if (seasons.length > 0) {
-          <mat-accordion class="seasons-accordion">
-            @for (season of seasons; track season.seasonNumber) {
-              <mat-expansion-panel (opened)="onSeasonExpand(season.seasonNumber)">
-                <mat-expansion-panel-header>
-                  <mat-panel-title>{{ 'series.detail.season' | transloco: { number: season.seasonNumber } }}</mat-panel-title>
-                  <mat-panel-description>{{ season.watchedCount }}/{{ season.episodeCount }}</mat-panel-description>
-                </mat-expansion-panel-header>
-
-                @if (loadingSeasonNumber === season.seasonNumber) {
-                  <div class="season-loading"><mat-spinner diameter="24" /></div>
-                } @else if (seasonEpisodes[season.seasonNumber]) {
-                  <div class="episode-list">
-                    @for (episode of seasonEpisodes[season.seasonNumber]; track episode.episodeNumber) {
-                      <label class="episode-row">
-                        <mat-checkbox
-                          [checked]="episode.watched"
-                          (change)="onToggleEpisode(season.seasonNumber, episode)">
-                        </mat-checkbox>
-                        <span class="episode-number">{{ episode.episodeNumber }}.</span>
-                        <span class="episode-title">{{ episode.title }}</span>
-                        @if (episode.airDate) {
-                          <span class="episode-date">{{ episode.airDate }}</span>
-                        }
-                      </label>
-                    }
-                  </div>
-                  <button mat-stroked-button class="watch-season-btn" (click)="onMarkSeasonWatched(season)">
-                    {{ 'series.detail.markSeasonWatched' | transloco }}
-                  </button>
-                }
-              </mat-expansion-panel>
-            }
-          </mat-accordion>
-        }
-      </div>
-    }
-
-    <div class="detail-card">
-      <h2 class="card-title">{{ 'series.detail.notes' | transloco }}</h2>
-      <textarea
-        class="notes-textarea"
-        rows="4"
-        maxlength="2000"
-        [placeholder]="'series.detail.notesPlaceholder' | transloco"
-        [value]="notesDraft"
-        (input)="onNotesInput($event)">
-      </textarea>
-      <div class="notes-actions">
-        <button mat-stroked-button [disabled]="!notesDirty || isSavingNotes" (click)="onSaveNotes()">
-          @if (isSavingNotes) {
-            <mat-spinner diameter="18" />
-          } @else {
-            {{ 'series.detail.saveNotes' | transloco }}
-          }
-        </button>
-      </div>
-    </div>
-
-    <div class="detail-card">
-      <h2 class="card-title">{{ 'series.detail.changeStatus' | transloco }}</h2>
-      <div class="status-buttons">
-        @for (status of statuses; track status) {
-          <button
-            mat-stroked-button
-            class="status-btn"
-            [class.active]="series.status === status"
-            (click)="onStatusChange(status)">
-            <mat-icon>{{ statusConfig[status].icon }}</mat-icon>
-            {{ status | seriesStatus }}
+        <div class="detail-card danger">
+          <h2 class="card-title danger-title">{{ 'series.detail.dangerZone' | transloco }}</h2>
+          <button mat-stroked-button class="btn-danger" (click)="onDeleteRequest()">
+            <mat-icon>delete</mat-icon>
+            {{ 'series.detail.removeFromList' | transloco }}
           </button>
-        }
+        </div>
       </div>
     </div>
-
-    <div class="detail-card danger">
-      <h2 class="card-title danger-title">{{ 'series.detail.dangerZone' | transloco }}</h2>
-      <button mat-stroked-button class="btn-danger" (click)="onDeleteRequest()">
-        <mat-icon>delete</mat-icon>
-        {{ 'series.detail.removeFromList' | transloco }}
-      </button>
-    </div>
-
   }
-
 </div>
