@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -33,8 +33,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { SeriesCardComponent } from '../../../shared/components/series-card/series-card.component';
-import { fadeIn, listStagger, tabFade } from '../../../shared/animations/app.animations';
+import { pageFadeIn, listStagger, tabFade } from '../../../shared/animations/app.animations';
 import { extractErrorMessage } from '../../../core/utils/http-error.util';
+import { TranslatedPaginatorIntl } from '../../../core/services/translated-paginator-intl.service';
 
 @Component({
   selector: 'app-series-list',
@@ -52,7 +53,8 @@ import { extractErrorMessage } from '../../../core/utils/http-error.util';
     SeriesCardComponent,
     TranslocoModule,
   ],
-  animations: [fadeIn, listStagger, tabFade],
+  animations: [pageFadeIn, listStagger, tabFade],
+  providers: [{ provide: MatPaginatorIntl, useClass: TranslatedPaginatorIntl }],
   templateUrl: './series-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './series-list.component.scss',
@@ -77,6 +79,7 @@ export class SeriesListComponent implements OnInit {
   isLoading = false;
   hasError = false;
   errorMessage = '';
+  renderTick = 0;
   activeTab: SeriesStatus | null = null;
   searchQuery = '';
   showSearch = false;
@@ -133,6 +136,7 @@ export class SeriesListComponent implements OnInit {
           this.seriesList = response.data.content;
           this.totalElements = response.data.totalElements;
           this.isLoading = false;
+          this.renderTick++;
           this.cdr.detectChanges();
         },
         error: (err: HttpErrorResponse) => {

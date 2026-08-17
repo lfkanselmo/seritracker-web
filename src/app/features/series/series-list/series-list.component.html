@@ -1,14 +1,19 @@
 <app-navbar />
 
-<div class="page-container" @fadeIn>
-
+<div class="page-container" @pageFadeIn>
   <div class="page-header">
     <div class="header-left">
       <h1 class="page-title">{{ 'series.list.title' | transloco }}</h1>
-      <p class="page-subtitle">{{ 'series.list.subtitle' | transloco: { count: totalElements } }}</p>
+      <p class="page-subtitle">
+        {{ 'series.list.subtitle' | transloco: { count: totalElements } }}
+      </p>
     </div>
     <div class="header-actions">
-      <button mat-icon-button (click)="showSearch = !showSearch" [matTooltip]="'common.search' | transloco">
+      <button
+        mat-icon-button
+        (click)="showSearch = !showSearch"
+        [matTooltip]="'common.search' | transloco"
+      >
         <mat-icon>search</mat-icon>
       </button>
       <button mat-raised-button class="btn-gradient" (click)="onAddSeries()">
@@ -22,7 +27,7 @@
     <div class="search-bar">
       <mat-form-field appearance="outline" class="search-field">
         <mat-label>{{ 'series.list.searchLabel' | transloco }}</mat-label>
-        <input matInput [value]="searchQuery" (input)="onSearchInput($event)">
+        <input matInput [value]="searchQuery" (input)="onSearchInput($event)" />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
     </div>
@@ -40,7 +45,11 @@
     <button
       mat-icon-button
       (click)="onSortDirToggle()"
-      [matTooltip]="(sortDir === 'ASC' ? 'series.list.sort.ascending' : 'series.list.sort.descending') | transloco">
+      [matTooltip]="
+        (sortDir === 'ASC' ? 'series.list.sort.ascending' : 'series.list.sort.descending')
+          | transloco
+      "
+    >
       <mat-icon>{{ sortDir === 'ASC' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
     </button>
   </div>
@@ -50,21 +59,22 @@
       <button
         class="tab-btn"
         [class.active]="activeTab === tab.status"
-        (click)="onTabChange(tab.status)">
+        (click)="onTabChange(tab.status)"
+      >
         {{ tab.labelKey | transloco }}
       </button>
     }
   </div>
 
-  @if (isLoading) {
-    <div class="state-container">
+  @if (isLoading && seriesList.length === 0) {
+    <div class="state-container" @tabFade>
       <mat-spinner diameter="48" />
       <p>{{ 'series.list.loading' | transloco }}</p>
     </div>
   }
 
   @if (hasError && !isLoading) {
-    <div class="state-container error">
+    <div class="state-container error" @tabFade>
       <mat-icon>error_outline</mat-icon>
       <p>{{ errorMessage }}</p>
       <button mat-raised-button (click)="loadSeries()">{{ 'common.retry' | transloco }}</button>
@@ -72,7 +82,7 @@
   }
 
   @if (!isLoading && !hasError && seriesList.length === 0) {
-    <div class="state-container empty">
+    <div class="state-container empty" @tabFade>
       <span class="empty-icon">📺</span>
       @if (searchQuery.trim()) {
         <p>{{ 'series.list.noResults' | transloco }}</p>
@@ -85,29 +95,30 @@
     </div>
   }
 
-  @if (!isLoading && seriesList.length > 0) {
-  <div class="series-grid" [@listStagger]="seriesList.length">
+  <div class="series-grid" [class.series-grid--loading]="isLoading" [@listStagger]="renderTick">
     @for (series of seriesList; track series.id) {
-      <div @fadeIn>
+      <div>
         <app-series-card
           [series]="series"
           (statusChange)="onStatusChange(series, $event)"
           (ratingChange)="onRatingChange(series, $event)"
           (deleteRequest)="onDeleteRequest(series)"
-          (cardClick)="onCardClick(series)">
+          (cardClick)="onCardClick(series)"
+        >
         </app-series-card>
       </div>
     }
   </div>
 
-  <mat-paginator
-    [length]="totalElements"
-    [pageIndex]="pageIndex"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="pageSizeOptions"
-    (page)="onPageChange($event)"
-    [attr.aria-label]="'series.list.selectPage' | transloco">
-  </mat-paginator>
-}
-
+  @if (seriesList.length > 0) {
+    <mat-paginator
+      [length]="totalElements"
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageChange($event)"
+      [attr.aria-label]="'series.list.selectPage' | transloco"
+    >
+    </mat-paginator>
+  }
 </div>
