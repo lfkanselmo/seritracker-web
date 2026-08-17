@@ -3,6 +3,7 @@
 [![CI](https://github.com/lfkanselmo/seritracker-web/actions/workflows/ci.yml/badge.svg)](https://github.com/lfkanselmo/seritracker-web/actions/workflows/ci.yml)
 ![Angular](https://img.shields.io/badge/Angular-21-DD0031?logo=angular&logoColor=white)
 ![Material](https://img.shields.io/badge/Angular%20Material-21-DD0031?logo=angular&logoColor=white)
+![License](https://img.shields.io/badge/license-proprietary-lightgrey)
 
 Aplicación web para el seguimiento de series de televisión. Construida con Angular 21 (zoneless) y Angular Material 21, consume la [SeriesTracker API](https://github.com/lfkanselmo/seritracker-api).
 
