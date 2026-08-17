@@ -1,4 +1,11 @@
-import { Component, OnInit, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  DestroyRef,
+  inject,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,18 +29,13 @@ interface CalendarDayGroup {
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  imports: [
-    MatIconModule,
-    MatProgressSpinnerModule,
-    NavbarComponent,
-    TranslocoModule,
-  ],
+  imports: [MatIconModule, MatProgressSpinnerModule, NavbarComponent, TranslocoModule],
   animations: [pageFadeIn, listStagger, fadeIn],
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './calendar.component.scss',
 })
 export class CalendarComponent implements OnInit {
-
   private destroyRef = inject(DestroyRef);
   private calendarService = inject(CalendarService);
   private router = inject(Router);
@@ -63,7 +65,7 @@ export class CalendarComponent implements OnInit {
           date: episode.airDate,
           isToday: episode.isToday,
           isTomorrow: episode.isTomorrow,
-          episodes: [episode]
+          episodes: [episode],
         });
       }
     }
@@ -78,7 +80,9 @@ export class CalendarComponent implements OnInit {
   formatDayHeader(dateStr: string): string {
     const locale = this.languageService.lang() === 'en' ? 'en-US' : 'es-ES';
     const formatted = new Intl.DateTimeFormat(locale, {
-      weekday: 'long', day: 'numeric', month: 'long'
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
     }).format(new Date(dateStr + 'T00:00:00'));
     return formatted.charAt(0).toUpperCase() + formatted.slice(1);
   }
@@ -87,7 +91,8 @@ export class CalendarComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    this.calendarService.getUpcoming()
+    this.calendarService
+      .getUpcoming()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -100,7 +105,7 @@ export class CalendarComponent implements OnInit {
           this.errorMessage = extractErrorMessage(err, this.transloco, 'calendar.error');
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 

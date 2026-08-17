@@ -1,5 +1,19 @@
-import { Component, DestroyRef, inject, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroupDirective, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  ChangeDetectorRef,
+  ViewChild,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroupDirective,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
@@ -38,10 +52,10 @@ function passwordsMatchValidator(group: AbstractControl): ValidationErrors | nul
   ],
   animations: [pageFadeIn],
   templateUrl: './account.component.html',
-  styleUrl: './account.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './account.component.scss',
 })
 export class AccountComponent {
-
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -50,11 +64,14 @@ export class AccountComponent {
   private cdr = inject(ChangeDetectorRef);
   private transloco = inject(TranslocoService);
 
-  form = this.fb.group({
-    currentPassword: ['', Validators.required],
-    newPassword: ['', [Validators.required, Validators.minLength(8)]],
-    confirmPassword: ['', Validators.required]
-  }, { validators: passwordsMatchValidator });
+  form = this.fb.group(
+    {
+      currentPassword: ['', Validators.required],
+      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required],
+    },
+    { validators: passwordsMatchValidator },
+  );
 
   @ViewChild('formDirective') formDirective!: FormGroupDirective;
 
@@ -75,7 +92,8 @@ export class AccountComponent {
 
     const { currentPassword, newPassword } = this.form.getRawValue();
 
-    this.authService.changePassword({ currentPassword: currentPassword!, newPassword: newPassword! })
+    this.authService
+      .changePassword({ currentPassword: currentPassword!, newPassword: newPassword! })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -88,7 +106,7 @@ export class AccountComponent {
           this.errorMessage = extractErrorMessage(err, this.transloco, 'account.error');
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 

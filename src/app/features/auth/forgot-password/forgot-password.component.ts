@@ -1,4 +1,10 @@
-import { Component, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -28,10 +34,10 @@ import { extractErrorMessage } from '../../../core/utils/http-error.util';
     TranslocoModule,
   ],
   templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './forgot-password.component.scss',
 })
 export class ForgotPasswordComponent {
-
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
@@ -39,7 +45,7 @@ export class ForgotPasswordComponent {
   private transloco = inject(TranslocoService);
 
   form = this.fb.group({
-    email: ['', [Validators.required, Validators.email]]
+    email: ['', [Validators.required, Validators.email]],
   });
 
   isLoading = false;
@@ -52,7 +58,8 @@ export class ForgotPasswordComponent {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.authService.forgotPassword(this.form.getRawValue() as { email: string })
+    this.authService
+      .forgotPassword(this.form.getRawValue() as { email: string })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -67,7 +74,7 @@ export class ForgotPasswordComponent {
           this.errorMessage = extractErrorMessage(err, this.transloco, 'auth.forgotPassword.error');
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 }

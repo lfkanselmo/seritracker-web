@@ -1,20 +1,25 @@
-import { Component, Inject } from '@angular/core';
-import { MatDialog, MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslocoService } from '@jsverse/transloco';
 import { Observable } from 'rxjs';
 
 export interface ConfirmDialogData {
-  title:   string;
+  title: string;
   message: string;
   confirm: string;
-  cancel:  string;
+  cancel: string;
 }
 
 export function confirmDeleteSeries(
   dialog: MatDialog,
   transloco: TranslocoService,
-  seriesTitle: string
+  seriesTitle: string,
 ): Observable<boolean | undefined> {
   const dialogRef = dialog.open(ConfirmDialogComponent, {
     width: '380px',
@@ -22,8 +27,8 @@ export function confirmDeleteSeries(
       title: transloco.translate('dialog.deleteSeriesTitle'),
       message: transloco.translate('dialog.deleteSeriesMessage', { title: seriesTitle }),
       confirm: transloco.translate('dialog.delete'),
-      cancel: transloco.translate('dialog.cancel')
-    }
+      cancel: transloco.translate('dialog.cancel'),
+    },
   });
 
   return dialogRef.afterClosed();
@@ -34,12 +39,13 @@ export function confirmDeleteSeries(
   standalone: true,
   imports: [MatDialogModule, MatButtonModule],
   templateUrl: './confirm-dialog.component.html',
-  styleUrl:    './confirm-dialog.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './confirm-dialog.component.scss',
 })
 export class ConfirmDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmDialogData,
   ) {}
 
   onCancel(): void {

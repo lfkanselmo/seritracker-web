@@ -1,4 +1,11 @@
-import { Component, OnInit, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  DestroyRef,
+  inject,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,7 +15,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserSeries, SeriesStatus, SeriesSortBy, SortDirection, STATUS_CONFIG } from '../../../core/models/series.model';
+import {
+  UserSeries,
+  SeriesStatus,
+  SeriesSortBy,
+  SortDirection,
+  STATUS_CONFIG,
+} from '../../../core/models/series.model';
 import { SeriesService } from '../../../core/services/series.service';
 import { confirmDeleteSeries } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -41,10 +54,10 @@ import { extractErrorMessage } from '../../../core/utils/http-error.util';
   ],
   animations: [fadeIn, listStagger, tabFade],
   templateUrl: './series-list.component.html',
-  styleUrl: './series-list.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './series-list.component.scss',
 })
 export class SeriesListComponent implements OnInit {
-
   private destroyRef = inject(DestroyRef);
   private seriesService = inject(SeriesService);
   private router = inject(Router);
@@ -88,15 +101,13 @@ export class SeriesListComponent implements OnInit {
   readonly statusConfig = STATUS_CONFIG;
 
   constructor() {
-    this.searchInput$.pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe(query => {
-      this.searchQuery = query;
-      this.pageIndex = 0;
-      this.loadSeries();
-    });
+    this.searchInput$
+      .pipe(debounceTime(400), distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+      .subscribe((query) => {
+        this.searchQuery = query;
+        this.pageIndex = 0;
+        this.loadSeries();
+      });
   }
 
   ngOnInit(): void {
@@ -107,14 +118,15 @@ export class SeriesListComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    this.seriesService.getAll({
-      status: this.activeTab ?? undefined,
-      page: this.pageIndex,
-      size: this.pageSize,
-      search: this.searchQuery.trim() || undefined,
-      sortBy: this.sortBy,
-      sortDir: this.sortDir,
-    })
+    this.seriesService
+      .getAll({
+        status: this.activeTab ?? undefined,
+        page: this.pageIndex,
+        size: this.pageSize,
+        search: this.searchQuery.trim() || undefined,
+        sortBy: this.sortBy,
+        sortDir: this.sortDir,
+      })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -128,7 +140,7 @@ export class SeriesListComponent implements OnInit {
           this.errorMessage = extractErrorMessage(err, this.transloco, 'series.list.error');
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 
@@ -157,39 +169,41 @@ export class SeriesListComponent implements OnInit {
   }
 
   onStatusChange(series: UserSeries, status: SeriesStatus): void {
-    this.seriesService.updateStatus(series.id, { status })
+    this.seriesService
+      .updateStatus(series.id, { status })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.seriesList = this.seriesList.map(s =>
-            s.id === series.id ? response.data : s
-          );
-          this.snackBar.open(this.transloco.translate('series.list.statusUpdated'), '✓', { duration: 2000 });
+          this.seriesList = this.seriesList.map((s) => (s.id === series.id ? response.data : s));
+          this.snackBar.open(this.transloco.translate('series.list.statusUpdated'), '✓', {
+            duration: 2000,
+          });
           this.cdr.detectChanges();
         },
-        error: () => { } // el interceptor ya muestra el error
+        error: () => {}, // el interceptor ya muestra el error
       });
   }
 
   onRatingChange(series: UserSeries, rating: number): void {
-    this.seriesService.updateRating(series.id, { rating })
+    this.seriesService
+      .updateRating(series.id, { rating })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
-          this.seriesList = this.seriesList.map(s =>
-            s.id === series.id ? response.data : s
-          );
-          this.snackBar.open(this.transloco.translate('series.list.ratingSaved'), '✓', { duration: 2000 });
+          this.seriesList = this.seriesList.map((s) => (s.id === series.id ? response.data : s));
+          this.snackBar.open(this.transloco.translate('series.list.ratingSaved'), '✓', {
+            duration: 2000,
+          });
           this.cdr.detectChanges();
         },
-        error: () => { }
+        error: () => {},
       });
   }
 
   onDeleteRequest(series: UserSeries): void {
     confirmDeleteSeries(this.dialog, this.transloco, series.title)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(confirmed => {
+      .subscribe((confirmed) => {
         if (confirmed) this.deleteSeries(series);
       });
   }
@@ -207,14 +221,17 @@ export class SeriesListComponent implements OnInit {
   }
 
   private deleteSeries(series: UserSeries): void {
-    this.seriesService.delete(series.id)
+    this.seriesService
+      .delete(series.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.snackBar.open(this.transloco.translate('series.list.deleted'), '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.list.deleted'), '✓', {
+            duration: 2000,
+          });
           this.loadSeries();
         },
-        error: () => { }
+        error: () => {},
       });
   }
 }

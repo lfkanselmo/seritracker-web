@@ -1,5 +1,18 @@
-import { Component, DestroyRef, inject, ChangeDetectorRef, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  ChangeDetectorRef,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
@@ -33,10 +46,10 @@ function passwordsMatchValidator(group: AbstractControl): ValidationErrors | nul
     TranslocoModule,
   ],
   templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './reset-password.component.scss',
 })
 export class ResetPasswordComponent implements OnInit {
-
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
@@ -45,10 +58,13 @@ export class ResetPasswordComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private transloco = inject(TranslocoService);
 
-  form = this.fb.group({
-    newPassword: ['', [Validators.required, Validators.minLength(8)]],
-    confirmPassword: ['', Validators.required]
-  }, { validators: passwordsMatchValidator });
+  form = this.fb.group(
+    {
+      newPassword: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', Validators.required],
+    },
+    { validators: passwordsMatchValidator },
+  );
 
   private token = '';
   tokenMissing = false;
@@ -70,7 +86,8 @@ export class ResetPasswordComponent implements OnInit {
 
     const { newPassword } = this.form.getRawValue();
 
-    this.authService.resetPassword({ token: this.token, newPassword: newPassword! })
+    this.authService
+      .resetPassword({ token: this.token, newPassword: newPassword! })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -82,7 +99,7 @@ export class ResetPasswordComponent implements OnInit {
           this.errorMessage = extractErrorMessage(err, this.transloco, 'auth.resetPassword.error');
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 

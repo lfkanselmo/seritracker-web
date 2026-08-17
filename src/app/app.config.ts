@@ -1,6 +1,6 @@
 import { ApplicationConfig, inject, provideAppInitializer } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideTransloco, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
@@ -17,7 +17,10 @@ export const appConfig: ApplicationConfig = {
     // Orden importa: refreshInterceptor va último para que sea el primero
     // en ver un 401 (más cerca del backend) e intente renovar el token
     // antes de que errorInterceptor asuma que la sesión expiró.
-    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor, refreshInterceptor])),
+    provideHttpClient(
+      withXhr(),
+      withInterceptors([authInterceptor, errorInterceptor, refreshInterceptor]),
+    ),
     provideAnimationsAsync(),
     provideTransloco({
       config: {
@@ -37,5 +40,5 @@ export const appConfig: ApplicationConfig = {
       transloco.setActiveLang(lang);
       return firstValueFrom(transloco.load(lang));
     }),
-  ]
+  ],
 };

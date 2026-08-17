@@ -1,4 +1,11 @@
-import { Component, OnInit, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  DestroyRef,
+  inject,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,10 +30,10 @@ import { pageFadeIn, listStagger, fadeIn } from '../../shared/animations/app.ani
   ],
   animations: [pageFadeIn, listStagger, fadeIn],
   templateUrl: './stats.component.html',
-  styleUrl: './stats.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './stats.component.scss',
 })
 export class StatsComponent implements OnInit {
-
   private destroyRef = inject(DestroyRef);
   private statsService = inject(StatsService);
   private cdr = inject(ChangeDetectorRef);
@@ -48,7 +55,8 @@ export class StatsComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    this.statsService.getStats()
+    this.statsService
+      .getStats()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -61,7 +69,7 @@ export class StatsComponent implements OnInit {
           this.errorMessage = extractErrorMessage(err, this.transloco, 'stats.error');
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 

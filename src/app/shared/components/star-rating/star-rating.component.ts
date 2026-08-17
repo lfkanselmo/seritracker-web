@@ -1,14 +1,14 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-star-rating',
   standalone: true,
   imports: [],
   templateUrl: './star-rating.component.html',
-  styleUrl:    './star-rating.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './star-rating.component.scss',
 })
 export class StarRatingComponent {
-
   @Input() value: number | null = null;
   @Input() readonly = false;
 

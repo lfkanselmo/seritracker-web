@@ -1,4 +1,11 @@
-import { Component, OnInit, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  DestroyRef,
+  inject,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,7 +17,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UserSeries, SeriesStatus, STATUS_CONFIG, STATUS_CLASS, calculateProgressPercent, formatEpisodeCode, SeasonProgress, NextEpisode, EpisodeInfo } from '../../../core/models/series.model';
+import {
+  UserSeries,
+  SeriesStatus,
+  STATUS_CONFIG,
+  STATUS_CLASS,
+  calculateProgressPercent,
+  formatEpisodeCode,
+  SeasonProgress,
+  NextEpisode,
+  EpisodeInfo,
+} from '../../../core/models/series.model';
 import { SeriesService } from '../../../core/services/series.service';
 import { NavbarComponent } from '../../../layout/navbar/navbar.component';
 import { StarRatingComponent } from '../../../shared/components/star-rating/star-rating.component';
@@ -35,10 +52,10 @@ import { extractErrorMessage } from '../../../core/utils/http-error.util';
   ],
   animations: [pageFadeIn, fadeIn],
   templateUrl: './series-detail.component.html',
-  styleUrl: './series-detail.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './series-detail.component.scss',
 })
 export class SeriesDetailComponent implements OnInit {
-
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private seriesService = inject(SeriesService);
@@ -87,7 +104,8 @@ export class SeriesDetailComponent implements OnInit {
     this.isLoading = true;
     this.hasError = false;
 
-    this.seriesService.getById(id)
+    this.seriesService
+      .getById(id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -102,7 +120,7 @@ export class SeriesDetailComponent implements OnInit {
           this.errorMessage = extractErrorMessage(err, this.transloco, 'series.detail.error');
           this.isLoading = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 
@@ -111,7 +129,8 @@ export class SeriesDetailComponent implements OnInit {
 
     this.isLoadingSeasons = true;
     this.cdr.detectChanges();
-    this.seriesService.getSeasonsSummary(this.series.id)
+    this.seriesService
+      .getSeasonsSummary(this.series.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -123,37 +142,43 @@ export class SeriesDetailComponent implements OnInit {
         error: () => {
           this.isLoadingSeasons = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 
   onStatusChange(status: SeriesStatus): void {
     if (!this.series) return;
 
-    this.seriesService.updateStatus(this.series.id, { status })
+    this.seriesService
+      .updateStatus(this.series.id, { status })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           this.series = response.data;
           this.cdr.detectChanges();
-          this.snackBar.open(this.transloco.translate('series.detail.statusUpdated'), '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.detail.statusUpdated'), '✓', {
+            duration: 2000,
+          });
         },
-        error: () => { }
+        error: () => {},
       });
   }
 
   onRatingChange(rating: number): void {
     if (!this.series) return;
 
-    this.seriesService.updateRating(this.series.id, { rating })
+    this.seriesService
+      .updateRating(this.series.id, { rating })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           this.series = response.data;
           this.cdr.detectChanges();
-          this.snackBar.open(this.transloco.translate('series.detail.ratingSaved'), '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.detail.ratingSaved'), '✓', {
+            duration: 2000,
+          });
         },
-        error: () => { }
+        error: () => {},
       });
   }
 
@@ -171,7 +196,8 @@ export class SeriesDetailComponent implements OnInit {
 
     this.loadingSeasonNumber = seasonNumber;
     this.cdr.detectChanges();
-    this.seriesService.getSeasonEpisodes(this.series.id, seasonNumber)
+    this.seriesService
+      .getSeasonEpisodes(this.series.id, seasonNumber)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -182,7 +208,7 @@ export class SeriesDetailComponent implements OnInit {
         error: () => {
           this.loadingSeasonNumber = null;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 
@@ -190,7 +216,8 @@ export class SeriesDetailComponent implements OnInit {
     if (!this.series) return;
     const watched = !episode.watched;
 
-    this.seriesService.markEpisode(this.series.id, seasonNumber, episode.episodeNumber, watched)
+    this.seriesService
+      .markEpisode(this.series.id, seasonNumber, episode.episodeNumber, watched)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -199,7 +226,7 @@ export class SeriesDetailComponent implements OnInit {
           this.cdr.detectChanges();
           this.loadSeasonsSummary();
         },
-        error: () => { }
+        error: () => {},
       });
   }
 
@@ -207,7 +234,8 @@ export class SeriesDetailComponent implements OnInit {
     if (!this.series) return;
     const episodeNumbers = Array.from({ length: season.episodeCount }, (_, i) => i + 1);
 
-    this.seriesService.markSeasonWatched(this.series.id, season.seasonNumber, episodeNumbers)
+    this.seriesService
+      .markSeasonWatched(this.series.id, season.seasonNumber, episodeNumbers)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -216,13 +244,13 @@ export class SeriesDetailComponent implements OnInit {
           if (episodes) {
             this.seasonEpisodes = {
               ...this.seasonEpisodes,
-              [season.seasonNumber]: episodes.map(e => ({ ...e, watched: true }))
+              [season.seasonNumber]: episodes.map((e) => ({ ...e, watched: true })),
             };
           }
           this.cdr.detectChanges();
           this.loadSeasonsSummary();
         },
-        error: () => { }
+        error: () => {},
       });
   }
 
@@ -230,7 +258,8 @@ export class SeriesDetailComponent implements OnInit {
     if (!this.series || !this.nextEpisode) return;
     const { seasonNumber, episodeNumber } = this.nextEpisode;
 
-    this.seriesService.markEpisode(this.series.id, seasonNumber, episodeNumber, true)
+    this.seriesService
+      .markEpisode(this.series.id, seasonNumber, episodeNumber, true)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -239,7 +268,7 @@ export class SeriesDetailComponent implements OnInit {
           this.cdr.detectChanges();
           this.loadSeasonsSummary();
         },
-        error: () => { }
+        error: () => {},
       });
   }
 
@@ -251,7 +280,8 @@ export class SeriesDetailComponent implements OnInit {
     if (!this.series) return;
 
     this.isSavingNotes = true;
-    this.seriesService.updateNotes(this.series.id, { notes: this.notesDraft })
+    this.seriesService
+      .updateNotes(this.series.id, { notes: this.notesDraft })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
@@ -259,12 +289,14 @@ export class SeriesDetailComponent implements OnInit {
           this.notesDraft = response.data.notes ?? '';
           this.isSavingNotes = false;
           this.cdr.detectChanges();
-          this.snackBar.open(this.transloco.translate('series.detail.notesSaved'), '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.detail.notesSaved'), '✓', {
+            duration: 2000,
+          });
         },
         error: () => {
           this.isSavingNotes = false;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 
@@ -273,7 +305,7 @@ export class SeriesDetailComponent implements OnInit {
 
     confirmDeleteSeries(this.dialog, this.transloco, this.series.title)
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(confirmed => {
+      .subscribe((confirmed) => {
         if (confirmed) this.deleteSeries();
       });
   }
@@ -288,21 +320,26 @@ export class SeriesDetailComponent implements OnInit {
 
     this.seasonEpisodes = {
       ...this.seasonEpisodes,
-      [seasonNumber]: episodes.map(e => e.episodeNumber === episodeNumber ? { ...e, watched } : e)
+      [seasonNumber]: episodes.map((e) =>
+        e.episodeNumber === episodeNumber ? { ...e, watched } : e,
+      ),
     };
   }
 
   private deleteSeries(): void {
     if (!this.series) return;
 
-    this.seriesService.delete(this.series.id)
+    this.seriesService
+      .delete(this.series.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.snackBar.open(this.transloco.translate('series.detail.deleted'), '✓', { duration: 2000 });
+          this.snackBar.open(this.transloco.translate('series.detail.deleted'), '✓', {
+            duration: 2000,
+          });
           this.router.navigate(['/series']);
         },
-        error: () => { }
+        error: () => {},
       });
   }
 }

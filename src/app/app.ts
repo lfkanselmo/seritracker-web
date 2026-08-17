@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { routeAnimations } from './shared/animations/app.animations';
 
@@ -8,7 +8,8 @@ import { routeAnimations } from './shared/animations/app.animations';
   imports: [RouterOutlet],
   animations: [routeAnimations],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './app.scss',
 })
 export class AppComponent {
   getRouteState(outlet: RouterOutlet): string {

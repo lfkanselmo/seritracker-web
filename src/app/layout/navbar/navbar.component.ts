@@ -1,4 +1,11 @@
-import { Component, OnInit, DestroyRef, ChangeDetectorRef, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  DestroyRef,
+  ChangeDetectorRef,
+  inject,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,10 +37,10 @@ import { Notification } from '../../core/models/series.model';
     TranslocoModule,
   ],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit {
-
   private authService = inject(AuthService);
   private notificationService = inject(NotificationService);
   private router = inject(Router);
@@ -49,7 +56,7 @@ export class NavbarComponent implements OnInit {
   }
 
   get unreadCount(): number {
-    return this.notifications.filter(n => !n.read).length;
+    return this.notifications.filter((n) => !n.read).length;
   }
 
   ngOnInit(): void {
@@ -59,29 +66,31 @@ export class NavbarComponent implements OnInit {
   }
 
   loadNotifications(): void {
-    this.notificationService.getUnread()
+    this.notificationService
+      .getUnread()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (response) => {
           this.notifications = response.data.content;
           this.cdr.detectChanges();
         },
-        error: () => { }
+        error: () => {},
       });
   }
 
   onMarkAsRead(notification: Notification, event: Event): void {
     event.stopPropagation();
-    this.notificationService.markAsRead(notification.id)
+    this.notificationService
+      .markAsRead(notification.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.notifications = this.notifications.map(n =>
-            n.id === notification.id ? { ...n, read: true } : n
+          this.notifications = this.notifications.map((n) =>
+            n.id === notification.id ? { ...n, read: true } : n,
           );
           this.cdr.detectChanges();
         },
-        error: () => { }
+        error: () => {},
       });
   }
 

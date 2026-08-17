@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,7 +6,13 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslocoModule } from '@jsverse/transloco';
-import { UserSeries, SeriesStatus, STATUS_CONFIG, STATUS_CLASS, calculateProgressPercent } from '../../../core/models/series.model';
+import {
+  UserSeries,
+  SeriesStatus,
+  STATUS_CONFIG,
+  STATUS_CLASS,
+  calculateProgressPercent,
+} from '../../../core/models/series.model';
 import { SeriesStatusPipe } from '../../pipes/series-status.pipe';
 import { StarRatingComponent } from '../star-rating/star-rating.component';
 
@@ -25,16 +31,16 @@ import { StarRatingComponent } from '../star-rating/star-rating.component';
     TranslocoModule,
   ],
   templateUrl: './series-card.component.html',
-  styleUrl:    './series-card.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './series-card.component.scss',
 })
 export class SeriesCardComponent {
-
   @Input({ required: true }) series!: UserSeries;
 
-  @Output() statusChange   = new EventEmitter<SeriesStatus>();
-  @Output() ratingChange   = new EventEmitter<number>();
-  @Output() deleteRequest  = new EventEmitter<void>();
-  @Output() cardClick      = new EventEmitter<void>();
+  @Output() statusChange = new EventEmitter<SeriesStatus>();
+  @Output() ratingChange = new EventEmitter<number>();
+  @Output() deleteRequest = new EventEmitter<void>();
+  @Output() cardClick = new EventEmitter<void>();
 
   readonly statusConfig = STATUS_CONFIG;
   readonly statuses = Object.keys(STATUS_CONFIG) as SeriesStatus[];
@@ -44,7 +50,7 @@ export class SeriesCardComponent {
   }
 
   get statusEntries() {
-    return this.statuses.filter(s => s !== this.series.status);
+    return this.statuses.filter((s) => s !== this.series.status);
   }
 
   get statusClass(): string {

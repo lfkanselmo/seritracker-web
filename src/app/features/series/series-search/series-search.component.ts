@@ -1,4 +1,10 @@
-import { Component, DestroyRef, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  ChangeDetectorRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -37,10 +43,10 @@ import { extractErrorMessage } from '../../../core/utils/http-error.util';
   ],
   animations: [pageFadeIn, listStagger, fadeIn],
   templateUrl: './series-search.component.html',
-  styleUrl: './series-search.component.scss'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrl: './series-search.component.scss',
 })
 export class SeriesSearchComponent {
-
   private destroyRef = inject(DestroyRef);
   private tmdbService = inject(TmdbService);
   private seriesService = inject(SeriesService);
@@ -56,48 +62,56 @@ export class SeriesSearchComponent {
   isAdding: number | null = null;
   hasSearched = false;
 
-  readonly statuses: SeriesStatus[] = [
-    'WATCHING', 'WANT_TO_WATCH', 'COMPLETED', 'ABANDONED'
-  ];
+  readonly statuses: SeriesStatus[] = ['WATCHING', 'WANT_TO_WATCH', 'COMPLETED', 'ABANDONED'];
 
   readonly statusConfig = STATUS_CONFIG;
 
   constructor() {
-    this.searchControl.valueChanges.pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-      filter(query => !!query && query.length >= 2),
-      switchMap(query => {
-        this.isSearching = true;
-        this.hasSearched = true;
-        return this.tmdbService.search(query!);
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe({
-      next: (response) => {
-        this.results = response.data;
-        this.isSearching = false;
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.isSearching = false;
-        this.snackBar.open(this.transloco.translate('series.search.error'), '✕', { duration: 3000 });
-        this.cdr.detectChanges();
-      }
-    });
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        filter((query) => !!query && query.length >= 2),
+        switchMap((query) => {
+          this.isSearching = true;
+          this.hasSearched = true;
+          return this.tmdbService.search(query!);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: (response) => {
+          this.results = response.data;
+          this.isSearching = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.isSearching = false;
+          this.snackBar.open(this.transloco.translate('series.search.error'), '✕', {
+            duration: 3000,
+          });
+          this.cdr.detectChanges();
+        },
+      });
   }
 
   onAddSeries(series: TmdbSeries, status: SeriesStatus): void {
     this.isAdding = series.tmdbId;
     this.cdr.detectChanges();
 
-    this.seriesService.create({
-      tmdbId: series.tmdbId,
-      status
-    }).pipe(takeUntilDestroyed(this.destroyRef))
+    this.seriesService
+      .create({
+        tmdbId: series.tmdbId,
+        status,
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.snackBar.open(this.transloco.translate('series.search.added', { title: series.title }), '✓', { duration: 3000 });
+          this.snackBar.open(
+            this.transloco.translate('series.search.added', { title: series.title }),
+            '✓',
+            { duration: 3000 },
+          );
           this.isAdding = null;
           this.cdr.detectChanges();
         },
@@ -106,7 +120,7 @@ export class SeriesSearchComponent {
           this.snackBar.open(message, '✕', { duration: 3000 });
           this.isAdding = null;
           this.cdr.detectChanges();
-        }
+        },
       });
   }
 
