@@ -8,6 +8,15 @@
     "back": "Back",
     "search": "Search"
   },
+  "paginator": {
+    "itemsPerPage": "Items per page",
+    "nextPage": "Next page",
+    "previousPage": "Previous page",
+    "firstPage": "First page",
+    "lastPage": "Last page",
+    "rangeLabel": "{{start}} – {{end}} of {{length}}",
+    "rangeLabelEmpty": "0 of {{length}}"
+  },
   "nav": {
     "myAccount": "My account",
     "logout": "Log out",
