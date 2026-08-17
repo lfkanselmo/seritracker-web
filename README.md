@@ -1,6 +1,14 @@
 # SeriesTracker Web
 
-Aplicación web para el seguimiento de series de televisión. Construida con Angular 21 (zoneless) y Angular Material 21, consume la [SeriesTracker API](https://github.com/TuUsuario/seritracker-api).
+[![CI](https://github.com/lfkanselmo/seritracker-web/actions/workflows/ci.yml/badge.svg)](https://github.com/lfkanselmo/seritracker-web/actions/workflows/ci.yml)
+![Angular](https://img.shields.io/badge/Angular-21-DD0031?logo=angular&logoColor=white)
+![Material](https://img.shields.io/badge/Angular%20Material-21-DD0031?logo=angular&logoColor=white)
+
+Aplicación web para el seguimiento de series de televisión. Construida con Angular 21 (zoneless) y Angular Material 21, consume la [SeriesTracker API](https://github.com/lfkanselmo/seritracker-api).
+
+## Capturas
+
+_(pendiente — agregar screenshot o GIF de la lista de series y el detalle con episodios)_
 
 Identidad visual propia — degradado "Ambilight" (teal → amber) documentada
 en [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md). Cualquier UI nueva debe partir
@@ -29,7 +37,7 @@ de esos tokens, no de valores hardcodeados.
 - Node.js 20+
 - npm 10+
 - Angular CLI 21+
-- [SeriesTracker API](https://github.com/TuUsuario/seritracker-api) corriendo en `localhost:8080`
+- [SeriesTracker API](https://github.com/lfkanselmo/seritracker-api) corriendo en `localhost:8080`
 
 ---
 
@@ -38,7 +46,7 @@ de esos tokens, no de valores hardcodeados.
 ### 1. Clonar el repositorio
 
 ```bash
-git clone https://github.com/TuUsuario/seritracker-web.git
+git clone https://github.com/lfkanselmo/seritracker-web.git
 cd seritracker-web
 ```
 
@@ -310,4 +318,4 @@ test: add unit tests for series service
 
 ## Proyectos Relacionados
 
-- **Backend:** [seritracker-api](https://github.com/TuUsuario/seritracker-api) — Spring Boot 3.5
+- **Backend:** [seritracker-api](https://github.com/lfkanselmo/seritracker-api) — Spring Boot 3.5
