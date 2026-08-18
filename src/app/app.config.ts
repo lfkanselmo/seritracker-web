@@ -38,7 +38,13 @@ export const appConfig: ApplicationConfig = {
       const transloco = inject(TranslocoService);
       const lang = resolveInitialLang();
       transloco.setActiveLang(lang);
-      return firstValueFrom(transloco.load(lang));
+      return firstValueFrom(transloco.load(lang)).then(() => {
+        // Precarga el otro idioma en segundo plano (sin esperar) para que
+        // el toggle de idioma se sienta instantáneo en vez de depender de
+        // una petición de red recién en el momento del clic.
+        const otherLang = AVAILABLE_LANGS.find((l) => l !== lang);
+        if (otherLang) transloco.load(otherLang).subscribe();
+      });
     }),
   ],
 };
